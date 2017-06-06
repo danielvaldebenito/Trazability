@@ -4,6 +4,7 @@
   "description": "Api Rest Proyecto Trazabilidad de productos",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Daniel Valdebenito",
