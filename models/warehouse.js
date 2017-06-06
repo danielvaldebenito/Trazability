@@ -1,5 +1,5 @@
 'use strict'
-/* Modelo de local de venta (planta o local) */
+/* Modelo de una bodega perteneciente a un local de venta*/
 var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var config = require('../config')
