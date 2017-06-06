@@ -7,11 +7,18 @@ module.exports = {
     entitiesNames: {
         distributor: {
             singular: 'contratista',
-            plural: 'contratistas'
+            plural: 'contratistas',
+            gender: 'F'
         },
         zone: {
             singular: 'zona',
-            plural: 'zonas'
+            plural: 'zonas',
+            gender: 'F'
+        },
+        user: {
+            singular: 'usuario',
+            plural: 'usuarios',
+            gender: 'M'
         }
         
     }
