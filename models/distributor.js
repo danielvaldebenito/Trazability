@@ -1,6 +1,6 @@
 'use strict'
 /* Modelo de distribuidor */
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema;
 var DistributorSchema = Schema({
@@ -15,6 +15,6 @@ var DistributorSchema = Schema({
     phone: String,
     image: String,
     intern: {type: Boolean, default: false}
-});
-DistributorSchema.plugin(timestamp);
-module.exports = mongoose.model('Distributor', DistributorSchema);
+})
+DistributorSchema.plugin(timestamp)
+module.exports = mongoose.model('Distributor', DistributorSchema)

@@ -1,6 +1,6 @@
 'use strict'
 /* Modelo de Zonas */
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema;
 var ZoneSchema = Schema({
@@ -10,5 +10,5 @@ var ZoneSchema = Schema({
         lng: Number
     }]
 });
-ZoneSchema.plugin(timestamp);
-module.exports = mongoose.model('Zone', ZoneSchema);
+ZoneSchema.plugin(timestamp)
+module.exports = mongoose.model('Zone', ZoneSchema)
