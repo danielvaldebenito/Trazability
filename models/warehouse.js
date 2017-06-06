@@ -1,0 +1,17 @@
+'use strict'
+/* Modelo de local de venta (planta o local) */
+var mongoose = require('mongoose')
+var timestamp = require('mongoose-timestamp')
+var config = require('../config')
+var typesEnum = config.entitiesNames.warehouse.types
+var Schema = mongoose.Schema
+var WarehouseSchema = Schema({
+    name: { type: String, required: true },
+    dependence: { type: Schema.ObjectId, ref: 'Dependence' },
+    type: {
+        type: String,
+        enum: typesEnum
+    }
+})
+WarehouseSchema.plugin(timestamp)
+module.exports = mongoose.model('Warehouse', WarehouseSchema)

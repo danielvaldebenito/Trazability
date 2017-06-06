@@ -21,6 +21,17 @@ module.exports = {
             singular: 'usuario',
             plural: 'usuarios',
             gender: 'M'
+        },
+        dependence: {
+            singular: 'local de venta',
+            plural: 'locales de venta',
+            gender: 'M'
+        },
+        warehouse: {
+            singular: 'almacén',
+            plural: 'almacenes',
+            gender: 'M',
+            types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACEN', 'MERMAS', 'PROCESO_INTERNO']
         }
         
     }
