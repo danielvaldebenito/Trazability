@@ -4,12 +4,17 @@ var mongoose = require('mongoose');
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema;
 var DistributorSchema = Schema({
-    name: String,
-    nit: String,
+    name: {
+        type: String,
+        required: [ true, 'El nombre es requerido'],
+        unique: true
+    },
+    nit: { type: String, unique: true } ,
     email: String,
     contact: String,
     phone: String,
-    image: String
+    image: String,
+    intern: {type: Boolean, default: false}
 });
 DistributorSchema.plugin(timestamp);
 module.exports = mongoose.model('Distributor', DistributorSchema);
