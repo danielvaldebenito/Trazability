@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt-nodejs')
 var User = require('../models/user')
 var jwt = require('../services/jwt')
 var moment = require('moment')
-var config = require('./config')
+var config = require('../config')
 
 function pruebas(req, res) {
     res
@@ -23,6 +23,7 @@ function saveUser (req, res) {
     user.email = params.email
     user.isAdmin = params.isAdmin
     user.distribuidor = params.distribuidor
+    user.username = params.username
     user.image = null
     
     if(params.password) {
@@ -66,9 +67,9 @@ function saveUser (req, res) {
 function loginUser (req, res) {
     
     var params = req.body
-    var email = params.email
+    var username = params.username
     var password = params.password
-    User.findOne({email: email}, (err, user) => {
+    User.findOne({username: username}, (err, user) => {
         if(err) {
             res.status(500)
                 .send({message: 'Error en la petición'})
@@ -78,14 +79,14 @@ function loginUser (req, res) {
                     .send({message: 'El usuario no existe'})
             } else {
                 // Comprobar contraseña
+                console.log('comparando: ', user)
                 bcrypt.compare(password, user.password, (error, check) => {
-                    if(error) return res.status(500).send({message: 'Ocurrió un error', error: error })
+                    if(error) return res.status(500).send({ message: 'Ocurrió un error', error: error })
                     if(check) {
                         // devolver los datos del usuario logueado
                         user.lastLogin = moment.unix()
                         res.status(200)
-                            .send({user: user, token: jwt.createToken(user)})
-                        
+                            .send({user: user, token: jwt.createToken(user)}) 
                     } else {
                         var pass = bcrypt.hashSync(password)
                         res.status(404)
@@ -99,11 +100,6 @@ function loginUser (req, res) {
 function updateUser(req, res) {
     var userId = req.params.id
     var update = req.body
-    if(userId != update._id)
-    {
-        return res.status(500)
-                .send({message: 'No tienes permiso para actualizar este usuario'})
-    }
     User.findByIdAndUpdate(userId, update, (err, updated) => {
         if(err) {
             res.status(500)
@@ -122,7 +118,6 @@ function updateUser(req, res) {
 }
 function uploadImage(req, res) {
     var userId = req.params.id
-    var fileName = 'Imagen no subida'
     console.log(req.files)
     if(req.files) {
         var file_path = req.files.image.path
