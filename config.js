@@ -32,6 +32,12 @@ module.exports = {
             plural: 'almacenes',
             gender: 'M',
             types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACEN', 'MERMAS', 'PROCESO_INTERNO']
+        },
+        transaction: {
+            singular: 'transacción',
+            plural: 'transacciones',
+            gender: 'F',
+            types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
         }
         
     }
