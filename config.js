@@ -6,20 +6,10 @@ module.exports = {
         port: process.env.PORT_DATABASE || 27017,
         server: 'localhost'
     },
-    entitiesNames: {
-        distributor: {
-            singular: 'contratista',
-            plural: 'contratistas',
-            gender: 'F'
-        },
-        zone: {
-            singular: 'zona',
-            plural: 'zonas',
-            gender: 'F'
-        },
-        user: {
-            singular: 'usuario',
-            plural: 'usuarios',
+    entitiesSettings: {
+        client: {
+            singular: 'cliente',
+            plural: 'clientes',
             gender: 'M'
         },
         dependence: {
@@ -27,17 +17,10 @@ module.exports = {
             plural: 'locales de venta',
             gender: 'M'
         },
-        warehouse: {
-            singular: 'almacén',
-            plural: 'almacenes',
-            gender: 'M',
-            types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACEN', 'MERMAS', 'PROCESO_INTERNO']
-        },
-        transaction: {
-            singular: 'transacción',
-            plural: 'transacciones',
-            gender: 'F',
-            types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
+        distributor: {
+            singular: 'contratista',
+            plural: 'contratistas',
+            gender: 'F'
         },
         order: {
             singular: 'pedido',
@@ -52,6 +35,36 @@ module.exports = {
             gender: 'F',
             types: ['POR PEDIDO', 'CAMPANEO'],
             paymentMethods: ['EFECTIVO', 'DÉBITO', 'CRÉDITO']
+        },
+        settings: {
+            keys: ['Alguna Configuración']
+        },
+        transaction: {
+            singular: 'transacción',
+            plural: 'transacciones',
+            gender: 'F',
+            types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
+        },
+        user: {
+            singular: 'usuario',
+            plural: 'usuarios',
+            gender: 'M'
+        },
+        vehicle: {
+            singular: 'vehículo',
+            plural: 'vehículos',
+            gender: 'M'
+        },
+        warehouse: {
+            singular: 'almacén',
+            plural: 'almacenes',
+            gender: 'M',
+            types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACEN', 'MERMAS', 'PROCESO_INTERNO']
+        },
+        zone: {
+            singular: 'zona',
+            plural: 'zonas',
+            gender: 'F'
         }
         
     }

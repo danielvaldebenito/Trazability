@@ -3,8 +3,8 @@
 var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var config = require('../config')
-var status = config.entitiesNames.order.status;
-var types = config.entitiesNames.order.types;
+var status = config.entitiesSettings.order.status;
+var types = config.entitiesSettings.order.types;
 var Schema = mongoose.Schema
 var OrderSchema = Schema({
     commitmentDate: Date,

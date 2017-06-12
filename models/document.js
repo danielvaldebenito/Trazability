@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
 var config = require('../config')
-var types = config.entitiesNames.document.types;
+var types = config.entitiesSettings.document.types;
 
 var DocumentSchema = Schema({
     type: { type: String, enum: types },

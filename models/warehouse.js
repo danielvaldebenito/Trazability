@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var config = require('../config')
-var typesEnum = config.entitiesNames.warehouse.types
+var typesEnum = config.entitiesSettings.warehouse.types
 var Schema = mongoose.Schema
 var WarehouseSchema = Schema({
     name: { type: String, required: true },

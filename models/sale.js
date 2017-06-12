@@ -4,8 +4,8 @@ var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
 var config = require('../config')
-var types = config.entitiesNames.sale.types;
-var paymentMethods = config.entitiesNames.sale.paymentMethods;
+var types = config.entitiesSettings.sale.types;
+var paymentMethods = config.entitiesSettings.sale.paymentMethods;
 var SaleSchema = Schema({
     coordinates: {
         lat: Number,

@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var config = require('../config')
-var types = config.entitiesNames.transaction.types;
+var types = config.entitiesSettings.transaction.types;
 var Schema = mongoose.Schema
 var TransactionSchema = Schema({
     type: { type: String, require: true, enum: types }
