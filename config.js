@@ -38,6 +38,20 @@ module.exports = {
             plural: 'transacciones',
             gender: 'F',
             types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
+        },
+        order: {
+            singular: 'pedido',
+            plural: 'pedidos',
+            gender: 'M',
+            types: ['ENVASADO', 'GRANEL'],
+            status: ['RECIBIDO', 'ASIGNADO A VEHÍCULO', 'RECIBIDO EN RUTA', 'ENTREGADO', 'NO ENTREGADO']
+        },
+        sale: {
+            singular: 'venta',
+            plural: 'ventas',
+            gender: 'F',
+            types: ['POR PEDIDO', 'CAMPANEO'],
+            paymentMethods: ['EFECTIVO', 'DÉBITO', 'CRÉDITO']
         }
         
     }
