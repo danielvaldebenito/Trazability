@@ -22,7 +22,7 @@ module.exports = {
             paymentMethods: ['EFECTIVO', 'DÉBITO', 'CRÉDITO']
         },
         settings: {
-            keys: ['Alguna Configuración']
+            keys: ['Alguna Configuración', 'Otra configuración']
         },
         transaction: {
             types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']

@@ -90,7 +90,7 @@ function loginUser (req, res) {
                     } else {
                         var pass = bcrypt.hashSync(password)
                         res.status(404)
-                        .send({message: 'El usuario no ha podido loguearse'})
+                        .send({message: 'Usuario y/o Contraseña son incorrectos'})
                     }
                 })
             }

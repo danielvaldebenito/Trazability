@@ -6,6 +6,7 @@ var app = express();
 
 // create routes
 var user_routes = require('./routes/user')
+var address_routes = require('./routes/address')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
 
 // rutas base
 app.use('/api', user_routes)
-
+app.use('/api', address_routes)
 
 
 
