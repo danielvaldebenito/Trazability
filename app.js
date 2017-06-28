@@ -8,6 +8,9 @@ var app = express();
 var user_routes = require('./routes/user')
 var address_routes = require('./routes/address')
 var client_routes = require('./routes/client')
+var dependence_routes = require('./routes/dependence')
+var distributor_routes = require('./routes/distributor')
+var userWarehouse_routes = require('./routes/userWarehouse')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -26,6 +29,7 @@ app.use((req, res, next) => {
 app.use('/api', user_routes)
 app.use('/api', address_routes)
 app.use('/api', client_routes)
-
-
+app.use('/api', dependence_routes)
+app.use('/api', distributor_routes)
+app.use('/api', userWarehouse_routes)
 module.exports = app

@@ -10,7 +10,7 @@ var UserSchema = Schema({
     password: { type: String, required: true },
     image: String,
     isAdmin: { type: Boolean, default: false },
-    distributor: { type: Schema.ObjectId, ref: 'Distributor' },
+    distributor: { type: Schema.Types.ObjectId, ref: 'Distributor' },
     lastLogin: Date
 })
 UserSchema.plugin(timestamp)

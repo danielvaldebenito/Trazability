@@ -8,6 +8,6 @@ api.get('/client/', md_auth.ensureAuth, ClientController.getAll)
 api.get('/client/:id', md_auth.ensureAuth, ClientController.getOne)
 api.post('/client/', md_auth.ensureAuth, ClientController.saveOne)
 api.put('/client/:id', md_auth.ensureAuth, ClientController.updateOne)
-api.delete('/client/:id', md_auth.ensureAuth, ClientController.deleteOne)
+api.delete('/client/:id', [md_auth.ensureAuth, md_auth.isAdmin], ClientController.deleteOne)
 
 module.exports = api;

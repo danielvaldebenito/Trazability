@@ -2,10 +2,9 @@
 
 var mongoose = require('mongoose')
 var Warehouse = require('../models/warehouse')
-
-var createWarehouse = function(req, res, next) {
+var createAddressWarehouse = function(req, res, next) {
     var warehouse = new Warehouse()
-    warehouse.name = 'test'
+    warehouse.name = 'Dirección'
     warehouse.dependence = req.body.dependence
     warehouse.type = 'DIRECCION_CLIENTE'
     console.log('body', req.body)
@@ -18,19 +17,6 @@ var createWarehouse = function(req, res, next) {
         next();
     })
 }
-/*
-name: { type: String, required: true },
-    dependence: { type: Schema.ObjectId, ref: 'Dependence' },
-    type: {
-        type: String,
-        enum: typesEnum
-    }
- */
-
-var getWareHouse = function (req, res, next) {
-    
-}
-
 module.exports = {
-    createWarehouse
+    createAddressWarehouse
 }

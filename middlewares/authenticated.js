@@ -27,3 +27,14 @@ exports.ensureAuth = function(req, res, next) {
     req.user = payload;
     next();
 }
+
+exports.isAdmin = function (req, res, next) {
+    if(!req.user.isAdmin)
+    {
+        return res.status(403)
+                    .send({
+                        message: 'No tienes permiso para realizar esta acción'
+                    })
+    }
+    next()
+}
