@@ -5,12 +5,17 @@ var bodyParser = require('body-parser')
 var app = express();
 
 // create routes
-var user_routes = require('./routes/user')
+
 var address_routes = require('./routes/address')
 var client_routes = require('./routes/client')
 var dependence_routes = require('./routes/dependence')
 var distributor_routes = require('./routes/distributor')
+var order_routes = require('./routes/order')
+var sale_routes = require('./routes/sale')
+var store_routes = require('./routes/store')
+var user_routes = require('./routes/user')
 var userWarehouse_routes = require('./routes/userWarehouse')
+var vehicle_routes = require('./routes/vehicle')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -26,10 +31,14 @@ app.use((req, res, next) => {
 })
 
 // rutas base
-app.use('/api', user_routes)
 app.use('/api', address_routes)
 app.use('/api', client_routes)
 app.use('/api', dependence_routes)
 app.use('/api', distributor_routes)
+app.use('/api', order_routes)
+app.use('/api', sale_routes)
+app.use('/api', store_routes)
+app.use('/api', user_routes)
 app.use('/api', userWarehouse_routes)
+app.use('/api', vehicle_routes)
 module.exports = app

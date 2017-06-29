@@ -29,7 +29,7 @@ module.exports = {
             types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
         },
         warehouse: {
-            types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACEN', 'MERMAS', 'PROCESO_INTERNO']
+            types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACÉN', 'MERMAS', 'PROCESO_INTERNO']
         }
     }
 }

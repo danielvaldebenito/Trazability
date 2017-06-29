@@ -15,24 +15,49 @@ function getAll(req, res) {
     var sidx = req.params.sidx || '_id'
     var sord = req.params.sord || 1
     var distributor = req.params.distributor
-    var user = req.params.user
-    var warehouse = req.params.warehouse
-    var query = {}
-    
-    if(user)
-        query.user = user
-    if(warehouse)
-        query.warehouse = warehouse
-
-    console.log('filtro', query)
+    var match = distributor ? { '_id': distributor } : {}
     UserWarehouse
-            .find(query)
+            .find()
             .sort([[sidx, sord]])
             .populate({ path: 'warehouse', model: Warehouse })
             .populate({ 
                 path: 'user', 
-                model: User
-             })
+                model: User, 
+                populate: { 
+                    path: 'distributor', 
+                    model: Distributor,
+                    match: match
+                } 
+            })
+            .paginate(page, limit, (err, records, total) => {
+                if(err)
+                    return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+                if(!records)
+                    return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+                return res
+                    .status(200)
+                    .send({ 
+                        done: true, 
+                        message: 'Bodegas Usuario Total', 
+                        data: records,
+                        total: total
+                    })  
+                
+            })
+}
+
+function getForUser(req, res) {
+    var page = req.params.page || 1
+    var limit = req.params.limit || 200
+    var sidx = req.params.sidx || '_id'
+    var sord = req.params.sord || 1
+    var user = req.params.user
+
+    UserWarehouse
+            .find({ user: user })
+            .sort([[sidx, sord]])
+            .populate({ path: 'warehouse', model: Warehouse })
+            .populate({ path: 'user', model: User })
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
@@ -45,15 +70,48 @@ function getAll(req, res) {
                     .status(200)
                     .send({ 
                         done: true, 
-                        message: 'OK', 
-                        data: records, 
-                        filtered: userwhs,
+                        message: 'Bodegas de un usuario', 
+                        data: userwhs,
                         total: total
                     })  
                 })
                 
             })
 }
+
+function getForWarehouse(req, res) {
+    var page = req.params.page || 1
+    var limit = req.params.limit || 200
+    var sidx = req.params.sidx || '_id'
+    var sord = req.params.sord || 1
+    var warehouse = req.params.warehouse
+
+    UserWarehouse
+            .find({ warehouse: warehouse })
+            .sort([[sidx, sord]])
+            .populate({ path: 'warehouse', model: Warehouse })
+            .populate({ path: 'user', model: User })
+            .paginate(page, limit, (err, records, total) => {
+                if(err)
+                    return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+                if(!records)
+                    return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+                
+                var options = { path: 'user.distributor', model: Distributor }
+                UserWarehouse.populate(records, options, (errr, userwhs) => {
+                    return res
+                    .status(200)
+                    .send({ 
+                        done: true, 
+                        message: 'Usuarios de una bodega', 
+                        data: userwhs,
+                        total: total
+                    })  
+                })
+                
+            })
+}
+
 function getOne (req, res) {
     var id = req.params.id
     UserWarehouse.findById(id)
@@ -124,6 +182,8 @@ function deleteOne(req, res){
 
 module.exports = {
     getAll,
+    getForUser,
+    getForWarehouse,
     getOne,
     saveOne,
     updateOne,

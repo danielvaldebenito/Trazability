@@ -11,11 +11,11 @@ var SaleSchema = Schema({
         lat: Number,
         lng: Number
     },
-    done: Boolean,
+    done: { type: Boolean, default: true, require: true },
     type: { type: String, enum: types },
     paymentMethod: { type: String, enum: paymentMethods },
-    transaction: { type: Schema.ObjectId, ref: 'Transaction' },
-    document: { type: Schema.ObjectId, ref: 'Document' }
+    transaction: { type: Schema.Types.ObjectId, ref: 'Transaction' },
+    document: { type: Schema.Types.ObjectId, ref: 'Document' }
 })
 SaleSchema.plugin(timestamp)
 module.exports = mongoose.model('Sale', SaleSchema)
