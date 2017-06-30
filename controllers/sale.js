@@ -68,14 +68,14 @@ function saveOne (req, res) {
     try{
         var sale = new Sale()
         var params = req.body
-        //sale.coordinates = params.coordinates
+        sale.coordinates = JSON.parse(params.coordinates)
         sale.done = params.done
         sale.type = params.type
         sale.paymentMethod = params.paymentMethod
         sale.transaction = params.transaction
         sale.document = params.document
         var items = params.itemsSale
-        console.log('apunto de guardar todo ', sale)
+        console.log('apunto de guardar todo ', params)
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
