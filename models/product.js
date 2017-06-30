@@ -5,7 +5,7 @@ var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
 var ProductSchema = Schema({
     nif: { type: String, require: true, unique: true }, 
-    productType: { type: Schema.ObjectId, ref: 'ProductType' },
+    productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
     enabled: {type: Boolean, default: true}
 })
 ProductSchema.plugin(timestamp)

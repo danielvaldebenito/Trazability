@@ -7,7 +7,7 @@ var keys = config.entitiesSettings.settings.keys;
 var Schema = mongoose.Schema
 var SettingsSchema = Schema({
     distributor: { type: Schema.ObjectId, ref: 'Distributor'},
-    key: { type: String, required: true },
+    key: { type: String, required: true, enum: keys },
     value: Schema.Types.Mixed
 })
 SettingsSchema.plugin(timestamp)

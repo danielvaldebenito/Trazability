@@ -3,11 +3,12 @@
 var mongoose = require('mongoose')
 var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
-var ProductSchema = Schema({
+var ProductTypeSchema = Schema({
     name: String,
     description: String,
-    weight: number,
-    tare: number
+    weight: Number,
+    tare: Number
 })
-ProductSchema.plugin(timestamp)
-module.exports = mongoose.model('Product', ProductSchema)
+ProductTypeSchema.plugin(timestamp)
+
+module.exports = mongoose.model('ProductType', ProductTypeSchema)
