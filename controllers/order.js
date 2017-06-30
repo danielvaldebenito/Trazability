@@ -3,6 +3,7 @@
 var path = require('path')
 var mongoose = require('mongoose')
 var pagination = require('mongoose-pagination')
+var moment = require('moment')
 var Order = require('../models/order')
 
 function getAll(req, res) {
@@ -55,7 +56,7 @@ function saveOne (req, res) {
 
     var order = new Order()
     var params = req.body
-    order.commitmentDate = params.commitmentDate
+    order.commitmentDate = moment(params.commitmentDate, "DD-MM-YYYY");
     order.type = params.type
     order.originWarehouse = params.originWarehouse
     order.destinyWarehouse = params.destinyWarehouse

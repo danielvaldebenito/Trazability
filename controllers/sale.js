@@ -9,6 +9,7 @@ var Transaction = require('../models/transaction')
 var Movement = require('../models/movement')
 var MovementItem = require('../models/movementItem')
 var Document = require('../models/document')
+var Delivery = require('../models/delivery')
 
 function getAll(req, res) {
     var page = req.params.page || 1
@@ -27,6 +28,7 @@ function getAll(req, res) {
                     populate: { path: 'items', model: MovementItem }
                 }
             })
+            .populate('delivery')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
@@ -64,7 +66,6 @@ function getOne (req, res) {
         })
 }
 function saveOne (req, res) {
-    
     try{
         var sale = new Sale()
         var params = req.body
@@ -74,11 +75,27 @@ function saveOne (req, res) {
         sale.paymentMethod = params.paymentMethod
         sale.transaction = params.transaction
         sale.document = params.document
+        var delivery = JSON.parse(params.delivery)
         var items = params.itemsSale
         console.log('apunto de guardar todo ', params)
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
+
+            if(delivery) {
+                var del = new Delivery({
+                    coordinates: JSON.parse(delivery.coordinates),
+                    done: delivery.done,
+                    order: delivery.order,
+                    sale: stored._id
+                })
+                del.save((e, deliveryStored) => {
+                    if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
+                    stored.delivery = deliveryStored._id
+                    stored.save()
+                })
+            }
+
             var total = items.length
             items.forEach((i) => {
                 var saleItem = new SaleItem({
@@ -108,9 +125,7 @@ function saveOne (req, res) {
                         }
                     })
                 }) 
-            })
-            
-            
+            })   
         })
     }
     catch(error) {
@@ -122,12 +137,8 @@ function saveOne (req, res) {
                     error: error
                 })
                 .end()
-    }
-    
+    }  
 }
-
-
-
 function updateOne(req, res) {
     var id = req.params.id
     var update = req.body

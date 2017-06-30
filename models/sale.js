@@ -16,7 +16,8 @@ var SaleSchema = Schema({
     paymentMethod: { type: String, enum: paymentMethods },
     transaction: { type: Schema.Types.ObjectId, ref: 'Transaction' },
     document: { type: Schema.Types.ObjectId, ref: 'Document' },
-    items: [ { type: Schema.Types.ObjectId, ref: 'SaleItem' }]
+    items: [ { type: Schema.Types.ObjectId, ref: 'SaleItem' }],
+    delivery: { type: Schema.Types.ObjectId, ref: 'Delivery' }
 })
 SaleSchema.plugin(timestamp)
 module.exports = mongoose.model('Sale', SaleSchema)
