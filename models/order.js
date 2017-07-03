@@ -16,7 +16,8 @@ var OrderSchema = Schema({
         date: Date,
         lat: Number, 
         lng: Number
-    }
+    },
+    items: [{ type: Schema.Types.ObjectId, ref: 'OrderItem' }]
 })
 OrderSchema.plugin(timestamp)
 module.exports = mongoose.model('Order', OrderSchema)

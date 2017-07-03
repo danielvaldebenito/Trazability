@@ -11,5 +11,7 @@ var DependenceSchema = Schema({
     isPlant: { type: Boolean, default: false },
     distributor: { type: Schema.ObjectId, ref: 'Distributor' },
 })
+
+
 DependenceSchema.plugin(timestamp)
 module.exports = mongoose.model('Dependence', DependenceSchema)

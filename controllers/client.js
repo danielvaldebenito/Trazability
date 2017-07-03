@@ -6,10 +6,10 @@ var pagination = require('mongoose-pagination')
 var Client = require('../models/client')
 
 function getAll(req, res) {
-    var page = req.params.page || 1
-    var limit = req.param.limit || 200
-    var sidx = req.params.sidx || '_id'
-    var sord = req.params.sord || 1
+    var page = parseInt(req.query.page) || 1
+    var limit = parseInt(req.query.limit) || 200
+    var sidx = req.query.sidx || '_id'
+    var sord = req.query.sord || 1
 
     Client.find()
             .sort([[sidx, sord]])

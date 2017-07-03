@@ -12,10 +12,10 @@ var Document = require('../models/document')
 var Delivery = require('../models/delivery')
 
 function getAll(req, res) {
-    var page = req.params.page || 1
-    var limit = req.param.limit || 200
-    var sidx = req.params.sidx || '_id'
-    var sord = req.params.sord || 1
+    var page = parseInt(req.query.page) || 1
+    var limit = parseInt(req.query.limit) || 200
+    var sidx = req.query.sidx || '_id'
+    var sord = req.query.sord || 1
 
     Sale.find()
             .sort([[sidx, sord]])
@@ -77,7 +77,6 @@ function saveOne (req, res) {
         sale.document = params.document
         var delivery = JSON.parse(params.delivery)
         var items = params.itemsSale
-        console.log('apunto de guardar todo ', params)
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

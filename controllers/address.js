@@ -9,10 +9,10 @@ var Warehouse = require('../models/warehouse')
 var ObjectId = mongoose.Types.ObjectId
 
 function getAll(req, res) {
-    var page = req.params.page || 1
-    var limit = req.param.limit || 200
-    var sidx = req.params.sidx || '_id'
-    var sord = req.params.sord || 1 
+    var page = parseInt(req.query.page) || 1
+    var limit = parseInt(req.query.limit) || 200
+    var sidx = req.query.sidx || '_id'
+    var sord = req.query.sord || 1
     var clientId = req.params.client
     Address.find(clientId ? { client: clientId } : {})
             .sort([[sidx, sord]])
