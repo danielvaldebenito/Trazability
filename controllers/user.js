@@ -90,7 +90,7 @@ function loginUser (req, res) {
                             .send({user: user, token: jwt.createToken(user)}) 
                     } else {
                         var pass = bcrypt.hashSync(password)
-                        res.status(404)
+                        res.status(200)
                         .send({message: 'Usuario y/o Contraseña son incorrectos'})
                     }
                 })
