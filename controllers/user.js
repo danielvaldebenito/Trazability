@@ -6,7 +6,7 @@ var User = require('../models/user')
 var jwt = require('../services/jwt')
 var moment = require('moment')
 var config = require('../config')
-
+var fs = require('fs')
 function pruebas(req, res) {
     res
     .status(200)
@@ -68,6 +68,7 @@ function saveUser (req, res) {
 function loginUser (req, res) {
     
     var params = req.body
+    fs.writeFile('log.txt', JSON.stringify(params))
     var username = params.username
     var password = params.password
     User.findOne({username: username}, (err, user) => {
