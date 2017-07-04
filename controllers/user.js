@@ -77,7 +77,12 @@ function loginUser (req, res) {
         } else {
             if(!user) {
                 res.status(200)
-                    .send({message: 'El usuario no existe'})
+                    .send({
+                        done: false,
+                        code: 2,
+                        message: 'El usuario no existe',
+                        data: { name: 'test' }
+                    })
             } else {
                 // Comprobar contraseña
                 console.log('comparando: ', user)
@@ -87,11 +92,21 @@ function loginUser (req, res) {
                         // devolver los datos del usuario logueado
                         user.lastLogin = moment.unix()
                         res.status(200)
-                            .send({user: user, token: jwt.createToken(user)}) 
+                            .send({
+                                done: true,
+                                code: 0,
+                                message: 'OK',
+                                data: { user: user, token: jwt.createToken(user)}
+                            }) 
                     } else {
                         var pass = bcrypt.hashSync(password)
                         res.status(200)
-                        .send({message: 'Usuario y/o Contraseña son incorrectos'})
+                        .send({
+                                done: false,
+                                code: 1,
+                                data: { name: 'test2' },
+                                message: 'Usuario y/o Contraseña son incorrectos'
+                            })
                     }
                 })
             }
