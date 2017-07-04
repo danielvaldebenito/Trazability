@@ -18,6 +18,7 @@ function pruebas(req, res) {
 function saveUser (req, res) {
     var params = req.body
     var user = new User ()
+    user.username = params.username
     user.name = params.name
     user.surname = params.surname
     user.email = params.email
