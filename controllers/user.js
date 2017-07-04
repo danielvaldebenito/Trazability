@@ -76,7 +76,7 @@ function loginUser (req, res) {
                 .send({message: 'Error en la petición'})
         } else {
             if(!user) {
-                res.status(404)
+                res.status(200)
                     .send({message: 'El usuario no existe'})
             } else {
                 // Comprobar contraseña
