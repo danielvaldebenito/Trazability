@@ -28,6 +28,9 @@ module.exports = {
         transaction: {
             types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
         },
+        vehicle: {
+            types: ['ENVASADO', 'GRANEL']
+        },
         warehouse: {
             types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACÉN', 'MERMAS', 'PROCESO_INTERNO']
         }

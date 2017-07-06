@@ -9,6 +9,7 @@ var app = express();
 var address_routes = require('./routes/address')
 var client_routes = require('./routes/client')
 var dependence_routes = require('./routes/dependence')
+var device_routes = require('./routes/device')
 var distributor_routes = require('./routes/distributor')
 var order_routes = require('./routes/order')
 var productType_routes = require('./routes/productType')
@@ -18,6 +19,9 @@ var user_routes = require('./routes/user')
 var userWarehouse_routes = require('./routes/userWarehouse')
 var vehicle_routes = require('./routes/vehicle')
 var zone_routes = require('./routes/zone')
+
+// selects route
+var selects_routes = require('./routes/selects')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -36,6 +40,7 @@ app.use((req, res, next) => {
 app.use('/api', address_routes)
 app.use('/api', client_routes)
 app.use('/api', dependence_routes)
+app.use('/api', device_routes)
 app.use('/api', distributor_routes)
 app.use('/api', order_routes)
 app.use('/api', productType_routes)
@@ -45,4 +50,6 @@ app.use('/api', user_routes)
 app.use('/api', userWarehouse_routes)
 app.use('/api', vehicle_routes)
 app.use('/api', zone_routes)
+
+app.use('/api/selects', selects_routes)
 module.exports = app

@@ -86,12 +86,12 @@ function loginUser (req, res) {
                     })
             } else {
                 // Comprobar contraseña
-                console.log('comparando: ', user)
                 bcrypt.compare(password, user.password, (error, check) => {
                     if(error) return res.status(500).send({ message: 'Ocurrió un error', error: error })
                     if(check) {
                         // devolver los datos del usuario logueado
                         user.lastLogin = moment.unix()
+                        user.save()
                         res.status(200)
                             .send({
                                 done: true,
