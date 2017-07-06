@@ -82,7 +82,7 @@ function loginUser (req, res) {
                         done: false,
                         code: 2,
                         message: 'El usuario no existe',
-                        data: { name: 'test' }
+                        data: null
                     })
             } else {
                 // Comprobar contraseña
@@ -105,7 +105,7 @@ function loginUser (req, res) {
                         .send({
                                 done: false,
                                 code: 1,
-                                data: { name: 'test2' },
+                                data: null,
                                 message: 'Usuario y/o Contraseña son incorrectos'
                             })
                     }

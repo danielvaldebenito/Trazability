@@ -30,8 +30,8 @@ function getAll(req, res) {
                         .send({ 
                             done: true, 
                             message: 'OK', 
-                            data: records, 
-                            total: total
+                            data: { records, total },  
+                            code: 0
                         })
                 })
                 
@@ -52,7 +52,8 @@ function getOne (req, res) {
                     .send({ 
                         done: true, 
                         message: 'OK', 
-                        address 
+                        data: address,
+                        code: 0 
                     })
         })
 }
@@ -74,7 +75,8 @@ function saveOne (req, res) {
                 .send({ 
                     done: true, 
                     message: 'Registro guardado exitosamente', 
-                    stored: stored
+                    data: stored,
+                    code: 0
                 })
     })
 }
@@ -90,7 +92,8 @@ function updateOne(req, res) {
                 .send({ 
                     done: true, 
                     message: 'OK', 
-                    address 
+                    data: address,
+                    code: 0
                 })
     })
 }
@@ -105,7 +108,8 @@ function deleteOne(req, res){
                 .send({ 
                     done: true, 
                     message: 'Registro eliminado', 
-                    address: deleted 
+                    data: deleted,
+                    code: 0 
                 })
     })
 }

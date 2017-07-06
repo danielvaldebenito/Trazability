@@ -15,9 +15,10 @@ function getAll(req, res) {
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
-    var distributor = req.param.distributor
+    var distributor = req.params.distributor
+    var filter = req.query.filter;
     Vehicle
-        .find()
+        .find(filter ?  { "licensePlate": { "$regex": filter, "$options": "i" } } : {})
         .sort([[sidx, sord]])
         .populate({
             path: 'warehouse',
@@ -27,11 +28,13 @@ function getAll(req, res) {
                 model: Dependence,
                 populate: {
                     path: 'distributor',
-                    model: Distributor
+                    model: Distributor,
+                    match: distributor ? {
+                        _id: distributor
+                    } : {}
                 }
             }
         })
-        .where( distributor ? { 'warehouse.dependence.distributor': distributor }: {})
         .paginate(page, limit, (err, records, total) => {
             if(err)
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
