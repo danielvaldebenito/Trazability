@@ -68,7 +68,7 @@ function loginDevice (req, res) {
     User.findOne({username: username}, (err, user) => {
         if(err) {
             res.status(500)
-                .send({message: 'Error en la petición'})
+                .send({ done: false, data: null, code: -1, message: 'Error en la petición', error: err})
         } else {
             if(!user) {
                 res.status(200)
@@ -81,7 +81,7 @@ function loginDevice (req, res) {
             } else {
                 // Comprobar contraseña
                 bcrypt.compare(password, user.password, (error, check) => {
-                    if(error) return res.status(500).send({ message: 'Ocurrió un error', error: error })
+                    if(error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })
                     if(check) {
                         // devolver los datos del usuario logueado
                         user.lastLogin = moment.unix()
@@ -90,7 +90,7 @@ function loginDevice (req, res) {
                         if(esn) {
                             Device.findOne({ esn: esn }, (err, device) => {
                                 if(err)
-                                    return res.status(500).send({done: false, code: 1, data: null, message: 'Error al buscar PDA'})
+                                    return res.status(500).send({done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err})
                                 if(!device)
                                 {
                                     // crearlo
@@ -100,21 +100,21 @@ function loginDevice (req, res) {
                                         user: user._id
                                     })
                                     dev.save((error, devStored) => {
-                                        if(error) return res.status(500).send({done: false, code: 1, data: null, message: 'Error al guardar PDA'})
-                                        if(!devStored) return res.status(404).send({done: false, code: 2, data: null, message: 'Error al guardar PDA'})
+                                        if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
+                                        if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
                                         
                                         return res.status(200)
-                                                    .send({done: false, code: 0, data: { user: user, token: jwt.createToken(user), devStored }, message: 'OK'})
+                                                    .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), devStored }, message: 'OK'})
                                     })
                                 } else {
                             
                                     device.user = user._id
                                     device.save((error, updatedDevice) => {
-                                        if(error) return res.status(500).send({done: false, code: 3, data: null, message: 'Error al actualizar PDA'})
+                                        if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error})
                                         if(!updatedDevice) return res.status(404).send({done: false, code: 4, data: null, message: 'Error al actualizar PDA'})
                                         
                                         return res.status(200)
-                                                    .send({done: false, code: 0, data: { user: user, token: jwt.createToken(user), updatedDevice }, message: 'OK'})
+                                                    .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), updatedDevice }, message: 'OK'})
                                     })
                                 }
 
@@ -135,7 +135,7 @@ function loginDevice (req, res) {
                         var pass = bcrypt.hashSync(password)
                         res.status(200)
                         .send({
-                                done: false,
+                                done: true,
                                 code: 1,
                                 data: null,
                                 message: 'Usuario y/o Contraseña son incorrectos'
