@@ -148,23 +148,21 @@ function loginDevice (req, res) {
 }
 
 function getConfig (req, res) {
-    var params = req.body
-    var deviceId = params.id
-    DeviceConfig.find({ device: deviceId })
-            .exec((err, records) => {
-                if(err)
-                    return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
-                if(!records)
-                    return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
-                
-                return res
-                    .status(200)
-                    .send({ 
-                        done: true, 
-                        message: 'OK', 
-                        data: records
-                    })
+    var type = req.params.app;
+    DeviceConfig.find({ app: type }, (err, records) => {
+        if(err)
+            return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+        if(!records)
+            return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+        
+        return res
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'OK', 
+                data: records
             })
+    })
 }
 module.exports = {
     pruebas,

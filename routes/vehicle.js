@@ -5,7 +5,7 @@ var md_auth = require('../middlewares/authenticated')
 var md_wh = require('../middlewares/warehouse')
 var api = express.Router()
 
-api.get('/vehicle/:distributor?/', md_auth.ensureAuth, VehicleController.getAll)
+api.get('/vehicles/:distributor?/', md_auth.ensureAuth, VehicleController.getAll)
 api.get('/vehicle/:id', md_auth.ensureAuth, VehicleController.getOne)
 api.post('/vehicle/', [md_auth.ensureAuth, md_wh.createVehicleWarehouse], VehicleController.saveOne)
 api.put('/vehicle/:id', md_auth.ensureAuth, VehicleController.updateOne)

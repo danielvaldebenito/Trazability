@@ -55,7 +55,7 @@ function getAll(req, res) {
 }
 function getOne (req, res) {
     var id = req.params.id
-    Distributor.findById(id)
+    Vehicle.findById(id)
         .exec((err, record) => {
             if(err) return res.status(500).send({ done: false, message: 'Error en la petición'})
             if(!record) return res.status(404).send({ done: false, message: 'No se pudo obtener el registro'})
