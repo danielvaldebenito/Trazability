@@ -151,14 +151,15 @@ function getConfig (req, res) {
     var type = req.params.app;
     DeviceConfig.find({ app: type }, (err, records) => {
         if(err)
-            return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+            return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
         if(!records)
-            return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+            return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
         
         return res
             .status(200)
             .send({ 
-                done: true, 
+                done: true,
+                code: 0,
                 message: 'OK', 
                 data: records
             })
