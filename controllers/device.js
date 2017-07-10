@@ -40,7 +40,7 @@ function registerDevice(req, res) {
                 if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
                 
                 return res.status(200)
-                            .send({done: false, code: 0, data: devStored, message: 'OK'})
+                            .send({done: true, code: 0, data: devStored, message: 'OK'})
             })
         } else {
             // actualizar
@@ -52,7 +52,7 @@ function registerDevice(req, res) {
                 if(!updatedDevice) return res.status(404).send({done: false, code: 6, data: null, message: 'Error al actualizar PDA'})
                 
                 return res.status(200)
-                            .send({done: false, code: 0, data: updatedDevice, message: 'OK'})
+                            .send({done: true, code: 0, data: updatedDevice, message: 'OK'})
             })
         }
 
@@ -73,7 +73,7 @@ function loginDevice (req, res) {
             if(!user) {
                 res.status(200)
                     .send({
-                        done: false,
+                        done: true,
                         code: 2,
                         message: 'El usuario no existe',
                         data: null
