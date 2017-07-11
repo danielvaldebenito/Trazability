@@ -6,16 +6,33 @@ var pagination = require('mongoose-pagination')
 var moment = require('moment')
 var Order = require('../models/order')
 var OrderItem = require('../models/orderItem')
-
+var Warehouse = require('../models/warehouse')
+var Distributor = require('../models/distributor')
+var Dependence = require('../models/dependence')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
+    var distributor = req.params.distributor
 
     Order.find()
             .sort([[sidx, sord]])
-            .populate('originWarehouse')
+            .populate(
+            {
+                path: 'originWarehouse',
+                model: Warehouse,
+                match: { 'dependence': { $ne: null } },
+                populate: {
+                    path: 'dependence',
+                    populate: {
+                        path: 'distributor',
+                        match: {
+                            '_id': distributor
+                        }
+                    }
+                }
+            })
             .populate('destinyWarehouse')
             .paginate(page, limit, (err, records, total) => {
                 if(err)

@@ -10,7 +10,23 @@ function getvehicleTypes (req, res) {
             data: types
         })
 }
+function initialDataToDevice(req, res) {
+    var reasons = config.entitiesSettings.order.reasons;
+    var paymentMethods = config.entitiesSettings.sale.paymentMethods;
 
+    return res
+            .status(200)
+            .send({
+                done: true,
+                code: 0,
+                data: {
+                    reasons,
+                    paymentMethods
+                },
+                message: 'OK'
+            })
+}
 module.exports = {
-    getvehicleTypes
+    getvehicleTypes,
+    initialDataToDevice
 }
