@@ -4,19 +4,33 @@ var path = require('path')
 var mongoose = require('mongoose')
 var pagination = require('mongoose-pagination')
 var moment = require('moment')
+moment.locale('es')
 var Order = require('../models/order')
 var OrderItem = require('../models/orderItem')
 var Warehouse = require('../models/warehouse')
 var Distributor = require('../models/distributor')
 var Dependence = require('../models/dependence')
+
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
+    var state = req.query.state
+    var date = req.query.date;
+    var date1 = !date ? '': date + 'T00:00:00.000Z'
+    var date2 = !date ? '' : date + 'T23:59:59.999Z'
+    var filter = req.query.filter
     var distributor = req.params.distributor
-
-    Order.find()
+    
+    Order.find(state ? { status: state } : {})
+            .where(date ? 
+                { 
+                    createdAt: {
+                        "$gte": moment(date1), 
+                        "$lt": moment(date2)
+                    }
+                } : {})
             .sort([[sidx, sord]])
             .populate(
             {
@@ -40,6 +54,11 @@ function getAll(req, res) {
                 if(!records)
                     return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
                 
+                if(filter)
+                    records = records.filter(r => { 
+                        return r.originWarehouse.name.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 
+                            || r.destinyWarehouse.name.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 
+                    })
                 return res
                     .status(200)
                     .send({ 

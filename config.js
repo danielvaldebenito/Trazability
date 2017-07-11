@@ -16,7 +16,7 @@ module.exports = {
         },
         order: {
             types: ['ENVASADO', 'GRANEL'],
-            status: ['RECIBIDO', 'ASIGNADO A VEHÍCULO', 'RECIBIDO EN RUTA', 'ENTREGADO', 'NO ENTREGADO'],
+            status: ['RECIBIDO', 'ASIGNADO', 'EN RUTA', 'ENTREGADO', 'CANCELADO'],
             reasons: ['PICO','ZORRA','CULO']
         },
         sale: {
