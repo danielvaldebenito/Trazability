@@ -6,5 +6,5 @@ var md_auth = require('../middlewares/authenticated')
 var api = express.Router()
 
 api.get('/vehicleTypes', md_auth.ensureAuth, SelectController.getvehicleTypes)
-api.get('/inicialdata', md_auth.ensureAuth, SelectController.initialDataToDevice)
+api.get('/inicialdata/:distributor', md_auth.ensureAuth, SelectController.initialDataToDevice)
 module.exports = api;

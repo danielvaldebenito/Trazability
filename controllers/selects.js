@@ -11,6 +11,7 @@ function getvehicleTypes (req, res) {
         })
 }
 function initialDataToDevice(req, res) {
+    var distributor = req.params.distributor;
     var reasons = config.entitiesSettings.order.reasons;
     var paymentMethods = config.entitiesSettings.sale.paymentMethods;
 
