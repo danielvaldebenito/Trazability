@@ -7,4 +7,5 @@ var api = express.Router()
 
 api.get('/vehicleTypes', md_auth.ensureAuth, SelectController.getvehicleTypes)
 api.get('/inicialdata/:distributor', md_auth.ensureAuth, SelectController.initialDataToDevice)
+api.get('/country', md_auth.ensureAuth, SelectController.getCountryData)
 module.exports = api;

@@ -50,9 +50,9 @@ function getAll(req, res) {
             .populate('destinyWarehouse')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
-                    return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+                    return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
                 if(!records)
-                    return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+                    return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
                 
                 if(filter)
                     records = records.filter(r => { 
@@ -65,7 +65,8 @@ function getAll(req, res) {
                         done: true, 
                         message: 'OK', 
                         data: records, 
-                        total: total
+                        total: total,
+                        code: 0
                     })
                 
                 

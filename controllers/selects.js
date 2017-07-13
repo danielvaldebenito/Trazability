@@ -1,6 +1,6 @@
 'use strict'
 var config = require('../config');
-
+var fs = require('fs')
 // .../api/select/vehicleTypes
 function getvehicleTypes (req, res) {
     var types = config.entitiesSettings.vehicle.types;
@@ -27,7 +27,15 @@ function initialDataToDevice(req, res) {
                 message: 'OK'
             })
 }
+
+function getCountryData (req, res) {
+    var data = JSON.parse(fs.readFileSync('./pais.json'))
+    return res.status(200).send({data})
+}
+
+
 module.exports = {
     getvehicleTypes,
-    initialDataToDevice
+    initialDataToDevice,
+    getCountryData
 }
