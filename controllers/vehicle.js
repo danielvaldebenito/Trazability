@@ -30,7 +30,7 @@ function getAll(req, res) {
                     path: 'distributor',
                     model: Distributor,
                     match: distributor ? {
-                        _id: distributor
+                        '_id': distributor
                     } : {}
                 }
             }
@@ -56,6 +56,7 @@ function getAll(req, res) {
 function getOne (req, res) {
     var id = req.params.id
     Vehicle.findById(id)
+        .populate('warehouse')
         .exec((err, record) => {
             if(err) return res.status(500).send({ done: false, message: 'Error en la petición'})
             if(!record) return res.status(404).send({ done: false, message: 'No se pudo obtener el registro'})
@@ -115,12 +116,13 @@ function deleteOne(req, res){
         if(!deleted) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
         
         return res
-                .status(200)
-                .send({ 
-                    done: true, 
-                    message: 'Registro eliminado', 
-                    deleted 
-                })
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'Registro eliminado', 
+                deleted 
+            })
+        
     })
 }
 

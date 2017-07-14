@@ -10,7 +10,7 @@ var OrderItem = require('../models/orderItem')
 var Warehouse = require('../models/warehouse')
 var Distributor = require('../models/distributor')
 var Dependence = require('../models/dependence')
-
+var Address = require('../models/address')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -47,7 +47,12 @@ function getAll(req, res) {
                     }
                 }
             })
-            .populate('destinyWarehouse')
+            .populate(
+            {
+                path: 'destinyWarehouse',
+                model: Warehouse,
+            })
+            .populate('items')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -60,18 +65,17 @@ function getAll(req, res) {
                             || r.destinyWarehouse.name.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 
                     })
                 return res
-                    .status(200)
-                    .send({ 
-                        done: true, 
-                        message: 'OK', 
-                        data: records, 
-                        total: total,
-                        code: 0
+                        .status(200)
+                        .send({ 
+                            done: true, 
+                            message: 'no entro al if', 
+                            data: records, 
+                            total: total,
+                            code: 0
+                        })
                     })
-                
-                
-            })
 }
+
 function getOne (req, res) {
     var id = req.params.id
     Order.findById(id)
@@ -94,9 +98,14 @@ function saveOne (req, res) {
 
     var order = new Order()
     var params = req.body
+    console.log('guardando pedido', params)
     order.commitmentDate = moment(params.commitmentDate, "DD-MM-YYYY");
     order.type = params.type
-    order.originWarehouse = params.originWarehouse
+    if(params.originWarehouse) {
+        order.originWarehouse = params.originWarehouse;
+        order.state = 'ASIGNADO';
+    }
+    
     order.destinyWarehouse = params.destinyWarehouse
     var items = JSON.parse(req.body.items)
     order.save((err, stored) => {

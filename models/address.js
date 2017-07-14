@@ -11,7 +11,8 @@ var AddressSchema = Schema({
     coordinates: {
         lat: Number,
         lng: Number
-    }
+    },
+    placeId: String
 })
 AddressSchema.plugin(timestamp)
 module.exports = mongoose.model('Address', AddressSchema)
