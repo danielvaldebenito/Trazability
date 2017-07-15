@@ -31,28 +31,12 @@ function getAll(req, res) {
                         "$lt": moment(date2)
                     }
                 } : {})
+            .where(distributor ? { distributor: distributor } : {})
             .sort([[sidx, sord]])
-            .populate(
-            {
-                path: 'originWarehouse',
-                model: Warehouse,
-                match: { 'dependence': { $ne: null } },
-                populate: {
-                    path: 'dependence',
-                    populate: {
-                        path: 'distributor',
-                        match: {
-                            '_id': distributor
-                        }
-                    }
-                }
-            })
-            .populate(
-            {
-                path: 'destinyWarehouse',
-                model: Warehouse,
-            })
+            .populate('originWarehouse')
+            .populate( 'destinyWarehouse')
             .populate('items')
+            .populate('distributor')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -68,14 +52,33 @@ function getAll(req, res) {
                         .status(200)
                         .send({ 
                             done: true, 
-                            message: 'no entro al if', 
+                            message: 'OK', 
                             data: records, 
                             total: total,
                             code: 0
                         })
                     })
 }
+function getDayResume (req, res) {
+    var date = req.query.date;
+    var date1 = !date ? '' : date + 'T00:00:00.000Z'
+    var date2 = !date ? '' : date + 'T23:59:59.999Z'
+    var dist = req.params.distributor;
 
+    Order.aggregate([
+        {   $match: { 
+                distributor: new mongoose.Types.ObjectId(dist),
+                createdAt : { '$gte' : moment(date1), '$lt': moment(date2) }
+             } },
+        {   $group : { _id: '$status', count: { $sum: 1 } } }
+    ])
+    .exec((e, d) => {
+        if (e) return res.status(500).send({ done: false, message: 'Error al obtener resumen', error: e, code: -1 })
+        if (!d) return res.status(404).send({ done: false, message: 'Error al obtener resumen', code: 1 })
+        return res.status(200).send({ done: true, message: 'OK', data: d, code: 0, date1, date2 })
+    })
+
+}
 function getOne (req, res) {
     var id = req.params.id
     Order.findById(id)
@@ -103,10 +106,11 @@ function saveOne (req, res) {
     order.type = params.type
     if(params.originWarehouse) {
         order.originWarehouse = params.originWarehouse;
-        order.state = 'ASIGNADO';
+        order.status = 'ASIGNADO';
     }
     
     order.destinyWarehouse = params.destinyWarehouse
+    order.distributor = params.distributor
     var items = JSON.parse(req.body.items)
     order.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
@@ -177,5 +181,6 @@ module.exports = {
     getOne,
     saveOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    getDayResume
 }  

@@ -9,6 +9,7 @@ var Schema = mongoose.Schema
 var OrderSchema = Schema({
     commitmentDate: Date,
     type: { type: String, enum: types, default: 'ENVASADO'},
+    distributor: { type: Schema.Types.ObjectId, ref: 'Distributor'}, // Distribuidor dueño del pedido
     originWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, // Vehiculo o almacén
     destinyWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, // Direccion del cliente
     status: { type: String, enum: status, default: 'RECIBIDO' },

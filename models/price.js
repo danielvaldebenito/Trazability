@@ -5,8 +5,8 @@ var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
 
 var PriceSchema = Schema({
-    priceList: { type: Schema.ObjectId, ref: 'PriceList' },
-    productType: { type: Schema.ObjectId, ref: 'ProductType' },
+    priceList: { type: Schema.Types.ObjectId, ref: 'PriceList' },
+    productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
     price: Number
 })
 PriceSchema.plugin(timestamp)

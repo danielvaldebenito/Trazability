@@ -97,15 +97,16 @@ function updateOne(req, res) {
     var id = req.params.id
     var update = req.body
     Vehicle.findByIdAndUpdate(id, update, (err, updated) => {
-        if(err) return res.status(500).send({ done: false, message: 'Error en la petición'})
-        if(!updated) return res.status(404).send({ done: false, message: 'No se pudo actualizar el registro'})
+        if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
+        if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
         
         return res
                 .status(200)
                 .send({ 
                     done: true, 
-                    message: 'OK', 
-                    updated 
+                    message: 'Registro editado exitosamente', 
+                    data: updated,
+                    code: 0
                 })
     })
 }

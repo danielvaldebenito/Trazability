@@ -21,7 +21,8 @@ exports.ensureAuth = function(req, res, next) {
     } catch (ex) {
         return res.status(404)
                     .send({
-                        message: 'Ha ocurrido un error. Token no válido'
+                        message: 'Ha ocurrido un error. Token no válido',
+                        ex: ex.toString()
                     })
     }
     req.user = payload;

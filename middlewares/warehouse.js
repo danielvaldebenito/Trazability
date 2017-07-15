@@ -59,7 +59,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
 }
 var createVehicleWarehouse = function(req, res, next) {
     var warehouse = new Warehouse()
-    warehouse.name = 'Vehicle ' + req.body.licensePlate
+    warehouse.name = req.body.licensePlate
     warehouse.dependence = req.body.dependence
     warehouse.type = 'VEHÍCULO'
     warehouse.save((err, wh) => {

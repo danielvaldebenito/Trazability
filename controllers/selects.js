@@ -3,6 +3,7 @@ var config = require('../config');
 var fs = require('fs')
 var Vehicle = require('../models/vehicle')
 var Dependence = require('../models/dependence')
+var PriceList = require('../models/priceList')
 var mongoose = require('mongoose')
 // .../api/select/vehicleTypes
 function getvehicleTypes (req, res) {
@@ -78,10 +79,27 @@ function getDependences (req, res) {
                 })
         })
 }
+function getPriceLists (req, res) {
+    var distributor = req.params.distributor;
+    PriceList.find(distributor ? { distributor: distributor } : {})
+        .exec((err, pls) => {
+            if (err) return res.status(500).send ({ done: false, code: -1, message: 'Error al obtener lista de precio', err: err});
+            if(!pls) return res.status(404).send ({ done: false, code: 1, message: 'Error. No se pudo encontrar registros'})
+            
+            return res.status(200)
+                        .send({
+                            done: true,
+                            code: 0,
+                            message: 'OK',
+                            data: pls
+                        })
+        })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
     getCountryData,
     getVehiclesToAsign,
-    getDependences
+    getDependences,
+    getPriceLists
 }

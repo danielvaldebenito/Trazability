@@ -12,4 +12,6 @@ api.get('/country', md_auth.ensureAuth, SelectController.getCountryData)
 api.get('/vehicles/:distributor?', md_auth.ensureAuth, SelectController.getVehiclesToAsign)
 /* Obtiene la totalidad de dependencias de un distribuidor */
 api.get('/dependences/:distributor?', md_auth.ensureAuth, SelectController.getDependences)
+/* Obtiene lista de precios */
+api.get('/pricelists/:distributor?', md_auth.ensureAuth, SelectController.getPriceLists)
 module.exports = api;
