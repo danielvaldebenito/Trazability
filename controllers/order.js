@@ -108,7 +108,6 @@ function saveOne (req, res) {
         order.originWarehouse = params.originWarehouse;
         order.status = 'ASIGNADO';
     }
-    
     order.destinyWarehouse = params.destinyWarehouse
     order.distributor = params.distributor
     var items = JSON.parse(req.body.items)

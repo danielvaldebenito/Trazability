@@ -7,7 +7,9 @@ var jwt = require('../services/jwt')
 var moment = require('moment')
 var config = require('../config')
 var fs = require('fs')
+
 function pruebas(req, res) {
+    
     res
     .status(200)
     .send({

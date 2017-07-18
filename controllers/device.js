@@ -102,7 +102,6 @@ function loginDevice (req, res) {
                                     dev.save((error, devStored) => {
                                         if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
                                         if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
-                                        
                                         return res.status(200)
                                                     .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), devStored }, message: 'OK'})
                                     })

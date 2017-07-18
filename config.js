@@ -2,6 +2,7 @@ module.exports = {
     secretjwt: 'commzgate1548',
     daysExpToken: 30,
     autocreateDecreaseWarehouse: true,
+    googleApiKey: 'AIzaSyCdo5HgF-LydsGMOxv4QEuSo9G24DlfgDU',
     database: {
         name: 'trazability',
         port: process.env.PORT_DATABASE || 27017,

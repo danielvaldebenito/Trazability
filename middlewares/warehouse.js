@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
 var Warehouse = require('../models/warehouse')
 var Decrease = require('../models/decrease')
 var Address = require ('../models/address')
+var Vehicle = require ('../models/vehicle')
 /* Crea la bodega al crear una dirección */
 var createAddressWarehouse = function(req, res, next) {
     var warehouse = new Warehouse()
@@ -57,6 +58,18 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     }
     
 }
+var getWarehouseFromVehicle = function (req, res, next) {
+    if(!req.body.vehicle) {
+        next();
+    } else {
+        Vehicle.findById(req.body.vehicle, (err, veh) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware al buscar bodega del vehiculo', error: err })
+            if(!veh) return res.status(404).send({ done: false, code: 1, message: 'Error en middleware al buscar bodega del vehiculo'})
+            req.body.originWarehouse = veh.warehouse;
+            next()
+        })
+    }
+}
 var createVehicleWarehouse = function(req, res, next) {
     var warehouse = new Warehouse()
     warehouse.name = req.body.licensePlate
@@ -95,5 +108,6 @@ module.exports = {
     createAddressWarehouse,
     createVehicleWarehouse,
     createStoreWarehouse,
-    createAddressWarehouseForOrder
+    createAddressWarehouseForOrder,
+    getWarehouseFromVehicle
 }

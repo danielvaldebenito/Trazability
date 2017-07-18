@@ -11,6 +11,8 @@ var client_routes = require('./routes/client')
 var dependence_routes = require('./routes/dependence')
 var device_routes = require('./routes/device')
 var distributor_routes = require('./routes/distributor')
+var georeference_request_routes = require('./routes/georeferenceRequest')
+var georeference_routes = require('./routes/georeference')
 var order_routes = require('./routes/order')
 var priceList_routes = require('./routes/priceList')
 var productType_routes = require('./routes/productType')
@@ -43,6 +45,8 @@ app.use('/api', client_routes)
 app.use('/api', dependence_routes)
 app.use('/api', device_routes)
 app.use('/api', distributor_routes)
+app.use('/api', georeference_request_routes)
+app.use('/api', georeference_routes)
 app.use('/api', order_routes)
 app.use('/api', priceList_routes)
 app.use('/api', productType_routes)
@@ -54,4 +58,15 @@ app.use('/api', vehicle_routes)
 app.use('/api', zone_routes)
 
 app.use('/api/selects', selects_routes)
+
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./trazabilidad-10793-firebase-adminsdk-ez6v0-5c76ecda7c");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://trazabilidad-10793.firebaseio.com"
+});
+
 module.exports = app
