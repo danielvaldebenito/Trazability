@@ -181,11 +181,38 @@ function getImageFile(req, res) {
         }
     })
 }
+
+function getUsers (req, res){
+    var distributor = req.params.distributor;
+    var page = parseInt(req.query.page) || 1
+    var limit = parseInt(req.query.limit) || 200
+    var sidx = req.query.sidx || '_id'
+    var sord = req.query.sord || 1 
+    User.find({ distributor: distributor })
+        .sort([[sidx, sord]])
+        .paginate(page, limit, (err, records, total) => {
+            if(err)
+                return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
+            if(!records)
+                return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
+            return res
+                    .status(200)
+                    .send({ 
+                        done: true, 
+                        message: 'OK', 
+                        data: { records, total },  
+                        code: 0
+                    })
+        })
+}
+
 module.exports = {
     pruebas,
     saveUser,
     loginUser,
     updateUser,
     uploadImage,
-    getImageFile
+    getImageFile,
+
+    getUsers
 }

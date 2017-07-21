@@ -14,4 +14,6 @@ api.get('/vehicles/:distributor?', md_auth.ensureAuth, SelectController.getVehic
 api.get('/dependences/:distributor?', md_auth.ensureAuth, SelectController.getDependences)
 /* Obtiene lista de precios */
 api.get('/pricelists/:distributor?', md_auth.ensureAuth, SelectController.getPriceLists)
+/* Obtiene roles de usuario */
+api.get('/roles', md_auth.ensureAuth, SelectController.getRoles)
 module.exports = api;

@@ -102,6 +102,9 @@ function loginDevice (req, res) {
                                     dev.save((error, devStored) => {
                                         if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
                                         if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
+                                        
+                                        user.device = devStored._id;
+                                        user.save()
                                         return res.status(200)
                                                     .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), devStored }, message: 'OK'})
                                     })
@@ -111,6 +114,8 @@ function loginDevice (req, res) {
                                     device.save((error, updatedDevice) => {
                                         if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error})
                                         if(!updatedDevice) return res.status(404).send({done: false, code: 4, data: null, message: 'Error al actualizar PDA'})
+                                        user.device = updatedDevice._id;
+                                        user.save()
                                         return res.status(200)
                                                     .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), updatedDevice }, message: 'OK'})
                                     })

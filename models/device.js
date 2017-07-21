@@ -12,7 +12,7 @@ var DeviceSchema = Schema({
     entryStatus: Number,
     status: Number,
     logDate: Date,
-    user: { type: Schema.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
 })
 DeviceSchema.plugin(timestamp)
 module.exports = mongoose.model('Device', DeviceSchema)

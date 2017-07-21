@@ -30,6 +30,9 @@ module.exports = {
         transaction: {
             types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN']
         },
+        user: {
+            roles: ['ADMIN', 'VEHÍCULO', 'OPERADOR PLANTA']
+        },
         vehicle: {
             types: ['ENVASADO', 'GRANEL']
         },

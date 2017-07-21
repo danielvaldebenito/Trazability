@@ -95,11 +95,22 @@ function getPriceLists (req, res) {
                         })
         })
 }
+function getRoles (req, res) {
+    var roles = config.entitiesSettings.user.roles;
+    return res.status(200)
+                .send ({
+                    done: true,
+                    code: 0,
+                    message: 'OK',
+                    data: roles
+                })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
     getCountryData,
     getVehiclesToAsign,
     getDependences,
-    getPriceLists
+    getPriceLists,
+    getRoles
 }

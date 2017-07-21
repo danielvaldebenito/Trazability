@@ -86,7 +86,7 @@ function getForRequest(req, res) {
                                                     .status(200)
                                                     .send({ 
                                                         done: true, 
-                                                        code: 1, 
+                                                        code: 0, 
                                                         data: { minor, minorDistanceDevice, minorText, veh }, 
                                                         message: 'OK' 
                                                     })
