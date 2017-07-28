@@ -21,7 +21,8 @@
     "moment": "^2.18.1",
     "mongoose": "^4.10.4",
     "mongoose-pagination": "^1.0.0",
-    "mongoose-timestamp": "^0.6.0"
+    "mongoose-timestamp": "^0.6.0",
+    "sendgrid": "^5.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

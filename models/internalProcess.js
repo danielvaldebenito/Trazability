@@ -5,7 +5,7 @@ var timestamp = require('mongoose-timestamp')
 
 var Schema = mongoose.Schema
 var InternalProcessSchema = Schema({
-    internalProcessType: { type: Schema.ObjectId, ref: 'Warehouse'},
+    internalProcessType: { type: Schema.Types.ObjectId, ref: 'InternalProcessType'},
     warehouse: { type: Schema.ObjectId, ref: 'Warehouse'}
 })
 InternalProcessSchema.plugin(timestamp)

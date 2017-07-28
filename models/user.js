@@ -9,14 +9,21 @@ var UserSchema = Schema({
     surname: String,
     email: String,
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String },
+    tempPassword: String,
     image: String,
     isAdmin: { type: Boolean, default: false },
     distributor: { type: Schema.Types.ObjectId, ref: 'Distributor' },
     vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
     device: { type: Schema.Types.ObjectId, ref: 'Device' },
     lastLogin: Date,
-    rol: { type: String, enum: roles }
+    roles: [{ type: String, enum: roles }],
+    internalProcessTypes: [{ type: Schema.Types.ObjectId, ref: 'InternalProcessType'}],
+    internalProcess: [{ type: Schema.Types.ObjectId, ref: 'InternalProcess'}]
 })
 UserSchema.plugin(timestamp)
 module.exports = mongoose.model('User', UserSchema)
+
+UserSchema.post('save', () => {
+
+})

@@ -3,6 +3,10 @@ module.exports = {
     daysExpToken: 30,
     autocreateDecreaseWarehouse: true,
     googleApiKey: 'AIzaSyCdo5HgF-LydsGMOxv4QEuSo9G24DlfgDU',
+    sendGridApiKey: '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',
+    sendGridConfig: {
+        senderMail: 'daniel.valdebenito@commzgate-la.com'
+    },
     database: {
         name: 'trazability',
         port: process.env.PORT_DATABASE || 27017,

@@ -4,6 +4,7 @@ var fs = require('fs')
 var Vehicle = require('../models/vehicle')
 var Dependence = require('../models/dependence')
 var PriceList = require('../models/priceList')
+var InternalProcessType = require('../models/internalProcessType')
 var mongoose = require('mongoose')
 // .../api/select/vehicleTypes
 function getvehicleTypes (req, res) {
@@ -105,6 +106,19 @@ function getRoles (req, res) {
                     data: roles
                 })
 }
+function getInternalProcessTypes (req, res) {
+    InternalProcessType
+        .find()
+        .exec((e, data) => {
+            return res.status(200)
+                    .send({
+                        done: true,
+                        code: 0,
+                        message: 'OK',
+                        data: data
+                    })
+        })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -112,5 +126,6 @@ module.exports = {
     getVehiclesToAsign,
     getDependences,
     getPriceLists,
-    getRoles
+    getRoles,
+    getInternalProcessTypes
 }

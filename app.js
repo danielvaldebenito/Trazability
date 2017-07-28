@@ -23,6 +23,7 @@ var userWarehouse_routes = require('./routes/userWarehouse')
 var vehicle_routes = require('./routes/vehicle')
 var zone_routes = require('./routes/zone')
 
+var test_routes = require('./routes/test')
 // selects route
 var selects_routes = require('./routes/selects')
 
@@ -56,6 +57,8 @@ app.use('/api', user_routes)
 app.use('/api', userWarehouse_routes)
 app.use('/api', vehicle_routes)
 app.use('/api', zone_routes)
+
+app.use('/api/test', test_routes)
 
 app.use('/api/selects', selects_routes)
 

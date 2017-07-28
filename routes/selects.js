@@ -16,4 +16,6 @@ api.get('/dependences/:distributor?', md_auth.ensureAuth, SelectController.getDe
 api.get('/pricelists/:distributor?', md_auth.ensureAuth, SelectController.getPriceLists)
 /* Obtiene roles de usuario */
 api.get('/roles', md_auth.ensureAuth, SelectController.getRoles)
+
+api.get('/internal-process-types', md_auth.ensureAuth, SelectController.getInternalProcessTypes)
 module.exports = api;
