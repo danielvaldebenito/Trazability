@@ -14,9 +14,11 @@ function getAll(req, res) {
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
-    
+    var filter = req.query.filter
     var distributor = req.param.distributor
-    Dependence.find( distributor ? { distributor : distributor } : {})
+    Dependence
+            .find( distributor ? { distributor : distributor } : {})
+            .where ( filter ? { name: { $regex: filter, $options: 'i' } }: {})
             .sort([[sidx, sord]])
             .populate({ path: 'distributor', model: Distributor })
             .paginate(page, limit, (err, records, total) => {
@@ -90,7 +92,7 @@ function saveOne (req, res) {
                                 done: true, 
                                 message: 'Registro guardado exitosamente', 
                                 stored: stored,
-                                warehouse: wh,
+                                mermas: wh,
                                 decrease: dc
                             })
                 })
@@ -123,7 +125,7 @@ function updateOne(req, res) {
                 .status(200)
                 .send({ 
                     done: true, 
-                    message: 'OK', 
+                    message: 'Registro actualizado exitosamente', 
                     updated 
                 })
     })

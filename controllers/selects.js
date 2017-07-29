@@ -1,6 +1,7 @@
 'use strict'
 var config = require('../config');
 var fs = require('fs')
+var User = require('../models/user')
 var Vehicle = require('../models/vehicle')
 var Dependence = require('../models/dependence')
 var PriceList = require('../models/priceList')
@@ -119,6 +120,22 @@ function getInternalProcessTypes (req, res) {
                     })
         })
 }
+function getUsersFromRol (req, res) {
+    var rol = req.params.rol
+    var distributor = req.params.distributor
+    User.find({ roles: rol, distributor: distributor })
+        .exec((err, users) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', err: err})
+            if(!users) return res.status(404).send({ done: false, code: 1, message: 'No se ha encontrado usuarios'})
+            return res.status(200)
+                    .send({
+                        done: true,
+                        code: 0,
+                        message: 'OK',
+                        data: users
+                    })
+        })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -127,5 +144,6 @@ module.exports = {
     getDependences,
     getPriceLists,
     getRoles,
-    getInternalProcessTypes
+    getInternalProcessTypes,
+    getUsersFromRol
 }

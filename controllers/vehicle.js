@@ -1,9 +1,9 @@
-
 'use strict'
 
 var path = require('path')
 var mongoose = require('mongoose')
 var pagination = require('mongoose-pagination')
+var User = require('../models/user')
 var Vehicle = require('../models/vehicle')
 var Warehouse = require('../models/warehouse')
 var Dependence = require('../models/dependence')
@@ -35,6 +35,7 @@ function getAll(req, res) {
                 }
             }
         })
+        .populate('user')
         .paginate(page, limit, (err, records, total) => {
             if(err)
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
@@ -79,11 +80,25 @@ function saveOne (req, res) {
     vehicle.capacity = params.capacity
     vehicle.type = params.type
     vehicle.warehouse = params.warehouse
+    vehicle.user = params.user
+    
     vehicle.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
-        // Creating decrease warehouse
         
+        if(params.user) {
+            User.findByIdAndUpdate(params.user, { vehicle: stored._id }, (err, updatedUser) => {
+                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario seleccionado', error: err })
+            })
+            Vehicle.update(
+                { user: params.user, _id: { $ne: stored._id }}, 
+                { user: undefined }, 
+                { multi: true }, 
+                (err, raw) => {
+                    if(err) console.log(err)
+                    console.log('raw', raw)
+            })
+        }
         return res
                 .status(200)
                 .send({ 
@@ -99,7 +114,19 @@ function updateOne(req, res) {
     Vehicle.findByIdAndUpdate(id, update, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
-        
+        if(update.user) {
+            User.findByIdAndUpdate(update.user, { vehicle: updated._id }, (err, updatedUser) => {
+                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario seleccionado', error: err })
+            })
+            Vehicle.update(
+                { user: update.user, _id: { $ne: updated._id }}, 
+                { user: undefined }, 
+                { multi: true }, 
+                (err, raw) => {
+                    if(err) console.log(err)
+                    console.log('raw', raw)
+            })
+        }
         return res
                 .status(200)
                 .send({ 

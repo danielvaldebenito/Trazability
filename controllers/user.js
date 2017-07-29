@@ -88,7 +88,10 @@ function loginUser (req, res) {
     var params = req.body
     var username = params.username
     var password = params.password
-    User.findOne({username: username}, (err, user) => {
+    User
+        .findOne({username: username})
+        .populate('distributor')
+        .exec((err, user) => {
         if(err) {
             res.status(500)
                 .send({message: 'Error en la petición'})
