@@ -311,3 +311,7 @@
 {"level":"info","message":"Overriding 'Express' logger","timestamp":"2017-08-01T15:09:36.209Z"}
 {"level":"info","message":"Overriding 'Express' logger","timestamp":"2017-08-01T15:34:43.609Z"}
 {"level":"info","message":"Overriding 'Express' logger","timestamp":"2017-08-01T15:35:44.767Z"}
+{"level":"info","message":"Overriding 'Express' logger","timestamp":"2017-08-01T15:55:58.518Z"}
+{"level":"info","message":"::1 - - [01/Aug/2017:15:55:59 +0000] \"GET /robots.txt HTTP/1.1\" 404 149 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36\"\n","timestamp":"2017-08-01T15:55:59.466Z"}
+{"level":"info","message":"::1 - - [01/Aug/2017:15:55:59 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3548/api/test/test\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36\"\n","timestamp":"2017-08-01T15:55:59.744Z"}
+{"level":"info","message":"Overriding 'Express' logger","timestamp":"2017-08-01T15:56:15.734Z"}

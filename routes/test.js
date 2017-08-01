@@ -5,6 +5,6 @@ var md_auth = require('../middlewares/authenticated');
 
 var api = express.Router();
 
-api.get('/test/', md_auth.ensureAuth, TestController.getList)
-api.get('/test/:id', md_auth.ensureAuth, TestController.getOne)
+api.get('/test/', TestController.getList)
+api.get('/test/:id', TestController.getOne)
 module.exports = api;
