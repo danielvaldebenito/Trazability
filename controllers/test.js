@@ -4,17 +4,20 @@ var list = [
     {
         id: 1,
         name: 'Jose Pérez',
-        age: 18
+        age: 18,
+        admin: false
     },
     {
         id: 2,
         name: 'Luis Valdés',
-        age: 31
+        age: 31,
+        admin: true
     },
     {
         id: 3,
         name: 'Ramón Fernández',
-        age: 46
+        age: 46,
+        admin: false
     }
 ]
 function getList(req, res) {
