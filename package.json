@@ -22,7 +22,9 @@
     "mongoose": "^4.10.4",
     "mongoose-pagination": "^1.0.0",
     "mongoose-timestamp": "^0.6.0",
-    "sendgrid": "^5.2.0"
+    "morgan": "^1.8.2",
+    "sendgrid": "^5.2.0",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

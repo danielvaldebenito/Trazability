@@ -5,9 +5,10 @@ var timestamp = require('mongoose-timestamp')
 
 var Schema = mongoose.Schema
 var FolioRankSchema = Schema({
-    distributor: { type: Schema.ObjectId, ref: 'Distributor'},
+    distributor: { type: Schema.Types.ObjectId, ref: 'Distributor'},
     start: Number,
-    end: Number
+    end: Number,
+    folios: [{ type: Schema.Types.ObjectId, ref: 'Folio'}]
 })
 FolioRankSchema.plugin(timestamp)
 module.exports = mongoose.model('FolioRank', FolioRankSchema)

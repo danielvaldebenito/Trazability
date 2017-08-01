@@ -1,9 +1,10 @@
 'use strict'
-
+var fs = require('fs')
+var path = require('path')
 var express = require('express')
 var bodyParser = require('body-parser')
 var app = express();
-
+var logger = require("./logger");
 // create routes
 
 var address_routes = require('./routes/address')
@@ -11,6 +12,7 @@ var client_routes = require('./routes/client')
 var dependence_routes = require('./routes/dependence')
 var device_routes = require('./routes/device')
 var distributor_routes = require('./routes/distributor')
+var folio_routes = require('./routes/folio')
 var georeference_request_routes = require('./routes/georeferenceRequest')
 var georeference_routes = require('./routes/georeference')
 var order_routes = require('./routes/order')
@@ -46,6 +48,7 @@ app.use('/api', client_routes)
 app.use('/api', dependence_routes)
 app.use('/api', device_routes)
 app.use('/api', distributor_routes)
+app.use('/api', folio_routes)
 app.use('/api', georeference_request_routes)
 app.use('/api', georeference_routes)
 app.use('/api', order_routes)
@@ -62,11 +65,12 @@ app.use('/api/test', test_routes)
 
 app.use('/api/selects', selects_routes)
 
-
+// LOG
+app.use(require('morgan')('combined',{ "stream": logger.stream }));
+logger.info("Overriding 'Express' logger");
+// FIREBASE
 var admin = require("firebase-admin");
-
 var serviceAccount = require("./trazabilidad-10793-firebase-adminsdk-ez6v0-5c76ecda7c");
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://trazabilidad-10793.firebaseio.com"
