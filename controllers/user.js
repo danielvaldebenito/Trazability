@@ -26,7 +26,6 @@ function saveUser (req, res) {
     user.surname = params.surname
     user.email = params.email
     user.isAdmin = params.isAdmin || false
-    user.email = params.email
     user.distributor = params.distributor
     
     var roles = params.roles

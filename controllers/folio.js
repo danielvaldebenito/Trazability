@@ -12,9 +12,11 @@ function getAll (req, res) {
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
     var distributor = req.params.distributor
-
+    var filter = parseInt(req.query.filter) || null
     FolioRank
         .find({ distributor: distributor })
+        .where(filter? { start: { $lte: filter }, end: { $gte: filter } }: {})
+        .populate('folios')
         .sort([[sidx, sord]])
         .paginate(page, limit, (err, records, total) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', err })

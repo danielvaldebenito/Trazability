@@ -1,0 +1,3 @@
+[32minfo[39m: Overriding 'Express' logger
+La conexión a la Base de datos corriendo correctamente { name: 'trazability', port: 27017, server: 'localhost' }
+Servidor corriendo correctamente en el puerto 3548
