@@ -136,6 +136,13 @@ function getUsersFromRol (req, res) {
                     })
         })
 }
+function getOrderStates (req, res) {
+    var states = config.entitiesSettings.order.status;
+    return res.status(200).send({done: true,
+                        code: 0,
+                        message: 'OK',
+                        data: states})
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -145,5 +152,6 @@ module.exports = {
     getPriceLists,
     getRoles,
     getInternalProcessTypes,
-    getUsersFromRol
+    getUsersFromRol,
+    getOrderStates
 }

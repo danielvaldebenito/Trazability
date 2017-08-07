@@ -8,6 +8,10 @@ var types = config.entitiesSettings.order.types;
 var Schema = mongoose.Schema
 var OrderSchema = Schema({
     commitmentDate: Date,
+    client: { type: Schema.Types.ObjectId, ref: 'Client' },
+    address: { type: Schema.Types.ObjectId, ref: 'Address' },
+    vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle'},
+    phone: { type: String},
     type: { type: String, enum: types, default: 'ENVASADO'},
     distributor: { type: Schema.Types.ObjectId, ref: 'Distributor'}, // Distribuidor dueño del pedido
     originWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, // Vehiculo o almacén

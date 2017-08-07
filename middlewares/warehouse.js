@@ -19,6 +19,20 @@ var createAddressWarehouse = function(req, res, next) {
         next();
     })
 }
+var createAddressFromClient = function (req, res, next) {
+    var address = new Address()
+    var params = req.body
+    address.location = params.address
+    address.client = params.client
+    address.warehouse = params.warehouse
+    address.coordinates = params.coordinates
+    address.save((err, add) => {
+        if(err) return res.status(500).send({ message: 'Error en middleware al crear dirección', error: err })
+        if(!add) return res.status(500).send({ message: 'Error en middleware al crear dirección'})
+        next ()
+    })
+
+}
 /* Crea la bodega al crear una dirección en el contexto de ingresar un pedido */
 var createAddressWarehouseForOrder = function(req, res, next) {
     
@@ -33,6 +47,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al buscar placeId', error: err })
             if(record) { /* Si existe una direccion con ese placeId */
                 req.body.destinyWarehouse = record.warehouse // Se envia la bodega
+                req.body.address = record._id
                 next();
             } else { // Si no se crea una bodega y la direccion, y se envía al siguiente la bodega
                 var warehouse = new Warehouse()
@@ -49,6 +64,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     address.placeId = body.placeId
                     address.save((error, addressSaved) => {
                         req.body.destinyWarehouse = wh._id
+                        req.body.address = addressSaved._id
                         next();
                     })
                 })
@@ -108,6 +124,7 @@ module.exports = {
     createAddressWarehouse,
     createVehicleWarehouse,
     createStoreWarehouse,
+    createAddressFromClient,
     createAddressWarehouseForOrder,
     getWarehouseFromVehicle
 }

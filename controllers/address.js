@@ -13,7 +13,7 @@ function getAll(req, res) {
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
-    var clientId = req.params.client
+    var clientId = req.query.client
     Address.find(clientId ? { client: clientId } : {})
             .sort([[sidx, sord]])
             .populate({ path: 'warehouse'})

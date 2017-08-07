@@ -4,13 +4,14 @@ var moment = require('moment')
 var secret = 'commzgate1548'
 
 exports.ensureAuth = function(req, res, next) {
-    if(!req.headers.authorization) {
+    var authorization = req.headers.authorization || req.query.Authorization
+    if(!authorization) {
         return res.status(403)
                     .send({
                         message: 'La petición no tiene la cabecera de authentication'
                     })
     }
-    var token = req.headers.authorization.replace(/['"]+/g, '');
+    var token = authorization.replace(/['"]+/g, '');
     var payload;
     try {
         payload = jwt.decode(token, secret);

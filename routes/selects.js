@@ -20,4 +20,6 @@ api.get('/roles', md_auth.ensureAuth, SelectController.getRoles)
 api.get('/internal-process-types', md_auth.ensureAuth, SelectController.getInternalProcessTypes)
 /* Obtiene lista de usuarios de un distribuidor, por el rol que tienen */
 api.get('/user-rol/:distributor/:rol', md_auth.ensureAuth, SelectController.getUsersFromRol)
+/* Obtiene lista de estados de pedidos*/
+api.get('/order-states', md_auth.ensureAuth, SelectController.getOrderStates)
 module.exports = api;

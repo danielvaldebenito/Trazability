@@ -18,8 +18,12 @@ function getAll(req, res) {
     var sord = req.query.sord || 1
     var state = req.query.state
     var date = req.query.date;
-    var date1 = !date ? '': date + 'T00:00:00.000Z'
-    var date2 = !date ? '' : date + 'T23:59:59.999Z'
+    var splited = date.split('-')
+    var year = parseInt(splited[0]) 
+    var month = parseInt(splited[1])
+    var day = parseInt(splited[2])
+    var date1 = new Date(year, month - 1, day, 0, 0, 0)
+    var date2 = new Date(year, month - 1, day, 23, 59, 59)
     var filter = req.query.filter
     var distributor = req.params.distributor
     
@@ -27,8 +31,8 @@ function getAll(req, res) {
             .where(date ? 
                 { 
                     createdAt: {
-                        $gte: moment(date1), 
-                        //$lte: moment(date2)
+                        $gte: date1, 
+                        $lte: date2
                     }
                 } : {})
             .where(distributor ? { distributor: distributor } : {})
@@ -37,17 +41,16 @@ function getAll(req, res) {
             .populate('destinyWarehouse')
             .populate('items')
             .populate('distributor')
+            .populate('client')
+            .populate('address')
+            .populate('vehicle')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
                 if(!records)
                     return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
                 
-                if(filter)
-                    records = records.filter(r => { 
-                        return r.originWarehouse.name.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 
-                            || r.destinyWarehouse.name.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 
-                    })
+                
                 return res
                         .status(200)
                         .send({ 
@@ -112,6 +115,10 @@ function saveOne (req, res) {
     console.log('guardando pedido', params)
     order.commitmentDate = moment().add(1, 'hour');
     order.type = params.type
+    order.client = params.client
+    order.address = params.address
+    order.vehicle = params.vehicle
+    order.phone = params.phone
     if(params.originWarehouse) {
         order.originWarehouse = params.originWarehouse;
         order.status = 'ASIGNADO';
