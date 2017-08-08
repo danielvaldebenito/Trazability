@@ -8,9 +8,11 @@ module.exports = {
         senderMail: 'daniel.valdebenito@commzgate-la.com'
     },
     database: {
-        name: 'trazability',
+        name: 'unigastrazabilidad',
         port: process.env.PORT_DATABASE || 27017,
-        server: 'localhost'
+        server: 'localhost',
+        user: 'unigas',
+        password: '09v9085a'
     },
     entitiesSettings: {
         document: {

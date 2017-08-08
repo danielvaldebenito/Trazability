@@ -13,7 +13,9 @@ function getAll(req, res) {
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
     var filter = req.query.filter
-    Client.find({ quick: undefined })
+    Client
+        //.find({ quick: undefined })
+        .find()
         .populate('discountSurcharges')
         .where(filter ? {
             $or: [
@@ -135,7 +137,8 @@ function saveOneQuick(req, res) {
     var params = req.body
     var falseNit = Math.random().toString(36).slice(2)
     client.nit = falseNit
-    client.name = 'NN'
+    client.name = params.name
+    client.phone = params.phone
     client.address = params.address
     client.region = params.region
     client.city = params.city
