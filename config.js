@@ -24,7 +24,11 @@ module.exports = {
         order: {
             types: ['ENVASADO', 'GRANEL'],
             status: ['RECIBIDO', 'ASIGNADO', 'EN RUTA', 'ENTREGADO', 'CANCELADO'],
-            reasons: ['PICO','ZORRA','CULO']
+            reasons: ['PICO','ZORRA','CULO'],
+            delayCommitted: {
+                value: 1,
+                time: 'hour'
+            }
         },
         sale: {
             types: ['POR PEDIDO', 'CAMPANEO'],

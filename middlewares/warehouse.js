@@ -62,6 +62,10 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     address.warehouse = wh._id
                     address.coordinates = body.coordinates
                     address.placeId = body.placeId
+                    address.coordinates = {
+                        lat: body.lat,
+                        lng: body.lng
+                    }
                     address.save((error, addressSaved) => {
                         req.body.destinyWarehouse = wh._id
                         req.body.address = addressSaved._id

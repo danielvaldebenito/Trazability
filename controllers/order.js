@@ -11,6 +11,7 @@ var Warehouse = require('../models/warehouse')
 var Distributor = require('../models/distributor')
 var Dependence = require('../models/dependence')
 var Address = require('../models/address')
+var config = require('../config')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -18,7 +19,7 @@ function getAll(req, res) {
     var sord = req.query.sord || 1
     var state = req.query.state
     var date = req.query.date;
-    var splited = date.split('-')
+    var splited = date ? date.split('-') : [0,0,0]
     var year = parseInt(splited[0]) 
     var month = parseInt(splited[1])
     var day = parseInt(splited[2])
@@ -39,7 +40,7 @@ function getAll(req, res) {
             .sort([[sidx, sord]])
             .populate('originWarehouse')
             .populate('destinyWarehouse')
-            .populate('items')
+            .populate({path:'items', populate: { path: 'productType'}})
             .populate('distributor')
             .populate('client')
             .populate('address')
@@ -62,6 +63,35 @@ function getAll(req, res) {
                         })
                     })
 }
+
+function getAllVehicle (req, res) {
+    var vehicle = req.params.vehicle
+    Order.find({ vehicle: vehicle })
+        .populate({
+            path: 'items',
+            select: ['productType', 'quantity'],
+            populate: { path: 'productType', select: 'name'}
+        })
+        .populate('address')
+        .populate('client')
+        .exec((err, records) => {
+            if(err)
+                return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
+            if(!records)
+                return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
+            
+            
+            return res
+                    .status(200)
+                    .send({ 
+                        done: true, 
+                        message: 'OK', 
+                        data: records,
+                        code: 0
+                    })
+        })  
+}
+
 function getDayResume (req, res) {
     var date = req.query.date;
     var splited = date.split('-')
@@ -112,8 +142,7 @@ function saveOne (req, res) {
 
     var order = new Order()
     var params = req.body
-    console.log('guardando pedido', params)
-    order.commitmentDate = moment().add(1, 'hour');
+    order.commitmentDate = moment().add(config.entitiesSettings.order.delayCommitted.value, config.entitiesSettings.order.delayCommitted.time);
     order.type = params.type
     order.client = params.client
     order.address = params.address
@@ -193,6 +222,7 @@ function deleteOne(req, res){
 module.exports = {
     getAll,
     getOne,
+    getAllVehicle,
     saveOne,
     updateOne,
     deleteOne,
