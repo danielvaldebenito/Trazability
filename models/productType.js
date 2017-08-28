@@ -6,8 +6,7 @@ var Schema = mongoose.Schema
 var ProductTypeSchema = Schema({
     name: String,
     description: String,
-    weight: Number,
-    tare: Number
+    code: String
 })
 ProductTypeSchema.plugin(timestamp)
 

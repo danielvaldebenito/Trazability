@@ -11,6 +11,7 @@ var Warehouse = require('../models/warehouse')
 var Distributor = require('../models/distributor')
 var Dependence = require('../models/dependence')
 var Address = require('../models/address')
+var ProductType = require('../models/productType')
 var config = require('../config')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
@@ -40,7 +41,7 @@ function getAll(req, res) {
             .sort([[sidx, sord]])
             .populate('originWarehouse')
             .populate('destinyWarehouse')
-            .populate({path:'items', populate: { path: 'productType'}})
+            .populate({path:'items.productType', model: ProductType })
             .populate('distributor')
             .populate('client')
             .populate('address')
@@ -148,43 +149,26 @@ function saveOne (req, res) {
     order.address = params.address
     order.vehicle = params.vehicle
     order.phone = params.phone
+    order.observation = params.observation
+    order.payMethod = params.payMethod
     if(params.originWarehouse) {
         order.originWarehouse = params.originWarehouse;
         order.status = 'ASIGNADO';
     }
     order.destinyWarehouse = params.destinyWarehouse
     order.distributor = params.distributor
-    var items = JSON.parse(req.body.items)
+    order.items = params.items
     order.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         
-        var total = items.length
-        items.forEach((i) => {
-            var orderItem = new OrderItem({
-                order: stored._id,
-                productType: i.productType,
-                quantity: i.quantity
+        return res
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'Registro guardado exitosamente', 
+                stored: stored
             })
-            orderItem.save((errr, orderItemStored) => {
-                if(errr) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar item', error: errr })
-                stored.items.push(orderItemStored)
-                stored.save((errrr, ok) => {
-                    if(errrr) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar item', error: errr })
-                    total--;
-                    if(total == 0)
-                    {
-                        return res
-                            .status(200)
-                            .send({ 
-                                done: true, 
-                                message: 'Registro guardado exitosamente', 
-                                stored: stored
-                            })
-                    }
-                })
-            }) 
-        })
     })
 }
 function updateOne(req, res) {

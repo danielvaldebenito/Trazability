@@ -22,4 +22,6 @@ api.get('/internal-process-types', md_auth.ensureAuth, SelectController.getInter
 api.get('/user-rol/:distributor/:rol', md_auth.ensureAuth, SelectController.getUsersFromRol)
 /* Obtiene lista de estados de pedidos*/
 api.get('/order-states', md_auth.ensureAuth, SelectController.getOrderStates)
+/* Obtiene métodos de pago */
+api.get('/pay-methods', md_auth.ensureAuth, SelectController.getPayMethods)
 module.exports = api;

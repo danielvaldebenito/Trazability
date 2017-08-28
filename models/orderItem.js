@@ -7,6 +7,9 @@ var OrderItemSchema = Schema({
     order: { type: Schema.ObjectId, ref: 'Order' }, // Pedido
     productType: { type: Schema.ObjectId, ref: 'ProductType' }, // tipo de producto
     quantity: { type: Number, default: 1 }, // cantidad
+    price: Number,
+    discount: Number,
+    surcharge: Number
 })
 OrderItemSchema.plugin(timestamp)
 module.exports = mongoose.model('OrderItem', OrderItemSchema)

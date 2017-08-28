@@ -33,7 +33,19 @@ function initialDataToDevice(req, res) {
                 message: 'OK'
             })
 }
-
+function getPayMethods(req, res)
+{
+    var paymentMethods = config.entitiesSettings.sale.paymentMethods;
+    
+        return res
+                .status(200)
+                .send({
+                    done: true,
+                    code: 0,
+                    data: paymentMethods,
+                    message: 'OK'
+                })
+}
 function getCountryData (req, res) {
     var data = JSON.parse(fs.readFileSync('./pais.json'))
     return res.status(200).send({data})
@@ -153,5 +165,7 @@ module.exports = {
     getRoles,
     getInternalProcessTypes,
     getUsersFromRol,
-    getOrderStates
+    getOrderStates,
+    getPayMethods
+
 }
