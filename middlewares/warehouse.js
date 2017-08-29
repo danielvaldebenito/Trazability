@@ -7,6 +7,7 @@ var Address = require ('../models/address')
 var Vehicle = require ('../models/vehicle')
 /* Crea la bodega al crear una dirección */
 var createAddressWarehouse = function(req, res, next) {
+    console.log('createAddressWarehouse', req.body)
     var warehouse = new Warehouse()
     warehouse.name = req.body.location
     warehouse.type = 'DIRECCION_CLIENTE'
@@ -20,6 +21,7 @@ var createAddressWarehouse = function(req, res, next) {
     })
 }
 var createAddressFromClient = function (req, res, next) {
+    console.log('createAddressFromClient', req.body)
     var address = new Address()
     var params = req.body
     address.location = params.address
@@ -79,6 +81,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     
 }
 var getWarehouseFromVehicle = function (req, res, next) {
+    console.log('getWarehouseFromVehicle', req.body)
     if(!req.body.vehicle) {
         next();
     } else {
@@ -91,6 +94,7 @@ var getWarehouseFromVehicle = function (req, res, next) {
     }
 }
 var createVehicleWarehouse = function(req, res, next) {
+    console.log('createVehicleWarehouse', req.body)
     var warehouse = new Warehouse()
     warehouse.name = req.body.licensePlate
     warehouse.dependence = req.body.dependence
@@ -106,6 +110,7 @@ var createVehicleWarehouse = function(req, res, next) {
 }
 
 var createStoreWarehouse = function(req, res, next) {
+    console.log('createStoreWarehouse', req.body)
     var warehouse = new Warehouse()
     warehouse.name = 'Almacén ' + req.body.name
     warehouse.dependence = req.body.dependence

@@ -7,7 +7,10 @@ var Schema = mongoose.Schema
 var PriceListSchema = Schema({
     name: { type: String, required: true },
     distributor: { type: Schema.Types.ObjectId, ref: 'Distributor' },
-    items: [{type: Schema.Types.ObjectId, ref: 'Price'}]
+    items: [{
+        productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
+        price: Number
+    }]
 })
 PriceListSchema.plugin(timestamp)
 module.exports = mongoose.model('PriceList', PriceListSchema)

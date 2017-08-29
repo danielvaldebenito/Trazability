@@ -28,8 +28,12 @@ var zone_routes = require('./routes/zone')
 var test_routes = require('./routes/test')
 // selects route
 var selects_routes = require('./routes/selects')
+// ERP INTEGRATION
+var erp_order_routes = require('./integration/routes/order')
 
-app.use(bodyParser.urlencoded({ extended: false }))
+
+
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
@@ -65,6 +69,8 @@ app.use('/api/test', test_routes)
 
 app.use('/api/selects', selects_routes)
 
+// integration
+app.use('/api/erp', erp_order_routes);
 // LOG
 app.use(require('morgan')('combined',{ "stream": logger.stream }));
 logger.info("Overriding 'Express' logger");

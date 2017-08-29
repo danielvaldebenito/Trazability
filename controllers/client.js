@@ -54,7 +54,7 @@ function getAllFromSelect(req, res) {
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
     var filter = req.query.filter
-    Client.find()
+    Client.find({ quick: { $ne: true } })
         .where(filter ? {
             $or: [
                 { nit: { $regex: filter, $options: 'i' } },

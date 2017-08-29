@@ -16,14 +16,7 @@ function getAll(req, res) {
 
     PriceList.find({ distributor: distributor })
             .sort([[sidx, sord]])
-            .populate({ 
-                path: 'items',
-                model: Price,
-                populate: {
-                    path: 'productType',
-                    model: ProductType
-                }
-            })
+            .populate('items.productType')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -47,14 +40,7 @@ function getOne (req, res) {
     var id = req.params.id
     PriceList
         .findById(id)
-        .populate({ 
-            path: 'items',
-            model: Price,
-            populate: {
-                path: 'productType',
-                model: ProductType
-            }
-        })
+        .populate('items.productType')
         .exec( (err, record) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición'})
             if(!record) return res.status(404).send({ done: false, code: 1, message: 'No se pudo obtener el registro'})
@@ -75,46 +61,20 @@ function saveOne (req, res) {
     var params = req.body
     priceList.name = params.name
     priceList.distributor = params.distributor
-    var items = JSON.parse(req.body.items)
-    items.forEach(i => {
-        var price = new Price({
-            priceList: priceList._id,
-            productType: i.productType,
-            price: i.price
-        })
-        priceList.items.push (price);
-        price.save((errr, priceStored) => {
-            if(errr) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al guardar item', error: errr })
-            
-        }) 
-    })
+    priceList.items = params.items
+    
     priceList.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, code: 1, message: 'No ha sido posible guardar el registro' })
         
-        PriceList
-            .findById(stored._id)
-            .populate({ 
-                path: 'items',
-                model: Price,
-                populate: {
-                    path: 'productType',
-                    model: ProductType
-                }
+        return res
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'Registro guardado exitosamente', 
+                stored: stored,
+                code: 0
             })
-            .exec((err, pl) => {
-                if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al guardar', error: err })
-                
-                return res
-                .status(200)
-                .send({ 
-                    done: true, 
-                    message: 'Registro guardado exitosamente', 
-                    stored: pl,
-                    code: 0
-                })
-        })
-        
     
     })
 }

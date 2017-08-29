@@ -32,12 +32,13 @@ var OrderSchema = Schema({
         quantity: { type: Number, default: 1 }, // cantidad
         price: Number,
         discount: Number,
-        surcharge: Number 
+        surcharge: Number,
+        negotiable: { type: Number, default: 0 } 
     }],
     orderNumber: Number,
     observation: String,
-    erpIds: [Number],
-    erpOrderNumber: [Number],
+    erpId: Number,
+    erpOrderNumber: Number,
     payMethod: String
 })
 OrderSchema.plugin(timestamp)

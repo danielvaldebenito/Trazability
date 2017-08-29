@@ -11,7 +11,8 @@ var VehicleSchema = Schema({
     capacity: { type: Number, default: 0 }, // capacidad en cantidad de litros o cilindros
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     type: { type: String, enum: ['ENVASADO', 'GRANEL'], default: 'ENVASADO' },
-    warehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }
+    warehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' },
+    distributor: { type: Schema.Types.ObjectId, ref: 'Distributor' }
 })
 VehicleSchema.plugin(timestamp)
 module.exports = mongoose.model('Vehicle', VehicleSchema)

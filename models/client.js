@@ -33,7 +33,23 @@ ClientSchema.virtual("fullname").get(function()
 });
 ClientSchema.virtual("fulldata").get(function()
 {
-    var concat = `Nombre: ${this.name} ${this.surname || ''} NIT: ${this.nit || ''} Teléfono: ${this.phone || ''} Email: ${this.email || ''} Dirección: ${this.address || ''} Departamento: ${this.region || ''} Ciudad: ${this.city || ''} Contacto: ${this.contact || ''}`
+    var concat = ''
+    if(this.name || this.surname)
+        concat += `Nombre: ${this.name} ${this.surname || ''} `
+    if(this.nit)
+        concat += `NIT: ${this.nit || ''} `
+    if(this.phone)
+        concat += `Teléfono: ${this.phone || ''} `
+    if(this.email)
+        concat += `Email: ${this.email || ''} `
+    if(this.address)
+        concat += `Dirección: ${this.address || ''} `
+    if(this.region)
+        concat += `Departamento: ${this.region || ''} `
+    if(this.city)
+        concat += `Ciudad: ${this.city || ''} `
+    if(this.contact)
+        concat += `Contacto: ${this.contact || ''}`
     return concat
 });
 ClientSchema.plugin(timestamp)

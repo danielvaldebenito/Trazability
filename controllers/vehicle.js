@@ -19,23 +19,18 @@ function getAll(req, res) {
     var filter = req.query.filter;
     Vehicle
         .find(filter ?  { "licensePlate": { "$regex": filter, "$options": "i" } } : {})
+        .where(distributor ? { distributor: distributor } : {})
         .sort([[sidx, sord]])
         .populate({
             path: 'warehouse',
             model: Warehouse,
             populate: {
                 path: 'dependence',
-                model: Dependence,
-                populate: {
-                    path: 'distributor',
-                    model: Distributor,
-                    match: distributor ? {
-                        '_id': distributor
-                    } : {}
-                }
+                model: Dependence
             }
         })
         .populate('user')
+        .populate('distributor')
         .paginate(page, limit, (err, records, total) => {
             if(err)
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
@@ -81,7 +76,7 @@ function saveOne (req, res) {
     vehicle.type = params.type
     vehicle.warehouse = params.warehouse
     vehicle.user = params.user
-    
+    vehicle.distributor = params.distributor
     vehicle.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

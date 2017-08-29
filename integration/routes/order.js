@@ -11,8 +11,10 @@ api.post('/order/', [
     md_order.findClient,
     md_order.findCoord,
     md_wh.createAddressWarehouseForOrder, 
-    // getVehicle,
-    md_wh.getWarehouseFromVehicle
-], OrderController.saveOne)
+    md_order.getVehicleFromLicensePlate,
+    md_wh.getWarehouseFromVehicle,
+    md_order.getProductType,
+    
+], OrderController.saveOrderFromErpIntegration)
 
 module.exports = api;
