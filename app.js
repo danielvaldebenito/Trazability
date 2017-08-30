@@ -82,4 +82,6 @@ admin.initializeApp({
   databaseURL: "https://trazabilidad-10793.firebaseio.com"
 });
 
+
+
 module.exports = app

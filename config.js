@@ -16,6 +16,11 @@ module.exports = {
         user: 'unigas',
         password: '09v9085a'
     },
+    integration: {
+        sessionId: '',
+        username: 'sistemas@unigas.com.co.developer',
+        password: 'Sagan2020$'
+    },
     entitiesSettings: {
         document: {
             types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA']
