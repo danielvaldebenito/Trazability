@@ -5,7 +5,7 @@ var md_auth = require('../middlewares/authenticated');
 var multipart = require('connect-multiparty')
 var api = express.Router();
 var md_upload = multipart({uploadDir: './uploads/users'});
-api.get('/test', md_auth.ensureAuth, UserController.pruebas)
+api.get('/test', UserController.pruebas)
 api.post('/register', UserController.saveUser)
 api.post('/login', UserController.loginUser)
 api.put('/update-user/:id', md_auth.ensureAuth, UserController.updateUser)
