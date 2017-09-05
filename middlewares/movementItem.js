@@ -8,7 +8,7 @@ var createMovementItems = function(req, res, next) {
     
     var params = req.body
     var movement = params.movement
-    var items = JSON.parse(params.items)
+    var items = params.items
     var ids = []
     var total = items.length
     items.forEach((i) => {
@@ -22,7 +22,9 @@ var createMovementItems = function(req, res, next) {
                     {
                         var product = new Product ({
                             nif: nif,
-                            productType: i.productType
+                            productType: i.productType,
+                            createdByPda: true,
+                            createdBy: req.user.username
                         })
                         product.save ((errr, productStored) => {
                             if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})

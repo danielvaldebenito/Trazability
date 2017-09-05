@@ -2,8 +2,9 @@
 var jwt = require('jwt-simple')
 var moment = require('moment')
 var secret = 'commzgate1548'
-
+var logger = '../logger'
 exports.ensureAuth = function(req, res, next) {
+
     var authorization = req.headers.authorization || req.query.Authorization
     if(!authorization) {
         return res.status(403)

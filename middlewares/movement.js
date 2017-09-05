@@ -24,8 +24,9 @@ var createMovementFromSale = function(req, res, next) {
             transaction.save((e, t) => {
                 if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar la transaction', e})
 
+                next()
             })
-            next()
+            
         })
     })
 }

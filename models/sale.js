@@ -16,7 +16,14 @@ var SaleSchema = Schema({
     paymentMethod: { type: String, enum: paymentMethods },
     transaction: { type: Schema.Types.ObjectId, ref: 'Transaction' },
     document: { type: Schema.Types.ObjectId, ref: 'Document' },
-    items: [ { type: Schema.Types.ObjectId, ref: 'SaleItem' }],
+    items: [{
+        productType: { type: Schema.Types.ObjectId, ref: 'ProductType' }, // tipo de producto
+        quantity: { type: Number, default: 1 }, // cantidad
+        price: Number,
+        discount: { type: Number, default: 0 },
+        negotiable: Number,
+        surcharge: { type: Number, default: 0 } 
+    }],
     delivery: { type: Schema.Types.ObjectId, ref: 'Delivery' }
 })
 SaleSchema.plugin(timestamp)

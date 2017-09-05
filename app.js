@@ -5,6 +5,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var app = express();
 var logger = require("./logger");
+var soap = require('soap')
 // create routes
 
 var address_routes = require('./routes/address')
@@ -25,7 +26,7 @@ var userWarehouse_routes = require('./routes/userWarehouse')
 var vehicle_routes = require('./routes/vehicle')
 var zone_routes = require('./routes/zone')
 
-var test_routes = require('./routes/test')
+var test_integration_routes = require('./integration/routes/test')
 // selects route
 var selects_routes = require('./routes/selects')
 // ERP INTEGRATION
@@ -65,12 +66,13 @@ app.use('/api', userWarehouse_routes)
 app.use('/api', vehicle_routes)
 app.use('/api', zone_routes)
 
-app.use('/api/test', test_routes)
+app.use('/api/test', test_integration_routes)
 
 app.use('/api/selects', selects_routes)
 
 // integration
 app.use('/api/erp', erp_order_routes);
+
 // LOG
 app.use(require('morgan')('combined',{ "stream": logger.stream }));
 logger.info("Overriding 'Express' logger");
@@ -81,6 +83,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://trazabilidad-10793.firebaseio.com"
 });
+
 
 
 

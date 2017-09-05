@@ -5,6 +5,7 @@ var User = require('../models/user')
 var Vehicle = require('../models/vehicle')
 var Dependence = require('../models/dependence')
 var PriceList = require('../models/priceList')
+var ProductType = require('../models/productType')
 var InternalProcessType = require('../models/internalProcessType')
 var mongoose = require('mongoose')
 // .../api/select/vehicleTypes
@@ -20,18 +21,24 @@ function initialDataToDevice(req, res) {
     var distributor = req.params.distributor;
     var reasons = config.entitiesSettings.order.reasons;
     var paymentMethods = config.entitiesSettings.sale.paymentMethods;
-
-    return res
-            .status(200)
-            .send({
-                done: true,
-                code: 0,
-                data: {
-                    reasons,
-                    paymentMethods
-                },
-                message: 'OK'
-            })
+    ProductType.find()
+                .exec((err, pts) => {
+                    if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err})
+                    return res
+                        .status(200)
+                        .send({
+                            done: true,
+                            code: 0,
+                            data: {
+                                reasons,
+                                paymentMethods,
+                                productTypes: pts
+                            },
+                            message: 'OK'
+                        })
+                }
+            )
+    
 }
 function getPayMethods(req, res)
 {

@@ -86,6 +86,7 @@ function saveUser (req, res) {
 }
 function loginUser (req, res) {
     var params = req.body
+    console.log(params)
     var username = params.username
     var password = params.password
     User
@@ -101,7 +102,7 @@ function loginUser (req, res) {
                     .send({
                         done: false,
                         code: 2,
-                        message: 'El usuario no existe',
+                        message: 'El usuario no existe ' + username,
                         data: null
                     })
             } else {

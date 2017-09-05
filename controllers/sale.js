@@ -69,21 +69,21 @@ function saveOne (req, res) {
     try{
         var sale = new Sale()
         var params = req.body
-        sale.coordinates = JSON.parse(params.coordinates)
+        sale.coordinates = params.coordinates
         sale.done = params.done
         sale.type = params.type
         sale.paymentMethod = params.paymentMethod
         sale.transaction = params.transaction
         sale.document = params.document
-        var delivery = JSON.parse(params.delivery)
-        var items = params.itemsSale
+        var delivery = params.delivery
+        sale.items = params.saleItems
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
 
             if(delivery) {
                 var del = new Delivery({
-                    coordinates: JSON.parse(delivery.coordinates),
+                    coordinates: delivery.coordinates,
                     done: delivery.done,
                     order: delivery.order,
                     sale: stored._id
@@ -94,37 +94,14 @@ function saveOne (req, res) {
                     stored.save()
                 })
             }
-
-            var total = items.length
-            items.forEach((i) => {
-                var saleItem = new SaleItem({
-                    sale: stored._id,
-                    productType: i.productType, // tipo de producto
-                    quantity: i.quantity, // cantidad
-                    unitPrice: i.unitPrice,
-                    discount: i.discount,
-                    surcharge: i.surcharge
+            return res
+                .status(200)
+                .send({
+                    done: true,
+                    message: 'Registro guardado exitosamente',
+                    stored: stored
                 })
-                saleItem.save((errr, saleItemStored) => {
-                    if(errr) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar item', error: errr })
-                    stored.items.push(saleItemStored)
-                    stored.save((errrr, ok) => {
-                        if(errrr) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar item', error: errr })
-                        total--;
-                        if(total == 0)
-                        {
-                            return res
-                                .status(200)
-                                .send({ 
-                                    done: true, 
-                                    message: 'Registro guardado exitosamente', 
-                                    stored: stored
-                                })
-                                .end()
-                        }
-                    })
-                }) 
-            })   
+                .end()  
         })
     }
     catch(error) {

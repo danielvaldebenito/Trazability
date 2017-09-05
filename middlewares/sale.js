@@ -8,7 +8,7 @@ var Enumerable = require('linq')
 var convertMovementDetailToSaleDetail = function(req, res, next) {
     
     var movementDetail = []
-    movementDetail = JSON.parse(req.body.items)
+    movementDetail = req.body.items
 
     var saleDetail = []
 
@@ -23,7 +23,7 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
             var sItem = {
                 productType: m.productType, // tipo de producto
                 quantity: 1, // cantidad
-                unitPrice: m.unitPrice,
+                price: m.price,
                 discount: 0,
                 surcharge: 0
             }

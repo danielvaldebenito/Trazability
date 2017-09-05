@@ -4,6 +4,7 @@ var path = require('path')
 var bcrypt = require('bcrypt-nodejs')
 var User = require('../models/user')
 var Device = require('../models/device')
+var ProductType = require('../models/productType')
 var DeviceConfig = require('../models/deviceConfig')
 var jwt = require('../services/jwt')
 var moment = require('moment')
@@ -65,72 +66,141 @@ function loginDevice (req, res) {
     var username = params.username
     var password = params.password
     var esn = params.esn
-    User.findOne({username: username}, (err, user) => {
-        if(err) {
-            res.status(500)
-                .send({ done: false, data: null, code: -1, message: 'Error en la petición', error: err})
-        } else {
-            if(!user) {
-                res.status(200)
-                    .send({
-                        done: true,
-                        code: 2,
-                        message: 'El usuario no existe',
-                        data: null
-                    })
+    var initialDataKey = params.initialDataKey
+    var initialDataKeyConfig = config.entitiesSettings.initialDataKey
+    var isSameDataKey = initialDataKey == initialDataKeyConfig
+    User.findOne({username: username})
+        .populate('vehicle')
+        .exec((err, user) => {
+            if(err) {
+                res.status(500)
+                    .send({ done: false, data: null, code: -1, message: 'Error en la petición', error: err})
             } else {
+                if(!user) {
+                    res.status(200)
+                        .send({
+                            done: true,
+                            code: 2,
+                            message: 'El usuario no existe',
+                            data: null
+                        })
+                } else {
+                    if(user.vehicle == undefined) {
+                        return res.status(200)
+                            .send({
+                                done: false,
+                                code: 3,
+                                message: 'El usuario no tiene vehículo asignado',
+                                data: null
+                            })
+                    }
                 // Comprobar contraseña
-                bcrypt.compare(password, user.password, (error, check) => {
-                    if(error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })
-                    if(check) {
-                        // devolver los datos del usuario logueado
-                        user.lastLogin = moment.unix()
-                        user.save()
+                    bcrypt.compare(password, user.password, (error, check) => {
+                        if(error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })
+                        if(check) {
+                            // devolver los datos del usuario logueado
+                            user.lastLogin = moment.unix()
+                            user.save()
 
-                        if(esn) {
-                            Device.findOne({ esn: esn }, (err, device) => {
-                                if(err)
-                                    return res.status(500).send({done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err})
-                                if(!device)
-                                {
-                                    // crearlo
-                                    var dev = new Device({
-                                        esn: esn,
-                                        status: 1,
-                                        user: user._id
-                                    })
-                                    dev.save((error, devStored) => {
-                                        if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
-                                        if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
-                                        
-                                        user.device = devStored._id;
-                                        user.save()
-                                        return res.status(200)
-                                                    .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), devStored }, message: 'OK'})
-                                    })
-                                } else {
-                            
-                                    device.user = user._id
-                                    device.save((error, updatedDevice) => {
-                                        if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error})
-                                        if(!updatedDevice) return res.status(404).send({done: false, code: 4, data: null, message: 'Error al actualizar PDA'})
-                                        user.device = updatedDevice._id;
-                                        user.save()
-                                        return res.status(200)
-                                                    .send({done: true, code: 0, data: { user: user, token: jwt.createToken(user), updatedDevice }, message: 'OK'})
-                                    })
-                                }
+                            if(esn) {
+                                Device.findOne({ esn: esn }, (err, device) => {
+                                    if(err)
+                                        return res.status(500).send({done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err})
+                                    if(!device)
+                                    {
+                                        // crearlo
+                                        var dev = new Device({
+                                            esn: esn,
+                                            status: 1,
+                                            user: user._id
+                                        })
+                                        dev.save((error, devStored) => {
+                                            if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
+                                            if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
+                                            
+                                            user.device = devStored._id;
+                                            user.save()
+                                            ProductType.find()
+                                                .exec((err, pts) => {
+                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                                    return res.status(200)
+                                                        .send({
+                                                            done: true, 
+                                                            code: 0, 
+                                                            data: { 
+                                                                user: user, 
+                                                                token: jwt.createToken(user), 
+                                                                devStored 
+                                                            }, 
+                                                            message: 'OK', 
+                                                            initialData: isSameDataKey ? {} : {
+                                                                reasons: config.entitiesSettings.order.reasons,
+                                                                paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                productTypes: pts,
+                                                                initialDataKey: initialDataKey
+                                                            }  
+                                                        })
+                                                    })
+                                            
+                                        })
+                                    } else {
+                                
+                                        device.user = user._id
+                                        device.save((error, updatedDevice) => {
+                                            if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error})
+                                            if(!updatedDevice) return res.status(404).send({done: false, code: 4, data: null, message: 'Error al actualizar PDA'})
+                                            user.device = updatedDevice._id;
+                                            user.save()
+
+                                            ProductType.find()
+                                                .exec((err, pts) => {
+                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                                    return res.status(200)
+                                                        .send({ 
+                                                            done: true, 
+                                                            code: 0, 
+                                                            data: { 
+                                                                user: user, 
+                                                                token: jwt.createToken(user), 
+                                                                updatedDevice,
+                                                                initialData: isSameDataKey ? {} : {
+                                                                    reasons: config.entitiesSettings.order.reasons,
+                                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                    productTypes: pts,
+                                                                    initialDataKey: initialDataKey
+                                                                } 
+                                                            }, 
+                                                            message: 'OK' 
+                                                        })
+                                                })
+                                            
+                                        })
+                                    }
 
                                 
                             })
                         } else {
-                            res.status(200)
-                            .send({
-                                done: true,
-                                code: 0,
-                                message: 'OK',
-                                data: { user: user, token: jwt.createToken(user)}
-                            }) 
+                            ProductType.find()
+                                .exec((err, pts) => {
+                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                    return res.status(200)
+                                        .send({
+                                            done: true,
+                                            code: 0,
+                                            message: 'OK',
+                                            data: {
+                                                user: user,
+                                                token: jwt.createToken(user),
+                                                initialData: isSameDataKey ? {} : {
+                                                    reasons: config.entitiesSettings.order.reasons,
+                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                    productTypes: pts,
+                                                    initialDataKey: initialDataKey
+                                                }
+                                            }
+                                        }) 
+                                })
+                            
                         }
 
                         

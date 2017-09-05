@@ -22,6 +22,7 @@ module.exports = {
         password: 'Sagan2020$'
     },
     entitiesSettings: {
+        initialDataKey: 1,
         document: {
             types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA']
         },
