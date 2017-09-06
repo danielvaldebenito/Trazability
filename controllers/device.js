@@ -135,7 +135,7 @@ function loginDevice (req, res) {
                                                                     reasons: config.entitiesSettings.order.reasons,
                                                                     paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                     productTypes: pts,
-                                                                    initialDataKey: initialDataKey
+                                                                    initialDataKey: initialDataKeyConfig
                                                                 }  
                                                             }, 
                                                             message: 'OK', 
@@ -168,7 +168,7 @@ function loginDevice (req, res) {
                                                                     reasons: config.entitiesSettings.order.reasons,
                                                                     paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                     productTypes: pts,
-                                                                    initialDataKey: initialDataKey
+                                                                    initialDataKey: initialDataKeyConfig
                                                                 } 
                                                             }, 
                                                             message: 'OK' 
@@ -196,7 +196,7 @@ function loginDevice (req, res) {
                                                     reasons: config.entitiesSettings.order.reasons,
                                                     paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                     productTypes: pts,
-                                                    initialDataKey: initialDataKey
+                                                    initialDataKey: initialDataKeyConfig
                                                 }
                                             }
                                         }) 

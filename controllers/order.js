@@ -209,7 +209,21 @@ function deleteOne(req, res){
                 })
     })
 }
-
+function setOrderEnRuta(req, res) {
+    var body = req.body
+    var orders = body.orders;
+    Order.update({ _id: { $in: orders }}, { status: config.entitiesSettings.order.status[2] }, { multi: true })
+        .exec((err, raw) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
+            return res.status(200)
+                        .send({
+                            done: true,
+                            message: 'OK',
+                            raw,
+                            code: 0
+                        })
+        })
+}
 module.exports = {
     getAll,
     getOne,
@@ -217,5 +231,6 @@ module.exports = {
     saveOne,
     updateOne,
     deleteOne,
-    getDayResume
+    getDayResume,
+    setOrderEnRuta
 }  

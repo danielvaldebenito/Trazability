@@ -61,6 +61,7 @@ function getVehiclesToAsign (req, res) {
     var distributor = req.params.distributor;
     var type = req.query.type;
     Vehicle.find( type ? { type: type } : {})
+        .where(distributor ? { distributor: distributor }: {})
         .populate ({ 
             path: 'warehouse',
             populate: { 
