@@ -130,15 +130,16 @@ function loginDevice (req, res) {
                                                             data: { 
                                                                 user: user, 
                                                                 token: jwt.createToken(user), 
-                                                                devStored 
+                                                                devStored,
+                                                                initialData: isSameDataKey ? {} : {
+                                                                    reasons: config.entitiesSettings.order.reasons,
+                                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                    productTypes: pts,
+                                                                    initialDataKey: initialDataKey
+                                                                }  
                                                             }, 
                                                             message: 'OK', 
-                                                            initialData: isSameDataKey ? {} : {
-                                                                reasons: config.entitiesSettings.order.reasons,
-                                                                paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                productTypes: pts,
-                                                                initialDataKey: initialDataKey
-                                                            }  
+                                                             
                                                         })
                                                     })
                                             

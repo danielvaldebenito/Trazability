@@ -70,11 +70,18 @@ function getAllVehicle (req, res) {
     Order.find({ vehicle: vehicle })
         .populate({
             path: 'items',
-            select: ['productType', 'quantity'],
+            select: ['-_id'],
             populate: { path: 'productType', select: 'name'}
         })
-        .populate('address')
-        .populate('client')
+        .populate({
+            path: 'address',
+            select: ['_id', 'warehouse', 'location', 'coordinates']
+        })
+        .populate({
+            path: 'client',
+            select: ['_id', 'nit', 'name', 'surname', 'fullname', 'discountSurcharges']
+        })
+        .select(['-__v'])
         .exec((err, records) => {
             if(err)
                 return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
