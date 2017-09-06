@@ -211,6 +211,7 @@ function deleteOne(req, res){
 }
 function setOrderEnRuta(req, res) {
     var body = req.body
+    console.log('set order en ruta', body)
     var orders = body.orders;
     Order.update({ _id: { $in: orders }}, { status: config.entitiesSettings.order.status[2] }, { multi: true })
         .exec((err, raw) => {
