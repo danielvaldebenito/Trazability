@@ -24,12 +24,6 @@ mongoose.connect(mongoConnectionUrl, (err, res) => {
                     config.integration.sessionId = res.result.sessionId
                 })
                 .catch(error => console.log(error))
-            
-            
-
-            
-
-
         })
 
 

@@ -4,7 +4,9 @@ var path = require('path')
 var bcrypt = require('bcrypt-nodejs')
 var User = require('../models/user')
 var Device = require('../models/device')
+var LoginHistory = require('../models/loginHistory')
 var ProductType = require('../models/productType')
+var PriceList = require('../models/priceList')
 var DeviceConfig = require('../models/deviceConfig')
 var jwt = require('../services/jwt')
 var moment = require('moment')
@@ -99,110 +101,120 @@ function loginDevice (req, res) {
                         if(error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })
                         if(check) {
                             // devolver los datos del usuario logueado
-                            user.lastLogin = moment.unix()
-                            user.save()
 
-                            if(esn) {
-                                Device.findOne({ esn: esn }, (err, device) => {
-                                    if(err)
-                                        return res.status(500).send({done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err})
-                                    if(!device)
-                                    {
-                                        // crearlo
-                                        var dev = new Device({
-                                            esn: esn,
-                                            status: 1,
-                                            user: user._id
-                                        })
-                                        dev.save((error, devStored) => {
-                                            if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error})
-                                            if(!devStored) return res.status(404).send({done: false, code: 3, data: null, message: 'Error al guardar PDA'})
-                                            
-                                            user.device = devStored._id;
-                                            user.save()
-                                            ProductType.find()
-                                                .exec((err, pts) => {
-                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-                                                    return res.status(200)
-                                                        .send({
-                                                            done: true, 
-                                                            code: 0, 
-                                                            data: { 
-                                                                user: user, 
-                                                                token: jwt.createToken(user), 
-                                                                devStored,
-                                                                initialData: isSameDataKey ? {} : {
-                                                                    reasons: config.entitiesSettings.order.reasons,
-                                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                    productTypes: pts,
-                                                                    initialDataKey: initialDataKeyConfig
-                                                                }  
-                                                            }, 
-                                                            message: 'OK', 
-                                                             
+                            User.update({ _id: user._id }, { lastLogin: moment() }, (err, raw) => {
+                                if (err)
+                                    return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar último login usuario', error: err })
+                                if (esn) {
+                                    Device.findOne({ esn: esn }, (err, device) => {
+                                        if (err)
+                                            return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err })
+                                        if (!device) {
+                                            // crearlo
+                                            var dev = new Device({
+                                                esn: esn,
+                                                status: 1,
+                                                user: user._id
+                                            })
+                                            dev.save((error, devStored) => {
+                                                if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error })
+                                                if (!devStored) return res.status(404).send({ done: false, code: 3, data: null, message: 'Error al guardar PDA' })
+                                                
+                                                User.update({ _id: user._id }, { device: devStored._id }, (err, raw) => {
+                                                    PriceList.find({ distributor: user.distributor })
+                                                        .exec((err, priceLists) => {
+                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                            ProductType.find()
+                                                                .exec((err, pts) => {
+                                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                                                    return res.status(200)
+                                                                        .send({
+                                                                            done: true,
+                                                                            code: 0,
+                                                                            data: {
+                                                                                user: user,
+                                                                                token: jwt.createToken(user),
+                                                                                devStored,
+                                                                                initialData: isSameDataKey ? {} : {
+                                                                                    reasons: config.entitiesSettings.order.reasons,
+                                                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                                    productTypes: pts,
+                                                                                    initialDataKey: initialDataKeyConfig,
+                                                                                    priceLists: priceLists
+                                                                                }
+                                                                            },
+                                                                            message: 'OK',
+                                                                        })
+                                                                })
                                                         })
-                                                    })
-                                            
-                                        })
-                                    } else {
-                                
-                                        device.user = user._id
-                                        device.save((error, updatedDevice) => {
-                                            if(error) return res.status(500).send({done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error})
-                                            if(!updatedDevice) return res.status(404).send({done: false, code: 4, data: null, message: 'Error al actualizar PDA'})
-                                            user.device = updatedDevice._id;
-                                            user.save()
-
-                                            ProductType.find()
-                                                .exec((err, pts) => {
-                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-                                                    return res.status(200)
-                                                        .send({ 
-                                                            done: true, 
-                                                            code: 0, 
-                                                            data: { 
-                                                                user: user, 
-                                                                token: jwt.createToken(user), 
-                                                                updatedDevice,
-                                                                initialData: isSameDataKey ? {} : {
-                                                                    reasons: config.entitiesSettings.order.reasons,
-                                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                    productTypes: pts,
-                                                                    initialDataKey: initialDataKeyConfig
-                                                                } 
-                                                            }, 
-                                                            message: 'OK' 
-                                                        })
+                                                    
                                                 })
-                                            
-                                        })
-                                    }
+                                            })
+                                        } else {
+                                            Device.update({ _id: device._id }, { user: user._id }, (err, raw) => { 
+                                                if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error })
+                                                User.update({ _id: user._id }, { device: device._id }, (err, raw) => {
+                                                    PriceList.find({distributor: user.distributor})
+                                                            .exec((err, priceLists) => {
+                                                                if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                                ProductType.find()
+                                                                    .exec((err, pts) => {
+                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                                                        return res.status(200)
+                                                                            .send({
+                                                                                done: true,
+                                                                                code: 0,
+                                                                                data: {
+                                                                                    user: user,
+                                                                                    token: jwt.createToken(user),
+                                                                                    updatedDevice: device,
+                                                                                    initialData: isSameDataKey ? {} : {
+                                                                                        reasons: config.entitiesSettings.order.reasons,
+                                                                                        paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                                        productTypes: pts,
+                                                                                        initialDataKey: initialDataKeyConfig,
+                                                                                        priceLists: priceLists
+                                                                                    }
+                                                                                },
+                                                                                message: 'OK'
+                                                                            })
+                                                                    })
+                                                            })
+                                                })  
+                                            }) 
+                                        }
+                                    })
+                                } else {
+                                    PriceList.find({distributor: user.distributor})
+                                            .exec((err, priceLists) => {
+                                                ProductType.find()
+                                                    .exec((err, pts) => {
+                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
 
-                                
+                                                        return res.status(200)
+                                                            .send({
+                                                                done: true,
+                                                                code: 0,
+                                                                message: 'OK',
+                                                                data: {
+                                                                    user: user,
+                                                                    token: jwt.createToken(user),
+                                                                    initialData: isSameDataKey ? {} : {
+                                                                        reasons: config.entitiesSettings.order.reasons,
+                                                                        paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                        productTypes: pts,
+                                                                        initialDataKey: initialDataKeyConfig,
+                                                                        priceLists: priceLists
+                                                                    }
+                                                                }
+                                                            })
+                                                    })
+                                            })
+                                    
+
+                                }
                             })
-                        } else {
-                            ProductType.find()
-                                .exec((err, pts) => {
-                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-                                    return res.status(200)
-                                        .send({
-                                            done: true,
-                                            code: 0,
-                                            message: 'OK',
-                                            data: {
-                                                user: user,
-                                                token: jwt.createToken(user),
-                                                initialData: isSameDataKey ? {} : {
-                                                    reasons: config.entitiesSettings.order.reasons,
-                                                    paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                    productTypes: pts,
-                                                    initialDataKey: initialDataKeyConfig
-                                                }
-                                            }
-                                        }) 
-                                })
                             
-                        }
 
                         
                     } else {

@@ -120,15 +120,18 @@ function loginUser (req, res) {
                         if(error) return res.status(500).send({ message: 'Ocurrió un error', error: error })
                         if(check) {
                         // devolver los datos del usuario logueado
-                            user.lastLogin = moment.unix()
-                            user.save()
-                            res.status(200)
-                                .send({
-                                done: true,
-                                code: 0,
-                                message: 'OK',
-                                data: { user: user, token: jwt.createToken(user)}
-                            }) 
+                            
+                            User.update({ _id: user._id }, { lastLogin: moment() }, (err, raw) => {
+                                if(err) return res.status(500).send({ done: false, message: 'Error al guardar último login', code: -1, err})
+                                return res.status(200)
+                                        .send({
+                                            done: true,
+                                            code: 0,
+                                            message: 'OK',
+                                            data: { user: user, token: jwt.createToken(user) }
+                                        }) 
+                            })
+                           
                         } else {
                             res.status(200)
                             .send({
