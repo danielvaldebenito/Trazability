@@ -9,6 +9,11 @@ module.exports = {
     sendGridConfig: {
         senderMail: 'daniel.valdebenito@commzgate-la.com'
     },
+    pushNotifications: {
+        codes: [
+            { id: 1, description: 'NUEVO PEDIDO', title: 'Nuevo Pedido', message: 'Usted tiene un nuevo pedido' }
+        ]
+    },
     database: {
         name: 'unigastrazabilidad',
         port: process.env.PORT_DATABASE || 27017,
