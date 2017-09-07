@@ -1,5 +1,6 @@
 'use strict'
 var Enumerable = require('linq')
+var pushService = require('../services/push')
 var list = [
     {
         id: 1,
@@ -39,7 +40,22 @@ function getOne (req, res) {
                 })
 }
 
+function testNotification (req, res) {
+    pushService.test(req.params.token)
+        .then(function (response) {
+            console.log("Successfully sent message:", response);
+            return res.status(200).json({ response })
+
+        })
+        .catch(function (error) {
+            console.log("Error sending message:", error);
+            return res.status(500).json({ error })
+        }); 
+    
+}
+
 module.exports = {
     getList,
-    getOne
+    getOne,
+    testNotification
 }

@@ -51,6 +51,26 @@ function send(token, payload) {
             console.log("Error sending message:", error);
         });
 }
+
+function test(token) {
+    //var token = 'ej_707oURzc:APA91bHJeVqT1W-YIJyJySb5ofPFfPeRIR2gtcu3fgtllHHER5ldhWnjKnhrIiFW4n1IPUsH61DU8nIqOSWmkFiytUlwRKGR4SpkR2EUD3lr3nIfVpzktYoK7S6hdF4hf2Aw_BCRa4l5'
+    
+    var payload = {
+        data: {
+            key: 'GEO_REQUEST',
+            requestId: '1'
+        },
+        notification: {
+            title: 'Hola',
+            message: 'Si te llegó esto, avísame plis'
+        }
+    }
+    return admin
+        .messaging()
+        .sendToDevice(token, payload)
+        
+}
+
 module.exports = {
-    requestGeoreference
+    requestGeoreference, test
 }

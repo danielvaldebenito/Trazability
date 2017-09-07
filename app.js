@@ -36,6 +36,7 @@ var user_routes = require('./routes/user')
 var userWarehouse_routes = require('./routes/userWarehouse')
 var vehicle_routes = require('./routes/vehicle')
 var zone_routes = require('./routes/zone')
+var test_routes = require('./routes/test')
 var test_integration_routes = require('./integration/routes/test')
 // selects route
 var selects_routes = require('./routes/selects')
@@ -67,16 +68,19 @@ app.use('/api', user_routes)
 app.use('/api', userWarehouse_routes)
 app.use('/api', vehicle_routes)
 app.use('/api', zone_routes)
+app.use('/api', test_routes)
 app.use('/api/test', test_integration_routes)
 app.use('/api/selects', selects_routes)
 // integration
 app.use('/api/erp', erp_order_routes)
 // FIREBASE
 var admin = require("firebase-admin");
-var serviceAccount = require("./trazabilidad-10793-firebase-adminsdk-ez6v0-5c76ecda7c");
+
+var serviceAccount = require('./unigas-envasado-firebase-adminsdk-bgnij-4a607b3f86.json');
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://trazabilidad-10793.firebaseio.com"
+  databaseURL: "https://unigas-envasado.firebaseio.com"
 });
 
 module.exports = app
