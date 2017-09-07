@@ -13,6 +13,7 @@ api.get('/order/vehicle/:vehicle', md_auth.ensureAuth, OrderController.getAllVeh
 api.post('/order/', [ md_auth.ensureAuth, md_wh.createAddressWarehouseForOrder, md_wh.getWarehouseFromVehicle], OrderController.saveOne)
 api.put('/order/:id', md_auth.ensureAuth, OrderController.updateOne)
 api.put('/order-set-en-ruta/', md_auth.ensureAuth, OrderController.setOrderEnRuta)
+api.put('/order-cancel/:id', md_auth.ensureAuth, OrderController.cancelOrder)
 api.delete('/order/:id', [md_auth.ensureAuth, md_auth.isAdmin], OrderController.deleteOne)
 
 module.exports = api;
