@@ -125,6 +125,7 @@ function loginDevice (req, res) {
                                                         .exec((err, priceLists) => {
                                                             if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
                                                             ProductType.find()
+                                                                .populate({ path: 'productType', select: ['_id', 'code', 'name'] })
                                                                 .exec((err, pts) => {
                                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
                                                                     return res.status(200)
@@ -155,6 +156,7 @@ function loginDevice (req, res) {
                                                 if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error })
                                                 User.update({ _id: user._id }, { device: device._id }, (err, raw) => {
                                                     PriceList.find({distributor: user.distributor})
+                                                            .populate({ path: 'productType', select: ['_id', 'code', 'name'] })
                                                             .exec((err, priceLists) => {
                                                                 if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
                                                                 ProductType.find()
@@ -186,6 +188,7 @@ function loginDevice (req, res) {
                                     })
                                 } else {
                                     PriceList.find({distributor: user.distributor})
+                                            .populate({ path: 'productType', select: ['_id', 'code', 'name'] })
                                             .exec((err, priceLists) => {
                                                 ProductType.find()
                                                     .exec((err, pts) => {
