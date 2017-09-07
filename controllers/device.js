@@ -140,8 +140,8 @@ function loginDevice (req, res) {
                                                                                     paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                                     productTypes: pts,
                                                                                     initialDataKey: initialDataKeyConfig,
-                                                                                    priceLists: priceLists
-                                                                                }
+                                                                                },
+                                                                                priceLists: priceLists
                                                                             },
                                                                             message: 'OK',
                                                                         })
@@ -173,8 +173,8 @@ function loginDevice (req, res) {
                                                                                         paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                                         productTypes: pts,
                                                                                         initialDataKey: initialDataKeyConfig,
-                                                                                        priceLists: priceLists
-                                                                                    }
+                                                                                    },
+                                                                                    priceLists: priceLists
                                                                                 },
                                                                                 message: 'OK'
                                                                             })
@@ -203,9 +203,9 @@ function loginDevice (req, res) {
                                                                         reasons: config.entitiesSettings.order.reasons,
                                                                         paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                         productTypes: pts,
-                                                                        initialDataKey: initialDataKeyConfig,
-                                                                        priceLists: priceLists
-                                                                    }
+                                                                        initialDataKey: initialDataKeyConfig, 
+                                                                    },
+                                                                    priceLists: priceLists
                                                                 }
                                                             })
                                                     })
