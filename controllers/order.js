@@ -225,6 +225,22 @@ function setOrderEnRuta(req, res) {
                         })
         })
 }
+function cancelOrder(req, res) {
+    var id = req.params.id
+    Order.update(
+        { _id: id }, 
+        { status: config.entitiesSettings.order.status[4] }, 
+        (err, raw) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
+            return res.status(200)
+                        .send({
+                            done: true,
+                            message: 'OK',
+                            code: 0
+                        })
+    })
+        
+}
 module.exports = {
     getAll,
     getOne,
@@ -233,5 +249,6 @@ module.exports = {
     updateOne,
     deleteOne,
     getDayResume,
-    setOrderEnRuta
+    setOrderEnRuta,
+    cancelOrder
 }  
