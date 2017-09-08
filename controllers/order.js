@@ -75,7 +75,7 @@ function getAllVehicle (req, res) {
         })
         .populate({
             path: 'address',
-            select: ['_id', 'warehouse', 'location', 'coordinates']
+            select: ['_id', 'warehouse', 'location', 'city', 'region', 'coordinates']
         })
         .populate({
             path: 'client',
