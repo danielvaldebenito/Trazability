@@ -60,6 +60,8 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                        
                     var address = new Address()
                     address.location = body.address
+                    address.city = body.city
+                    address.region = body.region
                     address.client = body.client
                     address.warehouse = wh._id
                     address.coordinates = body.coordinates

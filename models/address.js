@@ -6,6 +6,8 @@ var timestamp = require('mongoose-timestamp')
 var Schema = mongoose.Schema
 var AddressSchema = Schema({
     location: { type: String, required: true },
+    city: String,
+    region: String,
     client: { type: Schema.Types.ObjectId, ref: 'Client'},
     warehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
     coordinates: {
