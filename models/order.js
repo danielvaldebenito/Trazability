@@ -39,7 +39,9 @@ var OrderSchema = Schema({
     observation: String,
     erpId: Number,
     erpOrderNumber: Number,
-    payMethod: String
+    erpUpdated: Boolean,
+    payMethod: String,
+    device: { type: Schema.Types.ObjectId, ref: 'Device'}
 })
 OrderSchema.plugin(timestamp)
 OrderSchema.plugin(autoIncrement.plugin, { 

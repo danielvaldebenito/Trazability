@@ -141,6 +141,7 @@ function loginDevice (req, res) {
                                                                                     paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                                     productTypes: pts,
                                                                                     initialDataKey: initialDataKeyConfig,
+                                                                                    maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                                 },
                                                                                 priceLists: priceLists
                                                                             },
@@ -175,6 +176,7 @@ function loginDevice (req, res) {
                                                                                         paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                                         productTypes: pts,
                                                                                         initialDataKey: initialDataKeyConfig,
+                                                                                        maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                                     },
                                                                                     priceLists: priceLists
                                                                                 },
@@ -206,7 +208,8 @@ function loginDevice (req, res) {
                                                                         reasons: config.entitiesSettings.order.reasons,
                                                                         paymentMethods: config.entitiesSettings.sale.paymentMethods,
                                                                         productTypes: pts,
-                                                                        initialDataKey: initialDataKeyConfig, 
+                                                                        initialDataKey: initialDataKeyConfig,
+                                                                        maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                     },
                                                                     priceLists: priceLists
                                                                 }

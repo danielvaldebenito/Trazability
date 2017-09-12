@@ -38,6 +38,7 @@ module.exports = {
             types: ['ENVASADO', 'GRANEL'],
             status: ['RECIBIDO', 'ASIGNADO', 'EN RUTA', 'ENTREGADO', 'CANCELADO'],
             reasons: ['RAZON 1','RAZON 2','RAZON 3'],
+            maxProductTypesForOrder: 4,
             delayCommitted: {
                 value: 1,
                 time: 'hour'

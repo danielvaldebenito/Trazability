@@ -38,19 +38,7 @@ function requestGeoreference(distributor, requestId) {
         })
 }
 
-function send(token, payload) {
-    console.log('Sending push notification to token', token)
-    //token = 'ej_707oURzc:APA91bHJeVqT1W-YIJyJySb5ofPFfPeRIR2gtcu3fgtllHHER5ldhWnjKnhrIiFW4n1IPUsH61DU8nIqOSWmkFiytUlwRKGR4SpkR2EUD3lr3nIfVpzktYoK7S6hdF4hf2Aw_BCRa4l5'
-    admin
-        .messaging()
-        .sendToDevice(token, payload)
-        .then(function (response) {
-            console.log("Successfully sent message:", response);
-        })
-        .catch(function (error) {
-            console.log("Error sending message:", error);
-        });
-}
+
 
 function test(token) {
     //var token = 'ej_707oURzc:APA91bHJeVqT1W-YIJyJySb5ofPFfPeRIR2gtcu3fgtllHHER5ldhWnjKnhrIiFW4n1IPUsH61DU8nIqOSWmkFiytUlwRKGR4SpkR2EUD3lr3nIfVpzktYoK7S6hdF4hf2Aw_BCRa4l5'
@@ -71,6 +59,28 @@ function test(token) {
         
 }
 
+function cancelOrder(device, id) {
+    Device.findById(device, (err, stored) => {
+        if(err) return console.log('Error al buscar device ' + id)
+        if(stored && stored.token) {
+            var payload = {
+                data: {
+                    key: 'CANCEL_ORDER',
+                    id: id
+                }
+            }
+            send(stored.token, payload)
+        }
+    })
+}
+
+function send(token, payload) {
+    console.log('Sending push notification to token', token)
+    return admin
+        .messaging()
+        .sendToDevice(token, payload)
+
+}
 module.exports = {
-    requestGeoreference, test
+    requestGeoreference, test, send
 }

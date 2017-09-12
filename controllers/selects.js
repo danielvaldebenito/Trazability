@@ -21,6 +21,7 @@ function initialDataToDevice(req, res) {
     var distributor = req.params.distributor;
     var reasons = config.entitiesSettings.order.reasons;
     var paymentMethods = config.entitiesSettings.sale.paymentMethods;
+    var maxProductTypesForOrder = config.entitiesSettings.order.maxProductTypesForOrder;
     ProductType.find()
                 .exec((err, pts) => {
                     if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err})
@@ -32,7 +33,8 @@ function initialDataToDevice(req, res) {
                             data: {
                                 reasons,
                                 paymentMethods,
-                                productTypes: pts
+                                productTypes: pts,
+                                maxProductTypesForOrder
                             },
                             message: 'OK'
                         })

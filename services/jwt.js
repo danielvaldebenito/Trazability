@@ -13,6 +13,7 @@ function createToken(user) {
         email: user.email,
         username: user.username,
         isAdmin: user.isAdmin,
+        distributor: user.distributor,
         iat: moment().unix(),
         exp: moment().add(daysExpToken, 'days').unix()
     }

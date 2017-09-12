@@ -4,6 +4,8 @@ var path = require('path')
 var mongoose = require('mongoose')
 var pagination = require('mongoose-pagination')
 var moment = require('moment')
+var pushSocket = require('../services/pushSocket')
+var pushNotification = require('../services/push')
 moment.locale('es')
 var Order = require('../models/order')
 var OrderItem = require('../models/orderItem')
@@ -13,6 +15,7 @@ var Dependence = require('../models/dependence')
 var Address = require('../models/address')
 var ProductType = require('../models/productType')
 var config = require('../config')
+
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -67,7 +70,8 @@ function getAll(req, res) {
 
 function getAllVehicle (req, res) {
     var vehicle = req.params.vehicle
-    Order.find({ vehicle: vehicle })
+    Order
+        .find({ vehicle: vehicle, status: config.entitiesSettings.order.status[1] })
         .populate({
             path: 'items',
             select: ['-_id'],
@@ -168,14 +172,26 @@ function saveOne (req, res) {
     order.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
+        Order.update(
+            { _id: stored._id }, 
+            { erpId: stored.orderNumber, erpOrderNumber: stored.orderNumber, erpUpdated: false  },
+            (err, raw) => {
+
+                /**
+                 * TODO: ERP INTEGRATION: Informar pedido a SalesForce
+                 * TODO: SOCKET: Informar creación pedido
+                 */
+                pushSocket.send('/orders', params.distributor, 'new-order', stored)
+                return res
+                    .status(200)
+                    .send({
+                        done: true,
+                        message: 'Registro guardado exitosamente',
+                        stored: stored
+                    })
+            }
+        )
         
-        return res
-            .status(200)
-            .send({ 
-                done: true, 
-                message: 'Registro guardado exitosamente', 
-                stored: stored
-            })
     })
 }
 function updateOne(req, res) {
@@ -211,11 +227,18 @@ function deleteOne(req, res){
 }
 function setOrderEnRuta(req, res) {
     var body = req.body
-    console.log('set order en ruta', body)
-    var orders = body.orders;
-    Order.update({ _id: { $in: orders }}, { status: config.entitiesSettings.order.status[2] }, { multi: true })
+    var deviceId = req.body.device
+    var orders = body.orders
+    var user = req.user
+    console.log('set order en ruta user: ', user)
+    var distributor = req.user.distributor._id
+    
+    
+    Order.update({ _id: { $in: orders }}, { status: config.entitiesSettings.order.status[2], device: deviceId }, { multi: true })
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
+            
+            pushSocket.send('/orders', distributor, 'change-state-order', orders)
             return res.status(200)
                         .send({
                             done: true,
@@ -227,17 +250,22 @@ function setOrderEnRuta(req, res) {
 }
 function cancelOrder(req, res) {
     var id = req.params.id
-    Order.update(
-        { _id: id }, 
+    
+    Order.findByIdAndUpdate(id,
         { status: config.entitiesSettings.order.status[4] }, 
-        (err, raw) => {
+        (err, updated) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
+            var device = updated.device
+            if(device) {
+                pushNotification.cancelOrder(device, id)
+            }
+            pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
-                        .send({
-                            done: true,
-                            message: 'OK',
-                            code: 0
-                        })
+                .send({
+                    done: true,
+                    message: 'OK',
+                    code: 0
+                })
     })
         
 }
