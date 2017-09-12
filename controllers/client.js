@@ -6,6 +6,7 @@ var pagination = require('mongoose-pagination')
 var Client = require('../models/client')
 var Address = require('../models/address')
 var DiscountSurcharge = require('../models/discountSurcharge')
+var addressController = require('./address')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -18,15 +19,14 @@ function getAll(req, res) {
         .populate('discountSurcharges')
         .where(filter ? {
             $or: [
-                { nit: { $regex: filter, $options: 'i' } },
-                { name: { $regex: filter, $options: 'i' } },
-                { surname: { $regex: filter, $options: 'i' } },
-                { completeName: { $regex: filter, $options: 'i' } },
-                { address: { $regex: filter, $options: 'i' } },
-                { city: { $regex: filter, $options: 'i' } },
-                { region: { $regex: filter, $options: 'i' } },
-                { email: { $regex: filter, $options: 'i' } },
-                { phone: { $regex: filter, $options: 'i' } }
+                {   nit: {  $regex: filter, $options: 'i' } },
+                {   name: { $regex: filter, $options: 'i'}  },
+                {   surname: {  $regex: filter, $options: 'i'}  },
+                {   'addresses.location': { $regex: filter, $options: 'i' }, },
+                {   'addresses.region': { $regex: filter, $options: 'i' }, },
+                {   'addresses.city': { $regex: filter, $options: 'i' } },
+                {   email: { $regex: filter, $options: 'i' } },
+                {   phone: { $regex: filter, $options: 'i' } }
             ]
         } : {})
         .sort([[sidx, sord]])
@@ -56,14 +56,14 @@ function getAllFromSelect(req, res) {
     Client.find({ quick: { $ne: true } })
         .where(filter ? {
             $or: [
-                { nit: { $regex: filter, $options: 'i' } },
-                { name: { $regex: filter, $options: 'i' } },
-                { surname: { $regex: filter, $options: 'i' } },
-                { address: { $regex: filter, $options: 'i' } },
-                { city: { $regex: filter, $options: 'i' } },
-                { region: { $regex: filter, $options: 'i' } },
-                { email: { $regex: filter, $options: 'i' } },
-                { phone: { $regex: filter, $options: 'i' } }
+                {   nit: {  $regex: filter, $options: 'i' } },
+                {   name: { $regex: filter, $options: 'i' } },
+                {   surname: { $regex: filter, $options: 'i' } },
+                {   'addresses.location': { $regex: filter, $options: 'i' } },
+                {   'addresses.region': { $regex: filter, $options: 'i' } },
+                {   'addresses.city': { $regex: filter, $options: 'i' } },
+                {   email: { $regex: filter, $options: 'i' } },
+                {   phone: { $regex: filter, $options: 'i' } }
             ]
         } : {})
         .sort([[sidx, sord]])
@@ -117,6 +117,7 @@ function saveOne(req, res) {
     client.contact = params.contact
     client.completeName = params.surname ? params.name + ' ' + params.surname : params.name
     client.discountSurcharges = params.discountSurcharge
+    client.addresses = params.addresses
     client.save((err, stored) => {
         if (err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if (!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
@@ -134,11 +135,15 @@ function saveOne(req, res) {
 function saveOneQuick(req, res) {
     var client = new Client()
     var params = req.body
-    var falseNit = Math.random().toString(36).slice(2)
-    client.nit = falseNit
+    client.nit = params.nit
     client.name = params.name
     client.phone = params.phone
-    client.address = params.address
+    var address = {
+        location: params.location,
+        region: params.region,
+        city: params.city 
+    }
+    client.addresses.push(address);
     client.region = params.region
     client.city = params.city
     client.quick = true
@@ -194,9 +199,18 @@ function validateNit(req, res) {
             return res.status(200).send({ exists: client != null })
         })
 }
+function getClientByNit(req, res) {
+    var nit = req.params.nit
+    Client.findOne({ nit: nit  })
+            .exec((err, client) => {
+                if (err) return res.status(500).send({ message: 'Error al validar nit', error: err })
+                return res.status(200).send({ done: true, message: 'OK', client })
+            })
+}
 module.exports = {
     getAll,
     getOne,
+    getClientByNit,
     saveOne,
     saveOneQuick,
     updateOne,

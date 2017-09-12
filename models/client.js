@@ -21,6 +21,11 @@ var ClientSchema = Schema({
         productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
         isDiscount: { type: Boolean, default: true, required: true },
         value: Number
+    }],
+    addresses: [{
+        location: String,
+        city: String,
+        region: String
     }]
 }, 
 {

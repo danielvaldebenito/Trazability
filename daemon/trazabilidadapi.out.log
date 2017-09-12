@@ -17,3 +17,1560 @@ La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabili
   password: '09v9085a' }
 Servidor corriendo correctamente en el puerto 3548
 Conectado a web service Salesforce como Francisco Otalora
+[32minfo[39m: OPTIONS /api/test 200 99.649 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 134.620 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.880 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/clients/?filter=&limit=20&page=1 200 0.551 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/clients/?filter=&limit=20&page=1 200 1426.714 ms - 2713 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 2.567 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.419 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 21.551 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 125.401 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.715 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.529 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.806 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 19.183 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.046 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 97.471 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 198.955 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.757 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.306 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.769 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 32.460 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.496 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.571 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 196.884 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.470 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.081 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.341 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 1.259 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.413 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.069 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 80.926 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.696 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.984 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 25.491 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 1.198 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.695 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 141.181 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.776 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.863 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.100 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 16.881 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.536 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.376 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.800 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.533 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.546 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.981 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.473 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.850 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.374 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.348 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.144 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.411 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.982 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.747 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.575 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.614 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.212 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.002 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.471 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.937 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.457 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.371 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 210.821 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 52.823 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.689 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 264.783 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.344 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.481 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.307 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 3.354 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.108 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 125.991 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.371 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.935 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.462 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.377 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.607 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.670 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 36.257 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.472 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.227 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.873 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.356 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.853 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.964 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 204.077 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.423 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.883 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.483 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.347 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.509 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.840 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 122.323 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.382 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.896 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.496 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.334 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.518 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.886 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 135.192 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.464 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.068 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.455 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.379 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.504 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.887 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 6.617 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.534 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.083 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.203 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.602 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.414 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 44.234 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 589.215 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.811 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.606 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.485 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 155.402 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.742 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 153.759 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.406 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.989 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.945 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.430 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.342 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.367 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.011 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.388 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 12.568 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.323 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.437 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 57.204 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.750 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.307 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 15.321 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.448 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 10.255 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.511 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.350 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 55.335 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.534 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 5.565 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.368 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.809 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.471 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.336 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.345 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.449 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.187 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.521 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 10.510 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.482 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.412 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 48.574 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 63.626 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.118 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.395 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.896 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.456 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.331 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.585 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.554 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 420.370 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.564 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 15.340 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.553 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.386 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.566 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 323.734 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 373.666 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.407 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.970 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.434 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.368 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.638 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.495 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 427.477 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.479 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.846 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.431 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.330 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.466 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.005 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 550.760 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.369 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.964 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.523 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.447 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 26.702 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 55.901 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 87.352 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.385 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.908 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.440 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.331 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.377 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.967 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.444 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.431 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.931 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.464 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.375 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.480 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.770 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.334 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.737 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 464.747 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.474 ms - - body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.186 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 198.825 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.389 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.896 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.444 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.570 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.128 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.653 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.057 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.439 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.324 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.012 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.370 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.824 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.575 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.383 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.520 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.957 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.589 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.442 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 19.642 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.520 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.335 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.527 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.496 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 97.740 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.431 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.976 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.492 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.394 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.479 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.495 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 442.255 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.476 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.312 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.437 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.322 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.458 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.443 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 41.518 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.368 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.873 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.457 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.352 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.644 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.971 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.444 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.413 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.964 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.427 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.687 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.342 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.937 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 146.923 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.406 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.906 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.432 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.333 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.513 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.060 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 5.528 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.402 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.099 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.554 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 4.990 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.513 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.113 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 75.895 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.343 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.907 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.419 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.325 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.158 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.118 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 421.159 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 15.913 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.251 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.709 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.565 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.336 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.686 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 381.014 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.449 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.983 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.718 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.567 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.639 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.858 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.794 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.353 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.793 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.424 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.329 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.403 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 134.057 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.608 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.416 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.884 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 331.029 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 532.900 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 3.978 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 174.848 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 48.370 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.657 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 9.808 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.560 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.463 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 102.018 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.325 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.861 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.400 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.346 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.010 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.440 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.951 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.431 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.589 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.511 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.778 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 152.165 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.484 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.937 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.420 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.321 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.578 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.238 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 268.269 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.356 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.822 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.429 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.324 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.340 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.621 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 84.549 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/asd 200 51.877 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/asd 200 0.224 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 200 818.515 ms - 16 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 200 818.124 ms - 16 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 200 1109.926 ms - 16 body: {} | 
+
+[32minfo[39m: OPTIONS /api/clients/?filter=&limit=20&page=1 200 0.245 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/clients/?filter=&limit=20&page=1 304 343.365 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.589 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.477 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.328 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 27.137 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/as 200 0.254 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/as 200 20.304 ms - 16 body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/asd 200 0.227 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 304 1.394 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 304 1.496 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/clients/?filter=&limit=20&page=1 200 0.206 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/clients/?filter=&limit=20&page=1 304 104.586 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.657 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.471 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.892 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.086 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/asd 200 0.227 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 304 1.440 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 304 1.476 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/asd 304 2.002 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.678 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.549 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.490 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.374 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.575 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 4.127 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.003 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.483 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.606 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.517 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.445 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.582 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.850 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 65.685 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.398 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.966 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.413 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.394 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.449 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.664 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.759 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.401 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.908 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.396 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 17.692 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.814 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.697 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 145.078 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.377 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.006 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.409 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.468 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.456 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.064 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.983 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.402 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.652 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.399 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 2.171 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.432 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.944 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 105.552 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.639 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.910 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.426 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.717 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.362 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.667 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.655 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.409 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.919 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.442 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.421 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.343 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.670 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 200.912 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.408 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.791 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.724 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.321 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.499 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.964 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.798 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.386 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.953 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.426 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 1.002 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.460 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.815 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 279.204 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.570 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.913 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.417 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.336 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.500 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 347.355 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.515 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.401 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.907 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.416 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.311 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.494 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.271 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.750 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.408 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.011 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.406 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.321 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.340 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.291 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 6.387 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.421 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.951 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.426 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.367 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.344 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.751 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.433 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.408 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.951 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.433 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.404 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.362 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 84.175 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.184 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.351 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.043 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.410 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.318 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.337 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.951 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.137 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.347 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.862 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.427 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 1.388 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.510 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.981 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 57.932 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.544 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.010 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.678 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.472 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.481 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.094 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.121 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.359 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.803 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.414 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.305 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.354 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.165 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.715 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.377 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.877 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.439 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.311 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.502 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.492 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.310 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.583 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.997 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.636 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.539 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.584 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.833 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.752 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 13.810 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.164 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.425 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.336 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.324 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.459 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 117.019 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.051 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.889 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.455 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.477 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.362 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.039 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.492 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.382 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.937 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.166 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.323 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.469 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.248 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.421 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.389 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.930 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.439 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.316 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.326 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.759 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.002 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.417 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.952 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.415 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.313 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.499 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.042 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.468 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.421 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.954 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.680 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.342 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.389 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.474 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 85.837 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.377 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.931 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.420 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.315 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.564 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.593 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.386 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.670 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.949 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.722 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.357 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.353 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 34.651 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.884 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.413 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.936 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.577 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.444 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.352 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.666 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.328 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.428 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.086 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.444 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.403 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.405 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.752 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 52.815 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.386 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.907 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.413 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.343 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.679 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 100.700 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.870 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.355 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.915 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.398 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.322 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.378 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.199 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 99.401 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.383 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.936 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.413 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.317 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.329 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.867 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 90.645 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.474 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.088 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.409 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.306 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.534 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.169 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.045 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.347 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.877 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.296 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.341 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.374 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.868 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.001 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.368 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.931 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.488 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.325 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.334 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.678 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.039 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.418 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.921 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.515 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.375 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.507 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 3.080 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.634 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.344 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.898 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.407 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.313 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.434 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.849 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.486 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 83.921 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.923 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.380 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 18.529 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 219.116 ms - - body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1222.003 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 845.406 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 40.046 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.144 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.403 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.309 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.391 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.479 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 24.076 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/1 200 92.648 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/11 200 0.197 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/111 200 0.128 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/1 200 199.518 ms - 16 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/11 200 2.436 ms - 16 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/111 200 2.699 ms - 16 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.642 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 71.344 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.435 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.356 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1223.519 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.410 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.098 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.412 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.305 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.540 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.067 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 23.692 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.402 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.563 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.414 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 3.500 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.440 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 672.801 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 39.079 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.562 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.007 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.408 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.316 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.444 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 18.101 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 71.002 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.366 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.440 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.286 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 332.740 ms - - body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.299 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.236 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 2.678 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/1 200 0.308 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/1 304 60.734 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/12 200 0.250 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/12 200 1.427 ms - 16 body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/123 200 0.314 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 200 1.504 ms - 16 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.441 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.086 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.427 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.312 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.428 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 60.732 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 224.482 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.366 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.990 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.438 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.312 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.482 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.003 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 164.823 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.507 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.030 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.430 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.357 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.479 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.840 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 46.089 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.588 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.025 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.450 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.320 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.329 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.123 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 3.217 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.377 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 53.417 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.458 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.406 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.545 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.869 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 4.126 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.572 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.800 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 1.763 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.456 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.481 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.928 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 356.287 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/123 200 0.224 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 11.538 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 125.571 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 72.340 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.416 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 1.045 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.453 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.383 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.344 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 1.490 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 12.222 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.653 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.916 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.796 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.432 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.486 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 2.092 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 962.986 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/123 200 0.303 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 2.249 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 1.425 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.407 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/get-image-user/AFUYytZwBkpQCFf981svX2vY.jpg 304 0.987 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/country 200 0.415 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/productType 200 0.477 ms - 13 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.523 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/country 304 24.141 ms - - body: {} | 
+
+[32minfo[39m: GET /api/productType 304 76.001 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client-validate-nit/123 200 0.936 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 1.513 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 1.429 ms - - body: {} | 
+
+[32minfo[39m: GET /api/client-validate-nit/123 304 61.876 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/client/ 200 0.232 ms - 4 body: {} | 
+
+[32minfo[39m: POST /api/client/ 200 13623.238 ms - 1004 body: {"nit":"123","name":"Hector","surname":"Salamanca","phone":null,"email":null,"contact":"Hector Salamanca","discountSurcharge":[{"productType":"5988d40c67519cdd05854bcd","isDiscount":true,"value":0},{"productType":"5988d41d67519cdd05854be7","isDiscount":true,"value":0},{"productType":"5988d42e67519cdd05854c02","isDiscount":true,"value":0},{"productType":"5988d44167519cdd05854c12","isDiscount":true,"value":0},{"productType":"59a4665d1c16143d3312c0cc","isDiscount":true,"value":0}],"addresses":[{"location":"Calle 15 Carrera 15 #15","region":"Cundinamarca","city":"Bogotá"}]} | 
+
+[32minfo[39m: OPTIONS /api/client/ 200 0.229 ms - 4 body: {} | 
+
+[32minfo[39m: POST /api/client/ 500 1853.758 ms - 1012 body: {"nit":"123","name":"Hector","surname":"Salamanca","phone":null,"email":null,"contact":"Hector Salamanca","discountSurcharge":[{"productType":"5988d40c67519cdd05854bcd","isDiscount":true,"value":0},{"productType":"5988d41d67519cdd05854be7","isDiscount":true,"value":0},{"productType":"5988d42e67519cdd05854c02","isDiscount":true,"value":0},{"productType":"5988d44167519cdd05854c12","isDiscount":true,"value":0},{"productType":"59a4665d1c16143d3312c0cc","isDiscount":true,"value":0}],"addresses":[{"location":"Calle 15 Carrera 15 #15","region":"Cundinamarca","city":"Bogotá"}]} | 
+
+[32minfo[39m: Iniciando aplicación

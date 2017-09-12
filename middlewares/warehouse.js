@@ -35,6 +35,7 @@ var createAddressFromClient = function (req, res, next) {
     })
 
 }
+
 /* Crea la bodega al crear una dirección en el contexto de ingresar un pedido */
 var createAddressWarehouseForOrder = function(req, res, next) {
     
