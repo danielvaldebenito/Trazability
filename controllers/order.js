@@ -179,8 +179,11 @@ function saveOne (req, res) {
 
                 /**
                  * TODO: ERP INTEGRATION: Informar pedido a SalesForce
-                 * TODO: SOCKET: Informar creación pedido
                  */
+                if(params.vehicle){
+                    pushNotification.newOrderAssigned(vehicle, order)
+                }
+                
                 pushSocket.send('/orders', params.distributor, 'new-order', stored)
                 return res
                     .status(200)
@@ -269,12 +272,32 @@ function cancelOrder(req, res) {
     })
         
 }
+function assignVehicleToOrder (req, res) {
+    var vehicle = req.body.vehicle;
+    var order = req.body.order;
+    Order.findByIdAndUpdate(order, { vehicle: vehicle, status: 'ASIGNADO' },
+    (err, updated) => {
+        if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
+        
+        pushNotification.newOrderAssigned(vehicle, updated)
+        pushSocket.send('/orders', updated.distributor, 'change-state-order', order._id)
+        
+        return res.status(200)
+                .send({
+                    done: true,
+                    message: 'Vehículo asignado correctamente',
+                    updated
+                })
+    })
+            
+}
 module.exports = {
     getAll,
     getOne,
     getAllVehicle,
     saveOne,
     updateOne,
+    assignVehicleToOrder,
     deleteOne,
     getDayResume,
     setOrderEnRuta,

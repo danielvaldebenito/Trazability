@@ -1,7 +1,8 @@
 var admin = require("firebase-admin");
 var mongoose = require('mongoose')
 var Device = require('../models/device');
-
+var Vehicle = require('../models/vehicle')
+var User = require('../models/user')
 function requestGeoreference(distributor, requestId) {
     // This registration token comes from the client FCM SDKs.
     Device
@@ -38,7 +39,31 @@ function requestGeoreference(distributor, requestId) {
         })
 }
 
+function newOrderAssigned (vehicle, order) {
+    Vehicle.findById(vehicle, (err, found) => {
+        if(err) return console.log('Error al buscar vehiculo' + vehicle, err)
+        if(!found) return console.log('No se encontró vehículo', vehicle)
+        if(!found.user) return console.log('Vehículo no tiene usuario asignado', found)
+        User.findById(found.user, (err, foundUser) => {
+            if (err) return console.log('Error al buscar usuario' + found.user, err)
+            if (!foundUser) return console.log('No se encontró usuario', found.user)
+            if (!foundUser.device) return console.log('Usuario no tiene dispositivo asignado', foundUser)
+            Device.findById(foundUser.device, (err, foundDevice) => {
+                if (err) return console.log('Error al buscar dispositivo' + foundUser.device, err)
+                if (!foundDevice) return console.log('No se encontró dispositivo', foundUser.device)
+                if (!foundDevice.token) return console.log('Dispositivo no tiene token asociado', foundDevice)
 
+                var payload = {
+                    data: {
+                        key: 'ASSIGN_ORDER',
+                        order: order
+                    }
+                }
+                send(foundDevice.token, payload);
+            })
+        })
+    })
+}
 
 function test(token) {
     //var token = 'ej_707oURzc:APA91bHJeVqT1W-YIJyJySb5ofPFfPeRIR2gtcu3fgtllHHER5ldhWnjKnhrIiFW4n1IPUsH61DU8nIqOSWmkFiytUlwRKGR4SpkR2EUD3lr3nIfVpzktYoK7S6hdF4hf2Aw_BCRa4l5'
@@ -82,5 +107,5 @@ function send(token, payload) {
 
 }
 module.exports = {
-    requestGeoreference, test, send
+    requestGeoreference, test, send, newOrderAssigned
 }
