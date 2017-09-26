@@ -55,7 +55,7 @@ function newOrderAssigned (vehicle, order) {
 
                 var payload = {
                     data: {
-                        key: 'ASSIGN_ORDER',
+                        key: 'NEW_ORDER',
                         order: order
                     }
                 }

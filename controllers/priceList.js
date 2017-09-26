@@ -81,15 +81,7 @@ function saveOne (req, res) {
 function updateOne(req, res) {
     var id = req.params.id
     var update = req.body
-    var items = JSON.parse(update.items);
-    update.items = null;
-    items.forEach(i => {
-        Price.findByIdAndUpdate(i.itemId, { price: i.price }, (e, itemUpdated) => {
-            if(e) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
-            
-        })
-    })
-    PriceList.findByIdAndUpdate(id, {name: update.name}, (err, updated) => {
+    PriceList.findByIdAndUpdate(id, update, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
         

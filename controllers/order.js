@@ -280,7 +280,7 @@ function assignVehicleToOrder (req, res) {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
         
         pushNotification.newOrderAssigned(vehicle, updated)
-        pushSocket.send('/orders', updated.distributor, 'change-state-order', order._id)
+        pushSocket.send('/orders', updated.distributor, 'new-order', order._id)
         
         return res.status(200)
                 .send({
