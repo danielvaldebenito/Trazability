@@ -1,47 +1,48 @@
 'use strict'
-var fs = require('fs')
-var path = require('path')
-var express = require('express')
-var bodyParser = require('body-parser')
-var app = express();
-var logger = require("./logger");
-var soap = require('soap')
-var morgan = require('morgan')
+const fs = require('fs')
+const path = require('path')
+const express = require('express')
+const bodyParser = require('body-parser')
+const app = express();
+const logger = require("./logger");
+const soap = require('soap')
+const morgan = require('morgan')
 
 // BODY PARSER
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 //LOG CONFIG
 morgan.token('json', (req, res) => {
-  return 'body: ' + JSON.stringify(req.body) + ' | ';
+  return 'body: ' + JSON.stringify(req.body);
 })
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :json', { stream: logger.stream }))
 logger.info('Iniciando aplicación')
 
 // create routes
-var address_routes = require('./routes/address')
-var client_routes = require('./routes/client')
-var dependence_routes = require('./routes/dependence')
-var device_routes = require('./routes/device')
-var distributor_routes = require('./routes/distributor')
-var folio_routes = require('./routes/folio')
-var georeference_request_routes = require('./routes/georeferenceRequest')
-var georeference_routes = require('./routes/georeference')
-var order_routes = require('./routes/order')
-var priceList_routes = require('./routes/priceList')
-var productType_routes = require('./routes/productType')
-var sale_routes = require('./routes/sale')
-var store_routes = require('./routes/store')
-var user_routes = require('./routes/user')
-var userWarehouse_routes = require('./routes/userWarehouse')
-var vehicle_routes = require('./routes/vehicle')
-var zone_routes = require('./routes/zone')
-var test_routes = require('./routes/test')
-var test_integration_routes = require('./integration/routes/test')
+const address_routes = require('./routes/address')
+const client_routes = require('./routes/client')
+const dependence_routes = require('./routes/dependence')
+const device_routes = require('./routes/device')
+const distributor_routes = require('./routes/distributor')
+const folio_routes = require('./routes/folio')
+const georeference_request_routes = require('./routes/georeferenceRequest')
+const georeference_routes = require('./routes/georeference')
+const internal_process_routes = require('./routes/internalProcess')
+const order_routes = require('./routes/order')
+const priceList_routes = require('./routes/priceList')
+const productType_routes = require('./routes/productType')
+const sale_routes = require('./routes/sale')
+const store_routes = require('./routes/store')
+const user_routes = require('./routes/user')
+const userWarehouse_routes = require('./routes/userWarehouse')
+const vehicle_routes = require('./routes/vehicle')
+const zone_routes = require('./routes/zone')
+const test_routes = require('./routes/test')
+const test_integration_routes = require('./integration/routes/test')
 // selects route
-var selects_routes = require('./routes/selects')
+const selects_routes = require('./routes/selects')
 // ERP INTEGRATION
-var erp_order_routes = require('./integration/routes/order')
+const erp_order_routes = require('./integration/routes/order')
 // configurar cabeceras
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -59,6 +60,7 @@ app.use('/api', distributor_routes)
 app.use('/api', folio_routes)
 app.use('/api', georeference_request_routes)
 app.use('/api', georeference_routes)
+app.use('/api', internal_process_routes)
 app.use('/api', order_routes)
 app.use('/api', priceList_routes)
 app.use('/api', productType_routes)
@@ -74,9 +76,9 @@ app.use('/api/selects', selects_routes)
 // integration
 app.use('/api/erp', erp_order_routes)
 // FIREBASE
-var admin = require("firebase-admin");
+const admin = require("firebase-admin");
 
-var serviceAccount = require('./unigas-envasado-firebase-adminsdk-bgnij-4a607b3f86.json');
+const serviceAccount = require('./unigas-envasado-firebase-adminsdk-bgnij-4a607b3f86.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

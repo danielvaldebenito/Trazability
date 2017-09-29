@@ -87,7 +87,8 @@ function loginDevice (req, res) {
                             data: null
                         })
                 } else {
-                    if(user.vehicle == undefined) {
+                    // Comprueba si el usuario tiene vehìculo asignado
+                    /*if(user.vehicle == undefined) {
                         return res.status(200)
                             .send({
                                 done: false,
@@ -95,7 +96,7 @@ function loginDevice (req, res) {
                                 message: 'El usuario no tiene vehículo asignado',
                                 data: null
                             })
-                    }
+                    }*/
                 // Comprobar contraseña
                     bcrypt.compare(password, user.password, (error, check) => {
                         if(error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })

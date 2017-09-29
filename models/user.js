@@ -18,6 +18,7 @@ var UserSchema = Schema({
     device: { type: Schema.Types.ObjectId, ref: 'Device' },
     lastLogin: Date,
     roles: [{ type: String, enum: roles }],
+    dependence: {type: Schema.Types.ObjectId, ref: 'Dependence'},
     internalProcessTypes: [{ type: Schema.Types.ObjectId, ref: 'InternalProcessType'}],
     internalProcess: [{ type: Schema.Types.ObjectId, ref: 'InternalProcess'}]
 })

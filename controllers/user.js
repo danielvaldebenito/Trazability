@@ -11,12 +11,12 @@ var config = require('../config')
 var fs = require('fs')
 var mail = require('../services/mail')
 function pruebas(req, res) {
-    
+
     res
     .status(200)
     .send({
         done: true,
-        message: 'Conexión establecida correctamente' 
+        message: 'Conexión establecida correctamente'
     })
 }
 function saveUser (req, res) {
@@ -28,18 +28,18 @@ function saveUser (req, res) {
     user.email = params.email
     user.isAdmin = params.isAdmin || false
     user.distributor = params.distributor
-    
+
     var roles = params.roles
     var rolesUser = []
     if (roles) {
         if(roles.isAdmin){
             rolesUser.push('ADMIN')
             user.isAdmin = true
-        } 
+        }
         if(roles.isVehicle){
             rolesUser.push('VEHÍCULO')
             user.vehicle = params.vehicle
-        } 
+        }
         if(roles.isOperator){
             var process = params.process;
             rolesUser.push('OPERADOR PLANTA')
@@ -51,12 +51,12 @@ function saveUser (req, res) {
                         ip.push(el.id)
                 });
                 user.internalProcessTypes = ip;
+                user.internalProcess = params.internalProcess;
+                user.dependence = params.dependence;
             }
-        }   
+        }
         user.roles = rolesUser
     }
-    
-        
     user.image = null
     var tempPass = Math.random().toString(36).slice(2);
     user.tempPassword = tempPass;
@@ -67,21 +67,21 @@ function saveUser (req, res) {
         });
         Vehicle.findByIdAndUpdate(user.vehicle, { user: user._id }, (err, vehicle) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar vehículo', err })
-            
+
         })
     }
     user.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al guardar', err })
         if(!stored) return res.status(404).send({ done: false, message: 'No se pudo guardar el usuario' })
-        
-        mail.sendMail(user.email, 
-            'Trazabilidad - Contraseña Temporal', 
-            user.tempPassword, 
+
+        mail.sendMail(user.email,
+            'Trazabilidad - Contraseña Temporal',
+            user.tempPassword,
             user.name + ' ' + user.surname)
-        
+
         return res.status(200).send({ done: true, message: 'Usuario guardado. Se ha enviado un e-mail a la casilla especificada con la clave temporal', stored: stored})
-        
-        
+
+
     })
 }
 function loginUser (req, res) {
@@ -120,7 +120,7 @@ function loginUser (req, res) {
                         if(error) return res.status(500).send({ message: 'Ocurrió un error', error: error })
                         if(check) {
                         // devolver los datos del usuario logueado
-                            
+
                             User.update({ _id: user._id }, { lastLogin: moment() }, (err, raw) => {
                                 if(err) return res.status(500).send({ done: false, message: 'Error al guardar último login', code: -1, err})
                                 return res.status(200)
@@ -129,9 +129,9 @@ function loginUser (req, res) {
                                             code: 0,
                                             message: 'OK',
                                             data: { user: user, token: jwt.createToken(user) }
-                                        }) 
+                                        })
                             })
-                           
+
                         } else {
                             res.status(200)
                             .send({
@@ -142,11 +142,11 @@ function loginUser (req, res) {
                                 })
                         }
                 })
-                    
+
                 }
-                        
+
                 // Comprobar contraseña
-                
+
             }
         }
     })
@@ -178,7 +178,7 @@ function updatePass (req, res) {
                                         done: false,
                                         message: 'La contraseña indicada es incorrecta',
                                         code: 1
-                                        
+
                                     })
                     }
                 })
@@ -199,15 +199,15 @@ function updatePass (req, res) {
             })
         })
     }
-    
+
 }
 function updateUser(req, res) {
     var userId = req.params.id
-    
+
     var update = req.body
     console.log('update', update, userId)
     var user = update;
-    
+
     var roles = update.roles
     var rolesUser = []
     if (roles) {
@@ -234,10 +234,10 @@ function updateUser(req, res) {
                 });
                 user.internalProcessTypes = ip;
             }
-            
+
         } else {
             user.internalProcessTypes = null
-        } 
+        }
         user.roles = rolesUser
     }
     if(user.vehicle) {
@@ -247,7 +247,7 @@ function updateUser(req, res) {
         });
         Vehicle.findByIdAndUpdate(user.vehicle, { user: userId }, (err, vehicle) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar vehículo', err })
-            
+
         })
     }
     User.findByIdAndUpdate(userId, user, (err, updated) => {
@@ -256,10 +256,10 @@ function updateUser(req, res) {
                 .send({message: 'Error al actualizar el registro', err})
         } else {
             if(!updated) return res.status(404).send({message: 'No se ha podido actualizar'})
-            
+
             return res.status(200).send({ done: true, message: 'Usuario actualizado correctamente', updated: updated})
-        } 
-        
+        }
+
     })
 }
 function uploadImage(req, res) {
@@ -288,7 +288,7 @@ function uploadImage(req, res) {
                     .send({message: 'Datos actualizados', updated: updated})
             }
         })
-        
+
     } else {
         res.status(200)
             .send({
@@ -313,13 +313,13 @@ function getUsers (req, res){
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || 'name'
-    var sord = req.query.sord || 1 
+    var sord = req.query.sord || 1
     var filter = req.query.filter
-    
+
     User.find({ distributor: distributor })
         .populate('vehicle')
         .populate('internalProcessTypes')
-        .where(filter ? 
+        .where(filter ?
             { $or: [ { name: { "$regex": filter, "$options": "i" }},
                     { surname: { "$regex": filter, "$options": "i" }} ] }
              : {})
@@ -331,10 +331,10 @@ function getUsers (req, res){
                 return res.status(400).send({ done: false, message: 'Error al obtener los datos' })
             return res
                     .status(200)
-                    .send({ 
-                        done: true, 
-                        message: 'OK', 
-                        data: { records, total },  
+                    .send({
+                        done: true,
+                        message: 'OK',
+                        data: { records, total },
                         code: 0
                     })
         })

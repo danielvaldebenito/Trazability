@@ -1574,3 +1574,753 @@ Conectado a web service Salesforce como Francisco Otalora
 [32minfo[39m: POST /api/client/ 500 1853.758 ms - 1012 body: {"nit":"123","name":"Hector","surname":"Salamanca","phone":null,"email":null,"contact":"Hector Salamanca","discountSurcharge":[{"productType":"5988d40c67519cdd05854bcd","isDiscount":true,"value":0},{"productType":"5988d41d67519cdd05854be7","isDiscount":true,"value":0},{"productType":"5988d42e67519cdd05854c02","isDiscount":true,"value":0},{"productType":"5988d44167519cdd05854c12","isDiscount":true,"value":0},{"productType":"59a4665d1c16143d3312c0cc","isDiscount":true,"value":0}],"addresses":[{"location":"Calle 15 Carrera 15 #15","region":"Cundinamarca","city":"Bogotá"}]} | 
 
 [32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+{ Error: sf:LOGIN_MUST_USE_SECURITY_TOKEN: LOGIN_MUST_USE_SECURITY_TOKEN: Nombre de usuario, contraseña, token de seguridad o usuario no válidos o bloqueados. ¿Se encuentra en una nueva ubicación? Cuando acceda a Salesforce desde el exterior de las redes de confianza de su compañía, ya sea mediante un cliente de sobremesa o la API, deberá agregar un token de seguridad a su contraseña para iniciar sesión. Para obtener su nuevo token de seguridad, inicie sesión en Salesforce. Desde su configuración personal, introduzca Restablecer mi token de seguridad en el cuadro Búsqueda rápida y, a continuación, seleccione Restablecer mi token de seguridad.
+    at finish (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\soap\lib\wsdl.js:1513:21)
+    at parseSync (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\soap\lib\client.js:362:23)
+    at Request._callback (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\soap\lib\http.js:117:5)
+    at Request.self.callback (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\request\request.js:188:22)
+    at emitTwo (events.js:106:13)
+    at Request.emit (events.js:191:7)
+    at Request.<anonymous> (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\request\request.js:1171:10)
+    at emitOne (events.js:96:13)
+    at Request.emit (events.js:188:7)
+    at IncomingMessage.<anonymous> (C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\node_modules\request\request.js:1091:12)
+    at IncomingMessage.g (events.js:292:16)
+    at emitNone (events.js:91:20)
+    at IncomingMessage.emit (events.js:185:7)
+    at endReadableNT (_stream_readable.js:974:12)
+    at _combinedTickCallback (internal/process/next_tick.js:74:11)
+    at process._tickCallback (internal/process/next_tick.js:98:9)
+  root: { Envelope: { Body: [Object] } },
+  response: 
+   IncomingMessage {
+     _readableState: 
+      ReadableState {
+        objectMode: false,
+        highWaterMark: 16384,
+        buffer: [Object],
+        length: 0,
+        pipes: null,
+        pipesCount: 0,
+        flowing: true,
+        ended: true,
+        endEmitted: true,
+        reading: false,
+        sync: false,
+        needReadable: false,
+        emittedReadable: false,
+        readableListening: false,
+        resumeScheduled: false,
+        defaultEncoding: 'utf8',
+        ranOut: false,
+        awaitDrain: 0,
+        readingMore: false,
+        decoder: null,
+        encoding: null },
+     readable: false,
+     domain: null,
+     _events: 
+      { end: [Object],
+        close: [Object],
+        data: [Function],
+        error: [Function] },
+     _eventsCount: 4,
+     _maxListeners: undefined,
+     socket: 
+      TLSSocket {
+        _tlsOptions: [Object],
+        _secureEstablished: true,
+        _securePending: false,
+        _newSessionPending: false,
+        _controlReleased: true,
+        _SNICallback: null,
+        servername: null,
+        npnProtocol: undefined,
+        alpnProtocol: false,
+        authorized: true,
+        authorizationError: null,
+        encrypted: true,
+        _events: [Object],
+        _eventsCount: 9,
+        connecting: false,
+        _hadError: false,
+        _handle: null,
+        _parent: null,
+        _host: 'test.salesforce.com',
+        _readableState: [Object],
+        readable: false,
+        domain: null,
+        _maxListeners: undefined,
+        _writableState: [Object],
+        writable: false,
+        allowHalfOpen: false,
+        destroyed: true,
+        _bytesDispatched: 790,
+        _sockname: null,
+        _pendingData: null,
+        _pendingEncoding: '',
+        server: undefined,
+        _server: null,
+        ssl: null,
+        _requestCert: true,
+        _rejectUnauthorized: true,
+        parser: null,
+        _httpMessage: [Object],
+        read: [Function],
+        _consuming: true,
+        _idleNext: null,
+        _idlePrev: null,
+        _idleTimeout: -1 },
+     connection: 
+      TLSSocket {
+        _tlsOptions: [Object],
+        _secureEstablished: true,
+        _securePending: false,
+        _newSessionPending: false,
+        _controlReleased: true,
+        _SNICallback: null,
+        servername: null,
+        npnProtocol: undefined,
+        alpnProtocol: false,
+        authorized: true,
+        authorizationError: null,
+        encrypted: true,
+        _events: [Object],
+        _eventsCount: 9,
+        connecting: false,
+        _hadError: false,
+        _handle: null,
+        _parent: null,
+        _host: 'test.salesforce.com',
+        _readableState: [Object],
+        readable: false,
+        domain: null,
+        _maxListeners: undefined,
+        _writableState: [Object],
+        writable: false,
+        allowHalfOpen: false,
+        destroyed: true,
+        _bytesDispatched: 790,
+        _sockname: null,
+        _pendingData: null,
+        _pendingEncoding: '',
+        server: undefined,
+        _server: null,
+        ssl: null,
+        _requestCert: true,
+        _rejectUnauthorized: true,
+        parser: null,
+        _httpMessage: [Object],
+        read: [Function],
+        _consuming: true,
+        _idleNext: null,
+        _idlePrev: null,
+        _idleTimeout: -1 },
+     httpVersionMajor: 1,
+     httpVersionMinor: 1,
+     httpVersion: '1.1',
+     complete: true,
+     headers: 
+      { date: 'Wed, 27 Sep 2017 12:58:51 GMT',
+        'cache-control': 'no-cache,must-revalidate,max-age=0,no-store,private',
+        'set-cookie': [Object],
+        expires: 'Thu, 01 Jan 1970 00:00:00 GMT',
+        'content-type': 'text/xml; charset=utf-8',
+        'content-length': '1767',
+        connection: 'close' },
+     rawHeaders: 
+      [ 'Date',
+        'Wed, 27 Sep 2017 12:58:51 GMT',
+        'Cache-Control',
+        'no-cache,must-revalidate,max-age=0,no-store,private',
+        'Set-Cookie',
+        'BrowserId=S1y4qqHhQD-yvlbf0x_Ogw;Path=/;Domain=.salesforce.com;Expires=Sun, 26-Nov-2017 12:58:51 GMT;Max-Age=5184000',
+        'Expires',
+        'Thu, 01 Jan 1970 00:00:00 GMT',
+        'Content-Type',
+        'text/xml; charset=utf-8',
+        'Content-Length',
+        '1767',
+        'Connection',
+        'close' ],
+     trailers: {},
+     rawTrailers: [],
+     upgrade: false,
+     url: '',
+     method: null,
+     statusCode: 500,
+     statusMessage: 'Server Error',
+     client: 
+      TLSSocket {
+        _tlsOptions: [Object],
+        _secureEstablished: true,
+        _securePending: false,
+        _newSessionPending: false,
+        _controlReleased: true,
+        _SNICallback: null,
+        servername: null,
+        npnProtocol: undefined,
+        alpnProtocol: false,
+        authorized: true,
+        authorizationError: null,
+        encrypted: true,
+        _events: [Object],
+        _eventsCount: 9,
+        connecting: false,
+        _hadError: false,
+        _handle: null,
+        _parent: null,
+        _host: 'test.salesforce.com',
+        _readableState: [Object],
+        readable: false,
+        domain: null,
+        _maxListeners: undefined,
+        _writableState: [Object],
+        writable: false,
+        allowHalfOpen: false,
+        destroyed: true,
+        _bytesDispatched: 790,
+        _sockname: null,
+        _pendingData: null,
+        _pendingEncoding: '',
+        server: undefined,
+        _server: null,
+        ssl: null,
+        _requestCert: true,
+        _rejectUnauthorized: true,
+        parser: null,
+        _httpMessage: [Object],
+        read: [Function],
+        _consuming: true,
+        _idleNext: null,
+        _idlePrev: null,
+        _idleTimeout: -1 },
+     _consuming: true,
+     _dumped: false,
+     req: 
+      ClientRequest {
+        domain: null,
+        _events: [Object],
+        _eventsCount: 5,
+        _maxListeners: undefined,
+        output: [],
+        outputEncodings: [],
+        outputCallbacks: [],
+        outputSize: 0,
+        writable: true,
+        _last: true,
+        upgrading: false,
+        chunkedEncoding: false,
+        shouldKeepAlive: false,
+        useChunkedEncodingByDefault: true,
+        sendDate: false,
+        _removedHeader: [Object],
+        _contentLength: null,
+        _hasBody: true,
+        _trailer: '',
+        finished: true,
+        _headerSent: true,
+        socket: [Object],
+        connection: [Object],
+        _header: 'POST /services/Soap/u/40.0 HTTP/1.1\r\nUser-Agent: node-soap/0.21.0\r\nAccept: text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8\r\nAccept-Encoding: none\r\nAccept-Charset: utf-8\r\nConnection: close\r\nHost: test.salesforce.com\r\nContent-Length: 471\r\nContent-Type: text/xml; charset=utf-8\r\nSOAPAction: ""\r\n\r\n',
+        _headers: [Object],
+        _headerNames: [Object],
+        _onPendingData: null,
+        agent: [Object],
+        socketPath: undefined,
+        timeout: undefined,
+        method: 'POST',
+        path: '/services/Soap/u/40.0',
+        _ended: true,
+        parser: null,
+        res: [Circular] },
+     request: 
+      Request {
+        domain: null,
+        _events: [Object],
+        _eventsCount: 5,
+        _maxListeners: undefined,
+        uri: [Object],
+        method: 'POST',
+        headers: [Object],
+        followAllRedirects: true,
+        body: '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:fns="urn:fault.partner.soap.sforce.com" xmlns:tns="urn:partner.soap.sforce.com" xmlns:ens="urn:sobject.partner.soap.sforce.com"><soap:Body><login xmlns="urn:partner.soap.sforce.com"><username>sistemas@unigas.com.co.developer</username><password>Sagan2020$</password></login></soap:Body></soap:Envelope>',
+        callback: [Function],
+        readable: true,
+        writable: true,
+        explicitMethod: true,
+        _qs: [Object],
+        _auth: [Object],
+        _oauth: [Object],
+        _multipart: [Object],
+        _redirect: [Object],
+        _tunnel: [Object],
+        setHeader: [Function],
+        hasHeader: [Function],
+        getHeader: [Function],
+        removeHeader: [Function],
+        localAddress: undefined,
+        pool: {},
+        dests: [],
+        __isRequestRequest: true,
+        _callback: [Function],
+        proxy: null,
+        tunnel: true,
+        setHost: false,
+        originalCookieHeader: undefined,
+        _disableCookies: true,
+        _jar: undefined,
+        port: 443,
+        host: 'test.salesforce.com',
+        path: '/services/Soap/u/40.0',
+        httpModule: [Object],
+        agentClass: [Object],
+        agent: [Object],
+        _started: true,
+        href: 'https://test.salesforce.com/services/Soap/u/40.0',
+        req: [Object],
+        ntick: true,
+        response: [Circular],
+        originalHost: 'test.salesforce.com',
+        originalHostHeaderName: 'Host',
+        responseContent: [Circular],
+        _destdata: true,
+        _ended: true,
+        _callbackCalled: true },
+     toJSON: [Function: responseToJSON],
+     caseless: Caseless { dict: [Object] },
+     read: [Function],
+     body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><soapenv:Fault><faultcode>sf:LOGIN_MUST_USE_SECURITY_TOKEN</faultcode><faultstring>LOGIN_MUST_USE_SECURITY_TOKEN: Nombre de usuario, contraseña, token de seguridad o usuario no válidos o bloqueados. ¿Se encuentra en una nueva ubicación? Cuando acceda a Salesforce desde el exterior de las redes de confianza de su compañía, ya sea mediante un cliente de sobremesa o la API, deberá agregar un token de seguridad a su contraseña para iniciar sesión. Para obtener su nuevo token de seguridad, inicie sesión en Salesforce. Desde su configuración personal, introduzca Restablecer mi token de seguridad en el cuadro Búsqueda rápida y, a continuación, seleccione Restablecer mi token de seguridad.</faultstring><detail><sf:LoginFault xsi:type="sf:LoginFault"><sf:exceptionCode>LOGIN_MUST_USE_SECURITY_TOKEN</sf:exceptionCode><sf:exceptionMessage>Nombre de usuario, contraseña, token de seguridad o usuario no válidos o bloqueados. ¿Se encuentra en una nueva ubicación? Cuando acceda a Salesforce desde el exterior de las redes de confianza de su compañía, ya sea mediante un cliente de sobremesa o la API, deberá agregar un token de seguridad a su contraseña para iniciar sesión. Para obtener su nuevo token de seguridad, inicie sesión en Salesforce. Desde su configuración personal, introduzca Restablecer mi token de seguridad en el cuadro Búsqueda rápida y, a continuación, seleccione Restablecer mi token de seguridad.</sf:exceptionMessage></sf:LoginFault></detail></soapenv:Fault></soapenv:Body></soapenv:Envelope>' },
+  body: '<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><soapenv:Fault><faultcode>sf:LOGIN_MUST_USE_SECURITY_TOKEN</faultcode><faultstring>LOGIN_MUST_USE_SECURITY_TOKEN: Nombre de usuario, contraseña, token de seguridad o usuario no válidos o bloqueados. ¿Se encuentra en una nueva ubicación? Cuando acceda a Salesforce desde el exterior de las redes de confianza de su compañía, ya sea mediante un cliente de sobremesa o la API, deberá agregar un token de seguridad a su contraseña para iniciar sesión. Para obtener su nuevo token de seguridad, inicie sesión en Salesforce. Desde su configuración personal, introduzca Restablecer mi token de seguridad en el cuadro Búsqueda rápida y, a continuación, seleccione Restablecer mi token de seguridad.</faultstring><detail><sf:LoginFault xsi:type="sf:LoginFault"><sf:exceptionCode>LOGIN_MUST_USE_SECURITY_TOKEN</sf:exceptionCode><sf:exceptionMessage>Nombre de usuario, contraseña, token de seguridad o usuario no válidos o bloqueados. ¿Se encuentra en una nueva ubicación? Cuando acceda a Salesforce desde el exterior de las redes de confianza de su compañía, ya sea mediante un cliente de sobremesa o la API, deberá agregar un token de seguridad a su contraseña para iniciar sesión. Para obtener su nuevo token de seguridad, inicie sesión en Salesforce. Desde su configuración personal, introduzca Restablecer mi token de seguridad en el cuadro Búsqueda rápida y, a continuación, seleccione Restablecer mi token de seguridad.</sf:exceptionMessage></sf:LoginFault></detail></soapenv:Fault></soapenv:Body></soapenv:Envelope>' }
+[32minfo[39m: OPTIONS /api/test 200 7.912 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 200 2.499 ms - 61 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.384 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 3.124 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.951 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.456 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.679 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.553 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.783 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.671 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.052 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.433 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.471 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.428 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.462 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.096 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.786 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.811 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.701 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.506 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.005 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.427 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.012 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.517 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.411 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.364 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.914 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.622 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.462 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.589 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.799 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.932 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.805 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.576 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.418 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 1.318 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.601 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 164.372 ms - 327 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.745 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.469 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.597 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 7.190 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.448 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.555 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.627 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 5.744 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.396 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.468 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.112 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 4.544 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.752 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.467 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internalprocesstypes/59cab75255d684c66bc30c1a 404 4.474 ms - 200 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.746 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 2.844 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.396 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.512 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internalprocesstypes/ 404 0.758 ms - 176 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.459 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 4.194 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.489 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.653 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 1.137 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.822 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 6.263 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 200 5.675 ms - 47 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.474 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.846 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.711 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.612 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 4.658 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 3.165 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.134 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.493 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.762 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.615 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 6.060 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 200 6.070 ms - 335 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.402 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 2.558 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.454 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.729 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 4.664 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 5.310 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.453 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.571 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.650 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.580 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 6.651 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 5.745 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.710 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.500 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.721 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 2.414 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 4.622 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 2.679 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.048 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.683 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.435 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.588 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 3.314 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 2.756 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 1.094 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 1.411 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.403 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.499 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.576 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.692 ms - 8 body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 5.464 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 4.607 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.416 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 1.129 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.817 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.442 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 3.504 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 4.062 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/internal-process/ 404 0.436 ms - 164 body: {} | 
+
+[32minfo[39m: OPTIONS /api/internal-process/ 404 0.451 ms - 164 body: {} | 
+
+[32minfo[39m: OPTIONS /api/test 200 0.495 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 200 0.625 ms - 8 body: {} | 
+
+[32minfo[39m: OPTIONS /api/selects/internal-process-types 200 0.701 ms - 8 body: {} | 
+
+[32minfo[39m: GET /api/test 304 0.535 ms - - body: {} | 
+
+dependence [ { _id: 59caba6eaaee9545b49171a4,
+    createdAt: 2017-09-26T20:37:02.825Z,
+    updatedAt: 2017-09-26T20:42:22.778Z,
+    distributor: 59cab75255d684c66bc30c1a,
+    phone: '3654654446',
+    email: 'planta@unigas.co',
+    address: 'Calle 10 Carrera 12',
+    name: 'Planta Bogotá',
+    __v: 0,
+    isPlant: true } ]
+[32minfo[39m: GET /api/selects/dependences?distributor=59cab75255d684c66bc30c1a 304 3.664 ms - - body: {} | 
+
+[32minfo[39m: GET /api/selects/internal-process-types 304 3.756 ms - - body: {} | 
+
+[32minfo[39m: OPTIONS /api/internal-process/ 404 1.213 ms - 164 body: {} | 
+
+[32minfo[39m: OPTIONS /api/internal-process/ 404 1.690 ms - 164 body: {} | 
+
+[32minfo[39m: GET /api/dependences/59cab75255d684c66bc30c1a?filter=&limit=10&page=1 200 411.867 ms - 407 body: {} | 
+
+[32minfo[39m: POST /api/internal-process 404 0.663 ms - 160 body: {} | 
+
+[32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548

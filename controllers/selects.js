@@ -165,6 +165,7 @@ function getOrderStates (req, res) {
                         message: 'OK',
                         data: states})
 }
+
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,

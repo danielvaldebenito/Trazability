@@ -15,12 +15,12 @@ function getAll(req, res) {
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
     var filter = req.query.filter
-    var distributor = req.param.distributor
+    var distributor = req.params.distributor
     Dependence
             .find( distributor ? { distributor : distributor } : {})
             .where ( filter ? { name: { $regex: filter, $options: 'i' } }: {})
             .sort([[sidx, sord]])
-            .populate({ path: 'distributor', model: Distributor })
+            .populate({ path: 'distributor', model: Distributor, match: { _id: distributor } })
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})

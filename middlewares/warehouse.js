@@ -5,6 +5,22 @@ var Warehouse = require('../models/warehouse')
 var Decrease = require('../models/decrease')
 var Address = require ('../models/address')
 var Vehicle = require ('../models/vehicle')
+
+var createInternalProcessWarehouse = function(req, res, next) {
+    console.log('createInternalProcessWarehouse', req.body)
+    var warehouse = new Warehouse()
+    warehouse.name = req.body.name
+    warehouse.type = 'PROCESO_INTERNO'
+    warehouse.dependence = req.body.dependence
+    warehouse.save((err, wh) => {
+        if(err) {
+            res.status(500).send({ message: 'Error en middleware', error: err })
+            return
+        };
+        req.body.warehouse = wh._id
+        next();
+    })
+}
 /* Crea la bodega al crear una dirección */
 var createAddressWarehouse = function(req, res, next) {
     console.log('createAddressWarehouse', req.body)
@@ -133,6 +149,7 @@ var createStoreWarehouse = function(req, res, next) {
 
 
 module.exports = {
+    createInternalProcessWarehouse,
     createAddressWarehouse,
     createVehicleWarehouse,
     createStoreWarehouse,
