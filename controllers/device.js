@@ -73,6 +73,9 @@ function loginDevice (req, res) {
     var isSameDataKey = initialDataKey == initialDataKeyConfig
     User.findOne({username: username})
         .populate('vehicle')
+        .populate('internalProcess')
+        .populate('internalProcessTypes')
+        .populate('dependence')
         .exec((err, user) => {
             if(err) {
                 res.status(500)
