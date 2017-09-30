@@ -56,7 +56,6 @@ var createAddressFromClient = function (req, res, next) {
 var createAddressWarehouseForOrder = function(req, res, next) {
     
     var body = req.body;
-    console.log('createAddressWarehouseForOrder', body)
     var placeId = body.placeId;
     if(!placeId) { next() }
     else {
@@ -67,26 +66,32 @@ var createAddressWarehouseForOrder = function(req, res, next) {
             if(record) { /* Si existe una direccion con ese placeId */
                 req.body.destinyWarehouse = record.warehouse // Se envia la bodega
                 req.body.address = record._id
+                console.log('Existe placeId', placeId)
                 next();
             } else { // Si no se crea una bodega y la direccion, y se envía al siguiente la bodega
                 var warehouse = new Warehouse()
-                warehouse.name = req.body.address
+                warehouse.name = body.location || body.address.location
                 warehouse.type = 'DIRECCION_CLIENTE'
                 warehouse.save((err, wh) => {
                     if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', error: err })
                        
                     var address = new Address()
-                    address.location = body.address
-                    address.city = body.city
-                    address.region = body.region
-                    address.client = body.client
+                    address.location = body.location || body.address.location 
+                    address.city = body.city || body.address.city 
+                    address.region = body.region || body.address.region
+                    address.client = body.clientId 
                     address.warehouse = wh._id
-                    address.coordinates = body.coordinates
+                    
                     address.placeId = body.placeId
-                    address.coordinates = {
-                        lat: body.lat,
-                        lng: body.lng
+                    if(!body.coordinates) {
+                        address.coordinates = {
+                            lat: body.lat,
+                            lng: body.lng
+                        }
+                    } else {
+                        address.coordinates = body.coordinates
                     }
+                        
                     address.save((error, addressSaved) => {
                         req.body.destinyWarehouse = wh._id
                         req.body.address = addressSaved._id

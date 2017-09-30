@@ -6,8 +6,8 @@ var createDocument = function(req, res, next) {
 
     var folio = req.body.folio
     var typeDocument = req.body.typeDocument
-    Document.findOne({ folio: folio, typeDocument: typeDocument }, (err, doc) => {
-        if(err) res.status(500).send({ message: 'Error en creación de documento', error: err })
+    Document.findOne({ folio: folio, type: typeDocument }, (err, doc) => {
+        if(err) return res.status(500).send({ message: 'Error en creación de documento', error: err })
         if(!doc)
         {
             var document = new Document()

@@ -26,6 +26,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.8.2",
     "node-geocoder": "^3.20.0",
+    "request": "^2.83.0",
     "sendgrid": "^5.2.0",
     "soap": "^0.21.0",
     "soap-server": "^0.1.0",

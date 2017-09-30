@@ -33,3 +33,5 @@ Stacktrace:   en System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInter
 2017-09-12 11:52:35 - Started 5688
 2017-09-27 09:52:55 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2017-09-27 09:52:56 - Started 5180
+2017-09-29 22:40:48 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2017-09-29 22:40:49 - Started 5932

@@ -71,12 +71,12 @@ function saveOne (req, res) {
         var params = req.body
         sale.coordinates = params.coordinates
         sale.done = params.done
-        sale.type = params.type
+        sale.type = params.typeSale
         sale.paymentMethod = params.paymentMethod
         sale.transaction = params.transaction
         sale.document = params.document
         var delivery = params.delivery
-        sale.items = params.saleItems
+        sale.items = params.itemsSale
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
@@ -85,11 +85,13 @@ function saveOne (req, res) {
                 var del = new Delivery({
                     coordinates: delivery.coordinates,
                     done: delivery.done,
-                    order: delivery.order,
+                    order: delivery.orderId,
                     sale: stored._id
                 })
                 del.save((e, deliveryStored) => {
                     if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
+                    
+                    
                     stored.delivery = deliveryStored._id
                     stored.save()
                 })
