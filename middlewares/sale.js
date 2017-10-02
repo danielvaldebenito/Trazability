@@ -8,8 +8,11 @@ var Enumerable = require('linq')
 
 const parseToJson  = function (req, res, next) {
     try{
+        
         const body = req.body
+        console.log(body)
         const json = JSON.parse(body)
+        console.log(json)
         req.body = json.data;
         next()
     } catch(e) {
