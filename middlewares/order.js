@@ -93,6 +93,7 @@ function saveOneByDevice(req, res, next) {
                      * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                      */
                     pushSocket.send('/orders', params.distributor, 'new-order', stored)
+                    req.body.orderNumber = stored.orderNumber
                     next()
                 }
             )

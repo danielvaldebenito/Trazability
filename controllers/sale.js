@@ -69,8 +69,8 @@ function saveOne (req, res) {
     try{
         var sale = new Sale()
         var params = req.body
-        sale.coordinates = params.coordinates
-        sale.done = params.done
+        //sale.coordinates = params.coordinates
+        //sale.done = params.done
         sale.type = params.typeSale
         sale.paymentMethod = params.paymentMethod
         sale.transaction = params.transaction
@@ -91,7 +91,6 @@ function saveOne (req, res) {
                 del.save((e, deliveryStored) => {
                     if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
                     
-                    
                     stored.delivery = deliveryStored._id
                     stored.save()
                 })
@@ -101,7 +100,8 @@ function saveOne (req, res) {
                 .send({
                     done: true,
                     message: 'Registro guardado exitosamente',
-                    stored: stored
+                    stored: stored,
+                    orderNumber: req.body.orderNumber
                 })
                 .end()  
         })
