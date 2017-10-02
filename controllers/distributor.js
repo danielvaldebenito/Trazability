@@ -4,7 +4,9 @@ var path = require('path')
 var mongoose = require('mongoose')
 var pagination = require('mongoose-pagination')
 var Distributor = require('../models/distributor')
+var User = require('../models/user')
 var config = require('../config')
+var mail = require('../services/mail')
 
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
@@ -63,14 +65,35 @@ function saveOne (req, res) {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         // Creating decrease warehouse
-        
-        return res
+        var random = Math.random().toString(16).slice(2)
+        const user = new User({
+            name: params.name,
+            surname: '',
+            email: params.email,
+            username: params.nit,
+            tempPassword: random,
+            isAdmin: true,
+            distributor: stored._id,
+            roles: ['ADMIN']
+        })
+        user.save((err, stored) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar usuario', error: err })
+            if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro de usuario' })
+            
+            mail.sendMail(user.email,
+                'Trazabilidad - Contraseña Temporal',
+                user.random,
+                params.name)
+
+            return res
                 .status(200)
                 .send({ 
                     done: true, 
                     message: 'Registro guardado exitosamente', 
                     stored: stored,
-                })        
+                })   
+        })
+             
     })
 }
 function updateOne(req, res) {

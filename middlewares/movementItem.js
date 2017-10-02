@@ -7,7 +7,8 @@ var Product = require('../models/product')
 var createMovementItems = function(req, res, next) {
     
     var params = req.body
-    var movement = params.movement
+    var inputMovement = params.inputMovement
+    var outputMovement = params.outputMovement
     var items = params.items
     var ids = []
     var total = items.length
@@ -29,13 +30,13 @@ var createMovementItems = function(req, res, next) {
                         product.save ((errr, productStored) => {
                             if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                             id = productStored._id
-                            saveMovementItemToDb(i, id, movement)
-                            
+                            saveMovementItemToDb(i, id, inputMovement)
+                            saveMovementItemToDb(i, id, outputMovement)
                         })
                     } else {
                         id = pro._id
-                        saveMovementItemToDb(i, id, movement)
-
+                        saveMovementItemToDb(i, id, inputMovement)
+                        saveMovementItemToDb(i, id, outputMovement)
                     }
                     
                 })

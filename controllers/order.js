@@ -83,7 +83,7 @@ function getAllVehicle (req, res) {
         })
         .populate({
             path: 'client',
-            select: ['_id', 'nit', 'name', 'surname', 'fullname', 'discountSurcharges', 'phone', 'address', 'city', 'region']
+            select: ['_id', 'nit', 'name', 'surname', 'fullname', 'discountSurcharges', 'phone', 'addresses', 'city', 'region']
         })
         .select(['-__v'])
         .exec((err, records) => {

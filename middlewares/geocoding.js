@@ -16,12 +16,15 @@ exports.findCoordFromAddress = function (req, res, next) {
                 
                 const Body = JSON.parse(body)
                 const results = Body.results
-                const first = results[0]
-                const geometry = first.geometry
-                const location = geometry.location
-                const placeId = first.place_id
-                req.body.placeId = placeId
-                req.body.coordinates = location
+                if(results) {
+                    const first = results[0]
+                    const geometry = first.geometry
+                    const location = geometry.location
+                    const placeId = first.place_id
+                    req.body.placeId = placeId
+                    req.body.coordinates = location
+                }
+                
                 
                 next()
             }
