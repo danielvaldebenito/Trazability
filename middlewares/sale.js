@@ -10,7 +10,7 @@ const parseToJson  = function (req, res, next) {
     try{
         const body = req.body
         const json = JSON.parse(body)
-        req.body = json;
+        req.body = json.data;
         next()
     } catch(e) {
         res.status(500).send({done: false, code: -1, message: 'No se pudo parsear el JSON', error: e})
