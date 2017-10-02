@@ -58,7 +58,7 @@ const clientFromOrderByDevice = function (req, res, next) {
 function saveOneByDevice(req, res, next) {
     const order = new Order()
     const params = req.body
-    if (!params.delivery.order) {
+    if (params.delivery.orderId) {
         Order.update(
             { _id: params.delivery.orderId },
             { status: params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4] },

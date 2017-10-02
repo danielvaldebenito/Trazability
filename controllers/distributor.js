@@ -11,12 +11,21 @@ var mail = require('../services/mail')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
-    var sidx = req.query.sidx || '_id'
+    var sidx = req.query.sidx || '-intern'
     var sord = req.query.sord || 1
-    
-    var distributor = req.param.distributor
+    var filter = req.query.filter
     var l = parseInt(limit)
     Distributor.find()
+            .where(filter ? {
+                $or: [
+                    { name: { $regex: filter, $options: 'i' } },
+                    { nit: { $regex: filter, $options: 'i' } },
+                    { phone: { $regex: filter, $options: 'i' } },
+                    { contact: { $regex: filter, $options: 'i' } }
+                ] 
+            }:
+                 
+            {})
             .sort([[sidx, sord]])
             .paginate(page, limit, (err, records, total) => {
                 if(err)
