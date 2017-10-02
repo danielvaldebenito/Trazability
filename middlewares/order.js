@@ -69,7 +69,7 @@ function saveOneByDevice(req, res, next) {
         )
     } else {
         order.commitmentDate = moment()
-        order.client = params.client // From Middleware clientFromOrderByDevice
+        order.client = params.clientId // From Middleware clientFromOrderByDevice
         order.address = params.address // From Middleware addressFromOrderByDevice
         order.vehicle = params.vehicle
         order.phone = params.phone
