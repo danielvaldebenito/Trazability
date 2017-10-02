@@ -4,7 +4,7 @@ var DistributorController = require('../controllers/distributor')
 var md_auth = require('../middlewares/authenticated')
 var api = express.Router()
 
-api.get('/distributor/', md_auth.ensureAuth, DistributorController.getAll)
+api.get('/distributors/', md_auth.ensureAuth, DistributorController.getAll)
 api.get('/distributor/:id', md_auth.ensureAuth, DistributorController.getOne)
 api.post('/distributor/', [md_auth.ensureAuth], DistributorController.saveOne)
 api.put('/distributor/:id', md_auth.ensureAuth, DistributorController.updateOne)
