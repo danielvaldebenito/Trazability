@@ -48,6 +48,7 @@ var createMovementItems = function(req, res, next) {
     next()
 }
 const createMovementItemsByRetreat = function(req, res, next) {
+    var params = req.body
     if (!params.delivery.done) {
         return next()
     }
