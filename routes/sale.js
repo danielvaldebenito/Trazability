@@ -18,12 +18,16 @@ api.get('/sale/:id', md_auth.ensureAuth, SaleController.getOne)
 api.post('/sale/', [
     md_auth.ensureAuth,
     md_geocoding.findCoordFromAddress,
-    md_warehouse.createAddressWarehouseForOrder, 
+    md_warehouse.createAddressWarehouseForOrder,
+    md_warehouse.getWarehouseFromVehicle, 
     md_transaction.createSaleTransaction, 
     md_document.createDocument, 
     md_movement.createInputMovementFromSale,
+    md_movement.createInputMovementFromRetreat,
     md_movement.createOutputMovementFromSale, 
-    md_movementItem.createMovementItems, 
+    md_movement.createOutputMovementFromRetreat,
+    md_movementItem.createMovementItems,
+    md_movementItem.createMovementItemsByRetreat, 
     md_order.clientFromOrderByDevice, 
     md_sale.convertMovementDetailToSaleDetail,
     md_order.saveOneByDevice

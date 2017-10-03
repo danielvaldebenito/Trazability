@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
 var Transaction = require('../models/transaction')
 var createSaleTransaction = function(req, res, next) {
-    console.log('Creando transaccion')
+    
     var transaction = new Transaction()
     transaction.type = 'VENTA'
     transaction.save((err, tr) => {
@@ -11,6 +11,7 @@ var createSaleTransaction = function(req, res, next) {
             res.status(500).send({ message: 'Error en middleware', error: err })
             return
         };
+        console.log('Transacción creada')
         req.body.transaction = tr._id
         next();
     })

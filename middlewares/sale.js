@@ -5,22 +5,8 @@ var Sale = require('../models/sale')
 var SaleItem = require('../models/saleItem')
 var MovementItem = require('../models/movementItem')
 var Enumerable = require('linq')
+const Product = require('../models/product')
 
-const parseToJson  = function (req, res, next) {
-    try{
-        
-        const body = req.body
-        console.log(body)
-        const json = JSON.parse(body)
-        console.log(json)
-        req.body = json.data;
-        next()
-    } catch(e) {
-        res.status(500).send({done: false, code: -1, message: 'No se pudo parsear el JSON', error: e})
-    }
-
-    
-}
 
 var convertMovementDetailToSaleDetail = function(req, res, next) {
     
@@ -61,7 +47,8 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
     
 }
 
+
+
 module.exports = {
-    convertMovementDetailToSaleDetail,
-    parseToJson
+    convertMovementDetailToSaleDetail
 }

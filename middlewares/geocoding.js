@@ -18,19 +18,26 @@ exports.findCoordFromAddress = function (req, res, next) {
                 const results = Body.results
                 if(results) {
                     const first = results[0]
-                    const geometry = first.geometry
-                    const location = geometry.location
-                    const placeId = first.place_id
-                    req.body.placeId = placeId
-                    req.body.coordinates = location
+                    if(first) {
+                        const geometry = first.geometry
+                        const location = geometry.location
+                        const placeId = first.place_id
+                        req.body.placeId = placeId
+                        req.body.coordinates = location
+                    } else {
+                        req.body.placeId = '000'
+                    }                     
+                } else {
+                    req.body.placeId = '000'
                 }
-                
-                
+                console.log('placeid', req.body.placeId)
                 next()
             }
             else {
                 // The request failed, handle it
                 console.log('No se pudo encontrar coordenadas para la dirección ' + query)
+                req.body.placeId = '000'
+                console.log('placeid', req.body.placeId)
                 next()
             }
         });

@@ -77,6 +77,7 @@ function saveOne (req, res) {
         sale.document = params.document
         var delivery = params.delivery
         sale.items = params.itemsSale
+        sale.retreats = params.retreats
         sale.save((err, stored) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

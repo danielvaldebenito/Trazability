@@ -24,7 +24,13 @@ var SaleSchema = Schema({
         negotiable: Number,
         surcharge: { type: Number, default: 0 } 
     }],
-    delivery: { type: Schema.Types.ObjectId, ref: 'Delivery' }
+    delivery: { type: Schema.Types.ObjectId, ref: 'Delivery' },
+    retreats: [
+        {
+            productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
+            nif: String
+        }
+    ]
 })
 SaleSchema.plugin(timestamp)
 module.exports = mongoose.model('Sale', SaleSchema)
