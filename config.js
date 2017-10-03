@@ -29,7 +29,7 @@ module.exports = {
     entitiesSettings: {
         initialDataKey: 1,
         document: {
-            types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA']
+            types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA', 'COMODATO']
         },
         inventoryAdjustment: {
             reasons: ['MOTIVO 1', 'MOTIVO 2']
