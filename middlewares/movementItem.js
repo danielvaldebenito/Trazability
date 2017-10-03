@@ -7,6 +7,9 @@ var Product = require('../models/product')
 var createMovementItems = function(req, res, next) {
     
     var params = req.body
+    if (!params.delivery.done) {
+        return next()
+    }
     var inputMovement = params.inputMovement
     var outputMovement = params.outputMovement
     var items = params.items
@@ -45,6 +48,9 @@ var createMovementItems = function(req, res, next) {
     next()
 }
 const createMovementItemsByRetreat = function(req, res, next) {
+    if (!params.delivery.done) {
+        return next()
+    }
     const retreats = req.body.retreats
     if(!retreats || !retreats.length) {
         return next()
