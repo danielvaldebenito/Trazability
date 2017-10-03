@@ -3,7 +3,10 @@
 var mongoose = require('mongoose')
 var Transaction = require('../models/transaction')
 var createSaleTransaction = function(req, res, next) {
-    
+    var body = req.body
+    if (!body.delivery.done) {
+        return next()
+    }
     var transaction = new Transaction()
     transaction.type = 'VENTA'
     transaction.save((err, tr) => {

@@ -67,45 +67,68 @@ function getOne (req, res) {
 }
 function saveOne (req, res) {
     try{
-        var sale = new Sale()
+        
         var params = req.body
-        //sale.coordinates = params.coordinates
-        //sale.done = params.done
-        sale.type = params.typeSale
-        sale.paymentMethod = params.paymentMethod
-        sale.transaction = params.transaction
-        sale.document = params.document
+       
         var delivery = params.delivery
-        sale.items = params.itemsSale
-        sale.retreats = params.retreats
-        sale.save((err, stored) => {
-            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
-            if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
-
-            if(delivery) {
-                var del = new Delivery({
-                    coordinates: delivery.coordinates,
-                    done: delivery.done,
-                    order: delivery.orderId,
-                    sale: stored._id
-                })
-                del.save((e, deliveryStored) => {
-                    if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
-                    
-                    stored.delivery = deliveryStored._id
-                    stored.save()
-                })
-            }
-            return res
+        console.log('delivery', delivery.done)
+        if(!delivery.done) {
+            console.log('no entrega!!')
+            var del = new Delivery({
+                coordinates: delivery.coordinates,
+                done: delivery.done,
+                order: params.orderId
+            })
+            del.save((e, deliveryStored) => {
+                if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
+                return res
                 .status(200)
                 .send({
                     done: true,
-                    message: 'Registro guardado exitosamente',
-                    stored: stored,
+                    message: 'NO ENTREGA INFORMADA CORRECTAMENTE',
                     orderNumber: req.body.orderNumber
                 })
-                .end()  
-        })
+                .end() 
+
+            })
+        } else {
+            var sale = new Sale()
+            sale.type = params.typeSale
+            sale.paymentMethod = params.paymentMethod
+            sale.transaction = params.transaction
+            sale.document = params.document
+            
+            sale.items = params.itemsSale
+            sale.retreats = params.retreats
+            sale.save((err, stored) => {
+                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
+                if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
+    
+                if(delivery) {
+                    var del = new Delivery({
+                        coordinates: delivery.coordinates,
+                        done: delivery.done,
+                        order: params.orderId,
+                        sale: stored._id
+                    })
+                    del.save((e, deliveryStored) => {
+                        if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
+                        return res
+                        .status(200)
+                        .send({
+                            done: true,
+                            message: 'ENTREGA INFORMADA',
+                            orderNumber: req.body.orderNumber
+                        })
+                        .end() 
+        
+                    })
+                } 
+            })
+        }
+        //sale.coordinates = params.coordinates
+        //sale.done = params.done
+        
     }
     catch(error) {
         return res

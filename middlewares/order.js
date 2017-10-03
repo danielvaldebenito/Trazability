@@ -24,6 +24,13 @@ const clientFromOrderByDevice = function (req, res, next) {
                 req.body.clientId = found._id
                 next()
             } else {
+                const address = {
+                    location: params.address.location,
+                    city: params.address.city,
+                    region: params.address.region
+                }
+                const addresses = []
+                addresses.push(address)
                 const newclient = new Client({
                     nit: client.nit,
                     name: client.name,
@@ -33,11 +40,7 @@ const clientFromOrderByDevice = function (req, res, next) {
                     contact: client.name + ' ' + client.surname,
                     completeName: client.name + ' ' + client.surname,
                     quick: true,
-                    addresses: [{
-                        location: params.address.location,
-                        city: params.address.city,
-                        region: params.address.region
-                    }]
+                    addresses: addresses
                 })
                 newclient.save((err, stored) => {
                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al guardar cliente en middleware clientFromOrderByDevice', err })
@@ -59,14 +62,14 @@ function saveOneByDevice(req, res, next) {
     const order = new Order()
     const params = req.body
     if (params.delivery.orderId) {
-        Order.update(
-            { _id: params.delivery.orderId },
-            { status: params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4] },
-            (err, raw) => {
-                pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
-                return next()
-            }
-        )
+        const state = params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4]
+        Order.findByIdAndUpdate(params.delivery.orderId, { status: state }, (err, updated) => {
+            req.body.orderNumber = updated.orderNumber
+            req.body.orderId = params.delivery.orderId
+            pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
+            return next()
+        })
+        
     } else {
         
         order.commitmentDate = moment()
@@ -95,6 +98,7 @@ function saveOneByDevice(req, res, next) {
                      */
                     pushSocket.send('/orders', params.distributor, 'new-order', stored)
                     req.body.orderNumber = stored.orderNumber
+                    req.body.orderId = stored._id
                     next()
                 }
             )

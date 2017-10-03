@@ -8,6 +8,9 @@ var Enumerable = require('linq')
 
 var createOutputMovementFromSale = function(req, res, next) {
     var params = req.body
+    if (!params.delivery.done) {
+        return next()
+    }
     var movement = new Movement()
     movement.type = 'S',
     movement.transaction = params.transaction
@@ -29,6 +32,9 @@ var createOutputMovementFromSale = function(req, res, next) {
 }
 const createInputMovementFromSale = function (req, res, next) {
     var params = req.body
+    if (!params.delivery.done) {
+        return next()
+    }
     var movement = new Movement()
     movement.type = 'E',
     movement.transaction = params.transaction
@@ -54,6 +60,9 @@ const createInputMovementFromSale = function (req, res, next) {
 
 var createOutputMovementFromRetreat = function(req, res, next) {
     var params = req.body
+    if (!params.delivery.done) {
+        return next()
+    }
     var retreats = req.body.retreats
     if(!retreats || !retreats.length) {
         return next()
@@ -79,6 +88,9 @@ var createOutputMovementFromRetreat = function(req, res, next) {
 }
 const createInputMovementFromRetreat = function (req, res, next) {
     var params = req.body
+    if (!params.delivery.done) {
+        return next()
+    }
     var retreats = req.body.retreats
     if(!retreats || !retreats.length) {
         return next()

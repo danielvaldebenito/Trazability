@@ -45,7 +45,7 @@ module.exports = {
             }
         },
         sale: {
-            types: ['POR PEDIDO', 'CAMPANEO'],
+            types: ['PROGRAMADO', 'CAMPANEO'],
             paymentMethods: ['EFECTIVO', 'DÉBITO', 'CRÉDITO']
         },
         settings: {

@@ -181,7 +181,7 @@ function saveOne (req, res) {
                  * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                  */
                 if(params.vehicle){
-                    pushNotification.newOrderAssigned(params.vehicle, order)
+                    pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
                 }
                 
                 pushSocket.send('/orders', params.distributor, 'new-order', stored)
