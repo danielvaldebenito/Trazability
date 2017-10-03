@@ -45,9 +45,11 @@ var createMovementItems = function(req, res, next) {
                     })
             
         })
+
+        next()
     }
     
-    next()
+    
 }
 const createMovementItemsByRetreat = function(req, res, next) {
     var params = req.body
@@ -90,11 +92,12 @@ const createMovementItemsByRetreat = function(req, res, next) {
                     })
                 }
             }, this);
+            next()
         }
         
     }
     
-    next()
+    
 }
 var saveMovementItemToDb = function(i, id, movementId) {
     Movement.findById(movementId, (err, movement) => {
