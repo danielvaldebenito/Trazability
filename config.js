@@ -52,7 +52,7 @@ module.exports = {
             keys: ['Alguna Configuración', 'Otra configuración']
         },
         transaction: {
-            types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN', 'MOVIMIENTO INTERNO']
+            types: ['VENTA', 'AJUSTE', 'DEVOLUCIÓN', 'MANTENCIÓN', 'CARGA', 'DESCARGA', 'TRASFERENCIA']
         },
         user: {
             roles: ['ADMIN', 'VEHÍCULO', 'OPERADOR PLANTA']

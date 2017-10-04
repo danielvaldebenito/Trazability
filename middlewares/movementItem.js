@@ -45,12 +45,47 @@ var createMovementItems = function(req, res, next) {
                     })
             
         })
-
         next()
-    }
-    
-    
+    }   
 }
+
+
+var createNormalMovementItems = function(req, res, next) {
+    var params = req.body
+    var inputMovement = params.inputMovementId
+    var outputMovement = params.outputMovementId
+    var items = params.items
+    items.forEach((i) => {
+        var nif = i.nif
+        Product.findOne({ nif: nif })
+        .exec((err, pro) => {
+            if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
+            var id
+            if(!pro)
+            {
+                var product = new Product ({
+                    nif: nif,
+                    productType: i.productType,
+                    createdByPda: true,
+                    createdBy: req.user.username
+                })
+                product.save ((errr, productStored) => {
+                    if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', errr})
+                    id = productStored._id
+                    saveMovementItemToDb(i, id, inputMovement)
+                    saveMovementItemToDb(i, id, outputMovement)
+                })
+            } else {
+                id = pro._id
+                saveMovementItemToDb(i, id, inputMovement)
+                saveMovementItemToDb(i, id, outputMovement)
+            }
+        
+    })
+    })
+    next()  
+}
+
 const createMovementItemsByRetreat = function(req, res, next) {
     var params = req.body
     if (!params.delivery.done) {
@@ -123,5 +158,6 @@ var saveMovementItemToDb = function(i, id, movementId) {
 }
 module.exports = {
     createMovementItems,
-    createMovementItemsByRetreat
+    createMovementItemsByRetreat,
+    createNormalMovementItems
 }

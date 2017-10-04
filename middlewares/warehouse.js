@@ -5,7 +5,8 @@ var Warehouse = require('../models/warehouse')
 var Decrease = require('../models/decrease')
 var Address = require ('../models/address')
 var Vehicle = require ('../models/vehicle')
-
+var InternalProcess = require('../models/internalProcess')
+var config = require('../config')
 var createInternalProcessWarehouse = function(req, res, next) {
     console.log('createInternalProcessWarehouse', req.body)
     var warehouse = new Warehouse()
@@ -112,7 +113,6 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     
 }
 var getWarehouseFromVehicle = function (req, res, next) {
-    console.log('getWarehouseFromVehicle', req.body)
     if(!req.body.vehicle) {
         next();
     } else {
@@ -157,7 +157,84 @@ var createStoreWarehouse = function(req, res, next) {
     })
 }
 
+const getVehicleWarehouse = function (req, res, next) {
+    if(!req.body.searchVehicle) {
+        next();
+    } else {
+        const licensePlate = req.body.vehicleIsOrigin ? req.body.originLocation : req.body.destinationLocation
+        Vehicle.findOne({ licensePlate: licensePlate}, (err, found) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo en middleware getVehicleWarehouse', err })
+            if(!found) return res.status(404).send({ done: false, message: 'No se ha encontrado un vehículo con la placa: ' + licensePlate })
+            
+            if(req.body.vehicleIsOrigin) {
+                req.body.originWarehouse = found.warehouse
+            } else {
+                req.body.destinyWarehouse = found.warehouse
+            }
+            next()
+        })
+    }
+    
+}
 
+const getInternalProcessWarehouse = function (req, res, next) {
+    if(!req.body.searchInternalProcess) {
+        next()
+    } else {
+        const ids = [ ]
+        if(req.body.searchVehicle) {
+            if(req.body.vehicleIsOrigin) {
+                ids.push(req.body.destinationLocation)
+            } else {
+                ids.push(req.body.originLocation)
+            }
+        } else {
+            ids.push(req.body.originLocation)
+            ids.push(req.body.destinationLocation)
+        }
+        InternalProcess.find({ _id: { $in: ids } }, (err, founds) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar proceso interno en getInternalProcessWarehouse', err })
+    
+            if(!founds) return res.status(404).send({ done: false, message: 'No se ha encontrado proceso interno ' + internalProcess })
+            console.log('founds', founds)
+            founds.forEach(function(element) {
+                var wh = element.warehouse
+
+                if(element._id == req.body.originLocation)
+                    req.body.originWarehouse = wh
+                if(element._id == req.body.destinationLocation)
+                    req.body.destinyWarehouse = wh
+            }, this);
+            next ()
+        })
+
+        
+    }
+    
+}
+
+const getWarehousesFromMovement = function (req, res, next) {
+    const transactionType = req.body.transactionType
+    const types = config.entitiesSettings.transaction.types
+    switch(transactionType)
+    {
+        case types[3]: // mantencion
+            req.body.searchInternalProcess = true
+            break; 
+        case types[4]: // carga
+            req.body.searchInternalProcess = true
+            req.body.vehicleIsOrigin = false
+            req.body.searchVehicle = true
+            break; 
+        case types[5]: // descarga
+            req.body.searchInternalProcess = true
+            req.body.vehicleIsOrigin = true
+            req.body.searchVehicle = true
+            break; 
+        case types[6]: break; // transferencia
+    }
+    next()
+}
 
 
 module.exports = {
@@ -167,5 +244,8 @@ module.exports = {
     createStoreWarehouse,
     createAddressFromClient,
     createAddressWarehouseForOrder,
-    getWarehouseFromVehicle
+    getWarehouseFromVehicle,
+    getWarehousesFromMovement,
+    getVehicleWarehouse,
+    getInternalProcessWarehouse
 }

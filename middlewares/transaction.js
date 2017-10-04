@@ -19,7 +19,21 @@ var createSaleTransaction = function(req, res, next) {
         next();
     })
 }
-
+var createAnyTransaction = function(req, res, next) {
+    var body = req.body
+    var transaction = new Transaction()
+    transaction.type = body.transactionType
+    transaction.save((err, tr) => {
+        if(err) {
+            res.status(500).send({ message: 'Error en middleware que crea transacción', error: err })
+            return
+        };
+        console.log('Transacción creada')
+        req.body.transaction = tr._id
+        next();
+    })
+}
 module.exports = {
-    createSaleTransaction
+    createSaleTransaction,
+    createAnyTransaction
 }

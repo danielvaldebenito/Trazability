@@ -14,15 +14,22 @@ var MovementItemSchema = Schema({
 MovementItemSchema.plugin(timestamp)
 
 MovementItemSchema.post('save', (doc) => {
-    if(doc.movement.type == 'E') {
+    if(doc.movement.type == 'S') {
+        Stock.findOneAndRemove(
+            { product: doc.product, warehouse: doc.movement.warehouse }, (err, res) => {
+                if(err)
+                    console.log('Error al actualizar stock de salida', err)
+                console.log('stock salida actualizado', res)
+            });
+    } else if(doc.movement.type == 'E') {
         Stock.findOneAndUpdate(
             { product: doc.product }, 
             { warehouse: doc.movement.warehouse },
-            { upsert: true }, (err, stock) => {
+            { upsert: true }, (err, stock, res) => {
                 if(err)
-                    throw err
+                    console.log('Error al actualizar stock de entrada', err)
                 else
-                    console.log('stock actualizado')
+                    console.log('stock entrada actualizado', stock, res)
             });
     }
     
