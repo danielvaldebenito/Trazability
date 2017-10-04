@@ -71,9 +71,9 @@ function saveOne (req, res) {
         var params = req.body
        
         var delivery = params.delivery
-        console.log('delivery', delivery.done)
+
         if(!delivery.done) {
-            console.log('no entrega!!')
+            
             var del = new Delivery({
                 coordinates: delivery.coordinates,
                 done: delivery.done,
@@ -88,8 +88,6 @@ function saveOne (req, res) {
                     message: 'NO ENTREGA INFORMADA CORRECTAMENTE',
                     orderNumber: req.body.orderNumber
                 })
-                .end() 
-
             })
         } else {
             var sale = new Sale()
@@ -120,7 +118,6 @@ function saveOne (req, res) {
                             message: 'ENTREGA INFORMADA',
                             orderNumber: req.body.orderNumber
                         })
-                        .end() 
         
                     })
                 } 
