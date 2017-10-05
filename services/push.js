@@ -27,10 +27,6 @@ function requestGeoreference(distributor, requestId) {
                         data: {
                             key: 'GEO_REQUEST',
                             requestId: requestId
-                        },
-                        notification: {
-                            title: 'Hola Seba',
-                            message: 'Si te llegó esto, avísame plis'
                         }
                     };
                     send(registrationTokens, payload);
@@ -56,7 +52,11 @@ function newOrderAssigned (vehicle, order) {
                 var payload = {
                     data: {
                         key: 'NEW_ORDER',
-                        order: order
+                        id: order
+                    },
+                    notification: {
+                        title: 'Nueva Orden',
+                        body: 'Se ha asignado una nueva orden a su vehículo'
                     }
                 }
                 send(foundDevice.token, payload);
@@ -107,5 +107,5 @@ function send(token, payload) {
 
 }
 module.exports = {
-    requestGeoreference, test, send, newOrderAssigned
+    requestGeoreference, test, send, newOrderAssigned, cancelOrder
 }
