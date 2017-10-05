@@ -13,7 +13,8 @@ var Dependence = require('../../models/dependence')
 var Address = require('../../models/address')
 var ProductType = require('../../models/productType')
 var config = require('../../config')
-
+var pushSocket = require('../../services/pushSocket')
+var pushNotification = require('../../services/push')
 
 
 function saveOrderFromErpIntegration (req, res) {
@@ -27,7 +28,7 @@ function saveOrderFromErpIntegration (req, res) {
     order.phone = params.phone
     order.observation = params.observation
     order.payMethod = params.payMethod
-    order.client = params.client // From Middleware findClient
+    order.client = params.clientId // From Middleware clientFromOrderByDevice
     order.address = params.address  // From Middleware createAddressWarehouseForOrder
     order.vehicle = params.vehicle // From Middleware getVehicleFromLicensePlate
     if(params.originWarehouse) {
@@ -42,6 +43,12 @@ function saveOrderFromErpIntegration (req, res) {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         
+        if(params.vehicle){
+            pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
+        }
+        
+        pushSocket.send('/orders', params.distributor, 'new-order', stored)
+
         return res
             .status(200)
             .send({ 

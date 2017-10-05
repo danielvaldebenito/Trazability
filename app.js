@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 morgan.token('json', (req, res) => {
   return 'body: ' + JSON.stringify(req.body);
 })
+
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :json', { stream: logger.stream }))
 logger.info('Iniciando aplicación')
 
