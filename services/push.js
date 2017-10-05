@@ -53,11 +53,11 @@ function newOrderAssigned (vehicle, order) {
                     data: {
                         key: 'NEW_ORDER',
                         id: order
-                    },
-                    notification: {
-                        title: 'Nueva Orden',
-                        body: 'Se ha asignado una nueva orden a su vehículo'
                     }
+                    // notification: {
+                    //     title: 'Nueva Orden',
+                    //     body: 'Se ha asignado una nueva orden a su vehículo'
+                    // }
                 }
                 send(foundDevice.token, payload);
             })
