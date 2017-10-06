@@ -85,6 +85,7 @@ function test(token) {
 }
 
 function cancelOrder(device, id, orderNumber) {
+    console.log(device, id, orderNumber)
     Device.findById(device, (err, stored) => {
         if(err) return console.log('Error al buscar device ' + id)
         if(stored && stored.token) {
@@ -92,7 +93,7 @@ function cancelOrder(device, id, orderNumber) {
                 data: {
                     key: 'CANCEL_ORDER',
                     id: id,
-                    orderNumber: orderNumber
+                    orderNumber: orderNumber.toString()
                 }
             }
             send(stored.token, payload)
