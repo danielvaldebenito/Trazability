@@ -184,7 +184,7 @@ function saveOne (req, res) {
                     pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
                 }
                 
-                pushSocket.send('/orders', params.distributor, 'new-order', stored)
+                pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
                 return res
                     .status(200)
                     .send({
@@ -261,7 +261,7 @@ function cancelOrder(req, res) {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
             var device = updated.device
             if(device) {
-                pushNotification.cancelOrder(device, id)
+                pushNotification.cancelOrder(device, id, updated.erpOrderNumber)
             }
             pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
