@@ -32,6 +32,8 @@ api.put('/transfer/',
     md_movement.createInputMovement,
     md_movement.createOutputMovement,
     md_movementItem.createNormalMovementItems,
+    
+    md_movementItem.invertVariables,
     // 2 vez
     md_movement.createInputMovement,
     md_movement.createOutputMovement,

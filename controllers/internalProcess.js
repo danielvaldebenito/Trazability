@@ -21,6 +21,12 @@ function getAll (req, res) {
                 }
             }
         })
+        .populate({
+            path: 'dependence',
+            match: {
+                distributor: distributor
+            }
+        })
         .populate('internalProcessType')
         .where(filter ? { name: {  $regex: filter, $options: 'i' } } : {})
         .sort([[sidx, sord]])

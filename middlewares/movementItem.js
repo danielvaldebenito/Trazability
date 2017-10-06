@@ -50,31 +50,21 @@ var createMovementItems = function(req, res, next) {
 }
 
 
-var createNormalMovementItems = function(req, res, next) {
-    var params = req.body
-    var inputMovement = params.inputMovementId
-    var outputMovement = params.outputMovementId
-    var items
-
-    if(params.isStation) {
-        if(params.twice){
-            if(params.isSecondTime) {
-                items = req.body.putDown
-            } else {
-                items = req.body.putUp
-            }
-        } else {
-            items = []
-        }
+const createNormalMovementItems = function(req, res, next) {
+    const params = req.body
+    const inputMovement = params.inputMovementId
+    const outputMovement = params.outputMovementId
+    let items
+    if(req.body.isStation) {
+        items = req.body.isSecondTime ? req.body.putUp : req.body.putDown
     } else {
         items = params.items
     }
-    
-    
-    const array = []
-    const twice = inputMovement && outputMovement
+
+    const both = inputMovement && outputMovement
     const length = items.length
-    const total = twice ? items.length * 2 : items.length
+    const total = both ? items.length * 2 : items.length
+    let count = 0
     items.forEach((i, index) => {
         let nif = i.nif
         let product = {
@@ -94,65 +84,50 @@ var createNormalMovementItems = function(req, res, next) {
                 product: id,
                 movement: inputMovement || outputMovement,
             })
-            console.log('id antes de guardar', movementItem._id)
+            // Movimiento de entrada
             Movement.findByIdAndUpdate(movementItem.movement, { $push: { "items": movementItem._id }}, (err, movement) => {
                 movementItem.save((err, mi) => {
                     if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
-                    console.log('movimiento item creado', mi)
-                    array.push(mi._id)
-                    if(twice) {
-                        const movementItem2 = new MovementItem ({
-                            fill: i.fill,
-                            active: i.active,
-                            product: id,
-                            movement: outputMovement,
-                        })
-                        Movement.findByIdAndUpdate(movementItem2.movement, { $push: { "items": movementItem2._id }}, (err, movement) => {
-                            if(err) return res.status(500).send({ done: false, message: 'Error Buscar movimiento ' + movementItem.movement, err})
-                            movementItem2.save((err, mi) => {
-                                if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
-                                console.log('movimiento item creado', mi)
-                                array.push(mi._id)
-                                if(array.length == length) {
-                                    if(req.body.twice && !req.body.isSecondTime) {
-                                        const origin = req.body.originWarehouse
-                                        const destiny = req.body.destinyWarehouse
-                                        req.body.originWarehouse = destiny
-                                        req.body.destinyWarehouse = origin
-                                        req.body.isSecondTime = true
-                                        req.body.vehicleIsOrigin = false
+                    count++;
+                    if(count == total) {
+                        next()
+                    } else {
+                        if(both) {
+                            const movementItem2 = new MovementItem ({
+                                fill: i.fill,
+                                active: i.active,
+                                product: id,
+                                movement: outputMovement,
+                            })
+                            // Movimiento de salida
+                            Movement.findByIdAndUpdate(movementItem2.movement, { $push: { "items": movementItem2._id }}, (err, movement) => {
+                                if(err) return res.status(500).send({ done: false, message: 'Error Buscar movimiento ' + movementItem.movement, err})
+                                movementItem2.save((err, mi) => {
+                                    if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
+                                    count++
+                                    if(count == total) {
+                                        next()
                                     }
-                                    next() 
-                                }
+                                })
+                                
                             })
                             
-                        })
-                        
-                    } else {
-                        if(array.length == length) {
-                            if(req.body.twice && !req.body.isSecondTime) {
-                                const origin = req.body.originWarehouse
-                                const destiny = req.body.destinyWarehouse
-                                req.body.originWarehouse = destiny
-                                req.body.destinyWarehouse = origin
-                                req.body.isSecondTime = true
-                                req.body.vehicleIsOrigin = false
-                            }
-                            next() 
-                        }
+                        } 
                     }
+                    
                 })
             })
-            
-
-            
-            // if(inputMovement) 
-            //     saveMovementItemToDb(i, id, inputMovement)
-            // if(outputMovement)
-            //     saveMovementItemToDb(i, id, outputMovement)
         })
-    })
-     
+    })    
+}
+const invertVariables = function (req, res, next) {
+    const origin = req.body.originWarehouse
+    const destiny = req.body.destinyWarehouse
+    req.body.originWarehouse = destiny
+    req.body.destinyWarehouse = origin
+    req.body.isSecondTime = !req.body.isSecondTime
+    req.body.vehicleIsOrigin = !req.body.vehicleIsOrigin
+    next() 
 }
 
 
@@ -233,5 +208,6 @@ var saveMovementItemToDb = function(i, id, movementId) {
 module.exports = {
     createMovementItems,
     createMovementItemsByRetreat,
-    createNormalMovementItems
+    createNormalMovementItems,
+    invertVariables
 }

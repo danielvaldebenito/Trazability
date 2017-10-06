@@ -236,6 +236,7 @@ const getWarehousesFromMovement = function (req, res, next) {
             break;
         case types[7]: // estacion
             req.body.searchVehicle = true
+            req.body.searchInternalProcess = true
             req.body.vehicleIsOrigin = true
             req.body.twice = true
             req.body.isStation = true
