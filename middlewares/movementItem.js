@@ -54,37 +54,107 @@ var createNormalMovementItems = function(req, res, next) {
     var params = req.body
     var inputMovement = params.inputMovementId
     var outputMovement = params.outputMovementId
-    var items = params.items
-    items.forEach((i) => {
-        var nif = i.nif
-        Product.findOne({ nif: nif })
-        .exec((err, pro) => {
-            if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
-            var id
-            if(!pro)
-            {
-                var product = new Product ({
-                    nif: nif,
-                    productType: i.productType,
-                    createdByPda: true,
-                    createdBy: req.user.username
-                })
-                product.save ((errr, productStored) => {
-                    if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', errr})
-                    id = productStored._id
-                    saveMovementItemToDb(i, id, inputMovement)
-                    saveMovementItemToDb(i, id, outputMovement)
-                })
+    var items
+
+    if(params.isStation) {
+        if(params.twice){
+            if(params.isSecondTime) {
+                items = req.body.putDown
             } else {
-                id = pro._id
-                saveMovementItemToDb(i, id, inputMovement)
-                saveMovementItemToDb(i, id, outputMovement)
+                items = req.body.putUp
             }
-        
+        } else {
+            items = []
+        }
+    } else {
+        items = params.items
+    }
+    
+    
+    const array = []
+    const twice = inputMovement && outputMovement
+    const length = items.length
+    const total = twice ? items.length * 2 : items.length
+    items.forEach((i, index) => {
+        let nif = i.nif
+        let product = {
+            nif: nif,
+            productType: i.productType,
+            createdByPda: true,
+            createdBy: req.user.username
+        }
+        Product.findOneAndUpdate({ nif: nif }, product, { upsert: true, new: true, projection: { _id: true }  }, (err, doc) => {
+            if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
+            
+            const id = doc._id
+            
+            const movementItem = new MovementItem ({
+                fill: i.fill,
+                active: i.active,
+                product: id,
+                movement: inputMovement || outputMovement,
+            })
+            console.log('id antes de guardar', movementItem._id)
+            Movement.findByIdAndUpdate(movementItem.movement, { $push: { "items": movementItem._id }}, (err, movement) => {
+                movementItem.save((err, mi) => {
+                    if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
+                    console.log('movimiento item creado', mi)
+                    array.push(mi._id)
+                    if(twice) {
+                        const movementItem2 = new MovementItem ({
+                            fill: i.fill,
+                            active: i.active,
+                            product: id,
+                            movement: outputMovement,
+                        })
+                        Movement.findByIdAndUpdate(movementItem2.movement, { $push: { "items": movementItem2._id }}, (err, movement) => {
+                            if(err) return res.status(500).send({ done: false, message: 'Error Buscar movimiento ' + movementItem.movement, err})
+                            movementItem2.save((err, mi) => {
+                                if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
+                                console.log('movimiento item creado', mi)
+                                array.push(mi._id)
+                                if(array.length == length) {
+                                    if(req.body.twice && !req.body.isSecondTime) {
+                                        const origin = req.body.originWarehouse
+                                        const destiny = req.body.destinyWarehouse
+                                        req.body.originWarehouse = destiny
+                                        req.body.destinyWarehouse = origin
+                                        req.body.isSecondTime = true
+                                        req.body.vehicleIsOrigin = false
+                                    }
+                                    next() 
+                                }
+                            })
+                            
+                        })
+                        
+                    } else {
+                        if(array.length == length) {
+                            if(req.body.twice && !req.body.isSecondTime) {
+                                const origin = req.body.originWarehouse
+                                const destiny = req.body.destinyWarehouse
+                                req.body.originWarehouse = destiny
+                                req.body.destinyWarehouse = origin
+                                req.body.isSecondTime = true
+                                req.body.vehicleIsOrigin = false
+                            }
+                            next() 
+                        }
+                    }
+                })
+            })
+            
+
+            
+            // if(inputMovement) 
+            //     saveMovementItemToDb(i, id, inputMovement)
+            // if(outputMovement)
+            //     saveMovementItemToDb(i, id, outputMovement)
+        })
     })
-    })
-    next()  
+     
 }
+
 
 const createMovementItemsByRetreat = function(req, res, next) {
     var params = req.body
@@ -115,13 +185,17 @@ const createMovementItemsByRetreat = function(req, res, next) {
                                 product.save ((errr, productStored) => {
                                     if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', errr})
                                     id = productStored._id
-                                    saveMovementItemToDb(i, id, retreatInputMovement)
-                                    saveMovementItemToDb(i, id, retreatOutputMovement)
+                                    if(retreatInputMovement)
+                                        saveMovementItemToDb(i, id, retreatInputMovement)
+                                    if(retreatOutputMovement)
+                                        saveMovementItemToDb(i, id, retreatOutputMovement)
                                 })
                             } else {
                                 id = pro._id
-                                saveMovementItemToDb(i, id, retreatInputMovement)
-                                saveMovementItemToDb(i, id, retreatOutputMovement)
+                                if(retreatInputMovement)
+                                    saveMovementItemToDb(i, id, retreatInputMovement)
+                                if(retreatOutputMovement)
+                                    saveMovementItemToDb(i, id, retreatOutputMovement)
                             }
                         
                     })

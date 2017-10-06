@@ -22,11 +22,7 @@ var OrderSchema = Schema({
     originWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, // Vehiculo o almacén
     destinyWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, // Direccion del cliente
     status: { type: String, enum: status, default: 'RECIBIDO' },
-    arrival: {
-        date: Date,
-        lat: Number, 
-        lng: Number
-    },
+    pendingConfirmCancel: Boolean,
     items: [{ 
         productType: { type: Schema.ObjectId, ref: 'ProductType' }, // tipo de producto
         quantity: { type: Number, default: 1 }, // cantidad

@@ -14,6 +14,7 @@ api.post('/order/', [ md_auth.ensureAuth, md_wh.createAddressWarehouseForOrder, 
 api.put('/order/:id', md_auth.ensureAuth, OrderController.updateOne)
 api.put('/order-set-en-ruta/', md_auth.ensureAuth, OrderController.setOrderEnRuta)
 api.put('/order-cancel/:id', md_auth.ensureAuth, OrderController.cancelOrder)
+api.put('/order-cancel-confirm/:id', md_auth.ensureAuth, OrderController.confirmCancel)
 api.put('/order-assign-vehicle/', md_auth.ensureAuth, OrderController.assignVehicleToOrder)
 api.delete('/order/:id', [md_auth.ensureAuth, md_auth.isAdmin], OrderController.deleteOne)
 

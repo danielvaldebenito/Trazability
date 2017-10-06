@@ -23,16 +23,14 @@ MovementItemSchema.post('save', (doc) => {
             });
     } else if(doc.movement.type == 'E') {
         Stock.findOneAndUpdate(
-            { product: doc.product }, 
-            { warehouse: doc.movement.warehouse },
-            { upsert: true }, (err, stock, res) => {
-                if(err)
-                    console.log('Error al actualizar stock de entrada', err)
-                else
-                    console.log('stock entrada actualizado', stock, res)
-            });
+        {product: doc.product}, 
+        {product: doc.product, warehouse: doc.movement.warehouse}, { upsert: true }, (err, raw) => {
+            if(err)
+                console.log('Error al actualizar stock de entrada', err)
+            else
+                console.log('stock entrada actualizado', raw)
+        })
     }
-    
 })
 
 

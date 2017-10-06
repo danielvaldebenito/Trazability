@@ -164,7 +164,7 @@ function saveOne (req, res) {
     order.payMethod = params.payMethod
     if(params.originWarehouse) {
         order.originWarehouse = params.originWarehouse;
-        order.status = 'ASIGNADO';
+        order.status = config.entitiesSettings.order.status[1];
     }
     order.destinyWarehouse = params.destinyWarehouse
     order.distributor = params.distributor
@@ -256,7 +256,7 @@ function cancelOrder(req, res) {
     var id = req.params.id
     
     Order.findByIdAndUpdate(id,
-        { status: config.entitiesSettings.order.status[4] }, 
+        { status: null, pendingConfirmCancel: true }, 
         (err, updated) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
             var device = updated.device
@@ -271,12 +271,25 @@ function cancelOrder(req, res) {
                     code: 0
                 })
     })
-        
+}
+
+function confirmCancel (req, res) {
+    const id = req.params.id
+    Order.findByIdAndUpdate(id, { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: false }, (err, updated) => {
+        if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
+        pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
+        return res.status(200)
+            .send({
+                done: true,
+                message: 'OK',
+                code: 0
+            })
+    })
 }
 function assignVehicleToOrder (req, res) {
     var vehicle = req.body.vehicle;
     var order = req.body.order;
-    Order.findByIdAndUpdate(order, { vehicle: vehicle, status: 'ASIGNADO' },
+    Order.findByIdAndUpdate(order, { vehicle: vehicle, status: config.entitiesSettings.order.status[1] },
     (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
         
@@ -302,5 +315,6 @@ module.exports = {
     deleteOne,
     getDayResume,
     setOrderEnRuta,
-    cancelOrder
+    cancelOrder,
+    confirmCancel
 }  

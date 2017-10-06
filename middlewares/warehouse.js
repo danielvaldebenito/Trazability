@@ -165,7 +165,7 @@ const getVehicleWarehouse = function (req, res, next) {
         Vehicle.findOne({ licensePlate: licensePlate}, (err, found) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo en middleware getVehicleWarehouse', err })
             if(!found) return res.status(404).send({ done: false, message: 'No se ha encontrado un vehículo con la placa: ' + licensePlate })
-            
+            req.body.vehicleId = found._id
             if(req.body.vehicleIsOrigin) {
                 req.body.originWarehouse = found.warehouse
             } else {
@@ -231,7 +231,16 @@ const getWarehousesFromMovement = function (req, res, next) {
             req.body.vehicleIsOrigin = true
             req.body.searchVehicle = true
             break; 
-        case types[6]: break; // transferencia
+        case types[6]: // transferencia
+            req.body.searchVehicle = true
+            break;
+        case types[7]: // estacion
+            req.body.searchVehicle = true
+            req.body.vehicleIsOrigin = true
+            req.body.twice = true
+            req.body.isStation = true
+            break;
+
     }
     next()
 }

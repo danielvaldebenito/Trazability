@@ -47,7 +47,7 @@ function saveOrderFromErpIntegration (req, res) {
             pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
         }
         
-        pushSocket.send('/orders', params.distributor, 'new-order', stored)
+        pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
 
         return res
             .status(200)
