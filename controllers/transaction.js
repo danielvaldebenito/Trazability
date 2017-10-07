@@ -11,6 +11,9 @@ function getOne (req, res) {
                 populate: {
                     path: 'product'
                 }
+            },
+            populate: {
+                path: 'warehouse'
             }
         })
         .exec((err, record) => {
