@@ -15,7 +15,7 @@ function getAll(req, res) {
     var sord = req.query.sord || 1
     var filter = req.query.filter
     var l = parseInt(limit)
-    Distributor.find()
+    Distributor.find({ intern: false })
             .where(filter ? {
                 $or: [
                     { name: { $regex: filter, $options: 'i' } },
@@ -69,12 +69,12 @@ function saveOne (req, res) {
     distributor.contact = params.contact
     distributor.phone = params.phone
     distributor.image = params.image
-    distributor.intern = params.intern
+    distributor.intern = false
     distributor.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         // Creating decrease warehouse
-        var random = Math.random().toString(16).slice(2)
+        const random = Math.random().toString(36).slice(2)
         const user = new User({
             name: params.name,
             surname: '',
@@ -91,7 +91,7 @@ function saveOne (req, res) {
             
             mail.sendMail(user.email,
                 'Trazabilidad - Contraseña Temporal',
-                user.random,
+                random,
                 params.name)
 
             return res
