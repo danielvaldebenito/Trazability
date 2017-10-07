@@ -7,6 +7,7 @@ const md_transaction = require('../middlewares/transaction')
 const md_movement = require('../middlewares/movement')
 const md_movementItem = require('../middlewares/movementItem')
 const md_wh = require('../middlewares/warehouse')
+const md_transfer = require('../middlewares/transfer')
 const api = express.Router()
 
 api.post('/transfer/', 
@@ -24,9 +25,11 @@ api.post('/transfer/',
 api.put('/transfer/',
 [
     md_auth.ensureAuth,
+    
     md_wh.getWarehousesFromMovement,
     md_wh.getVehicleWarehouse,
     md_wh.getInternalProcessWarehouse,
+    md_transfer.validateTransfer,
     md_transaction.createAnyTransaction,
     // 1 vez
     md_movement.createInputMovement,

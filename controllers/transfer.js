@@ -37,7 +37,7 @@ function saveStation (req, res) {
     Transfer.findOne({ licensePlate: licensePlate, active: true }, (err, transfer) => {
         if(err) return res.status(500).send({ done: false, message: 'Error al buscar transferencia', err, code: -1})
         if(!transfer) {
-            return res.status(404).send({ done: false, message: 'No existe una transferencia activa para este vehículo', code: 1})
+            return res.status(200).send({ done: false, message: 'No existe una transferencia activa para este vehículo', code: 1})
         } else {
             const station = {
                 destinyDependence: req.body.destinationDependence,

@@ -118,7 +118,7 @@ var getWarehouseFromVehicle = function (req, res, next) {
     } else {
         Vehicle.findById(req.body.vehicle, (err, veh) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware al buscar bodega del vehiculo', error: err })
-            if(!veh) return res.status(404).send({ done: false, code: 1, message: 'Error en middleware al buscar bodega del vehiculo'})
+            if(!veh) return res.status(200).send({ done: false, code: 1, message: 'No se encontró vehículo'})
             req.body.originWarehouse = veh.warehouse;
             next()
         })
@@ -164,7 +164,7 @@ const getVehicleWarehouse = function (req, res, next) {
         const licensePlate = req.body.vehicleIsOrigin ? req.body.originLocation : req.body.destinationLocation
         Vehicle.findOne({ licensePlate: licensePlate}, (err, found) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo en middleware getVehicleWarehouse', err })
-            if(!found) return res.status(404).send({ done: false, message: 'No se ha encontrado un vehículo con la placa: ' + licensePlate })
+            if(!found) return res.status(200).send({ done: false, message: 'No se ha encontrado un vehículo con la placa: ' + licensePlate })
             req.body.vehicleId = found._id
             if(req.body.vehicleIsOrigin) {
                 req.body.originWarehouse = found.warehouse
@@ -195,7 +195,7 @@ const getInternalProcessWarehouse = function (req, res, next) {
         InternalProcess.find({ _id: { $in: ids } }, (err, founds) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar proceso interno en getInternalProcessWarehouse', err })
     
-            if(!founds) return res.status(404).send({ done: false, message: 'No se ha encontrado proceso interno ' + internalProcess })
+            if(!founds) return res.status(200).send({ done: false, message: 'No se ha encontrado proceso interno ' + internalProcess })
             const length = founds.length
             let count = 0
             founds.forEach(function(element) {
