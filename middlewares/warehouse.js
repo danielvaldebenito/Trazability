@@ -196,7 +196,8 @@ const getInternalProcessWarehouse = function (req, res, next) {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar proceso interno en getInternalProcessWarehouse', err })
     
             if(!founds) return res.status(404).send({ done: false, message: 'No se ha encontrado proceso interno ' + internalProcess })
-            console.log('founds', founds)
+            const length = founds.length
+            let count = 0
             founds.forEach(function(element) {
                 var wh = element.warehouse
 
@@ -204,13 +205,15 @@ const getInternalProcessWarehouse = function (req, res, next) {
                     req.body.originWarehouse = wh
                 if(element._id == req.body.destinationLocation)
                     req.body.destinyWarehouse = wh
-            }, this);
-            next ()
-        })
 
-        
+                count++
+                if(length == count)
+                {
+                    next ()
+                }
+            }, this);        
+        })
     }
-    
 }
 
 const getWarehousesFromMovement = function (req, res, next) {
