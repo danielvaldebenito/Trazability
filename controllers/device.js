@@ -4,6 +4,7 @@ var path = require('path')
 var bcrypt = require('bcrypt-nodejs')
 var User = require('../models/user')
 var Device = require('../models/device')
+var Order = require('../models/order')
 var LoginHistory = require('../models/loginHistory')
 var ProductType = require('../models/productType')
 var PriceList = require('../models/priceList')
@@ -132,6 +133,7 @@ function loginDevice (req, res) {
                                                                 .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
                                                                 .exec((err, pts) => {
                                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+
                                                                     return res.status(200)
                                                                         .send({
                                                                             done: true,
@@ -167,7 +169,15 @@ function loginDevice (req, res) {
                                                                 ProductType.find()
                                                                     .exec((err, pts) => {
                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-                                                                        return res.status(200)
+                                                                        
+                                                                        Order.find({ 
+                                                                            device: device._id,
+                                                                            pendingConfirmCancel: true
+                                                                         })
+                                                                         .select('_id')
+                                                                         .exec((err, orders) => {
+                                                                            if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err})
+                                                                            return res.status(200)
                                                                             .send({
                                                                                 done: true,
                                                                                 code: 0,
@@ -182,10 +192,13 @@ function loginDevice (req, res) {
                                                                                         initialDataKey: initialDataKeyConfig,
                                                                                         maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                                     },
-                                                                                    priceLists: priceLists
+                                                                                    priceLists: priceLists,
+                                                                                    pendingOrders: orders
                                                                                 },
                                                                                 message: 'OK'
                                                                             })
+                                                                         })
+                                                                        
                                                                     })
                                                             })
                                                 })  
@@ -200,7 +213,14 @@ function loginDevice (req, res) {
                                                     .exec((err, pts) => {
                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
 
-                                                        return res.status(200)
+                                                        Order.find({ 
+                                                            device: device._id,
+                                                            pendingConfirmCancel: true
+                                                         })
+                                                         .select('_id')
+                                                         .exec((err, orders) => {
+                                                            if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err})
+                                                            return res.status(200)
                                                             .send({
                                                                 done: true,
                                                                 code: 0,
@@ -215,10 +235,14 @@ function loginDevice (req, res) {
                                                                         initialDataKey: initialDataKeyConfig,
                                                                         maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                     },
-                                                                    priceLists: priceLists
+                                                                    priceLists: priceLists,
+                                                                    pendingOrders: orders
                                                                 }
                                                             })
                                                     })
+
+                                                         })
+                                                        
                                             })
                                     
 
