@@ -193,7 +193,7 @@ function loginDevice (req, res) {
                                                                                         maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                                     },
                                                                                     priceLists: priceLists,
-                                                                                    pendingOrders: orders
+                                                                                    pendingOrdersToCancel: orders
                                                                                 },
                                                                                 message: 'OK'
                                                                             })
@@ -236,7 +236,7 @@ function loginDevice (req, res) {
                                                                         maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                     },
                                                                     priceLists: priceLists,
-                                                                    pendingOrders: orders
+                                                                    pendingOrdersToCancel: orders
                                                                 }
                                                             })
                                                     })
