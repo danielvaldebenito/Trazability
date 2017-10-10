@@ -1,14 +1,15 @@
 'use strict'
 
-var path = require('path')
-var mongoose = require('mongoose')
-var pagination = require('mongoose-pagination')
-var User = require('../models/user')
-var Vehicle = require('../models/vehicle')
-var Warehouse = require('../models/warehouse')
-var Dependence = require('../models/dependence')
-var Distributor = require('../models/distributor')
-var config = require('../config')
+const path = require('path')
+const mongoose = require('mongoose')
+const pagination = require('mongoose-pagination')
+const User = require('../models/user')
+const Vehicle = require('../models/vehicle')
+const Transfer = require('../models/transfer')
+const Warehouse = require('../models/warehouse')
+const Dependence = require('../models/dependence')
+const Distributor = require('../models/distributor')
+const config = require('../config')
 
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
@@ -149,10 +150,33 @@ function deleteOne(req, res){
     })
 }
 
+function validateForLicensePlate(req, res) {
+    const licensePlate = req.params.licensePlate
+    const transfer = req.query.transfer
+    Vehicle.findOne({ licensePlate: licensePlate })
+        .exec((err, vehicle) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', code: -1, err})
+            if(!vehicle) return res.status(404).send({ done: false, message: 'No existe vehículo con la placa: ' + licensePlate, code: 1})
+            
+            if(transfer) {
+                Transfer.findOne({ licensePlate: licensePlate, active: true })
+                    .exec((err, transfer) => {
+                        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar transferencia', code: -1, err})
+                        if(!transfer) return res.status(404).send({ done: false, message: 'No existe transferencia activa para la placa: ' + licensePlate, code: 1})
+                        
+                        return res.status(200).send({ done: true, message: 'Vehículo existe', vehicle, transfer, code: 0})
+                    })
+            } else {
+                return res.status(200).send({ done: true, message: 'Vehículo existe', vehicle, code: 0})
+            }
+        })
+}
+
 module.exports = {
     getAll,
     getOne,
     saveOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    validateForLicensePlate
 }  

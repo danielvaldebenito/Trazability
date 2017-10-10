@@ -7,6 +7,7 @@ var api = express.Router()
 
 api.get('/vehicles/:distributor?/', md_auth.ensureAuth, VehicleController.getAll)
 api.get('/vehicle/:id', md_auth.ensureAuth, VehicleController.getOne)
+api.get('/vehicle-validate/:licensePlate', md_auth.ensureAuth, VehicleController.validateForLicensePlate)
 api.post('/vehicle/', [md_auth.ensureAuth, md_wh.createVehicleWarehouse], VehicleController.saveOne)
 api.put('/vehicle/:id', md_auth.ensureAuth, VehicleController.updateOne)
 api.delete('/vehicle/:id', [md_auth.ensureAuth, md_auth.isAdmin], VehicleController.deleteOne)
