@@ -3688,3 +3688,40 @@ sending push notification { namespace: '/orders',
      type: 'ENVASADO' } }
 [32minfo[39m: POST /api/sale 200 911.474 ms - 648 body: {"done":"true","coordinates":{"lat":3.4477488,"lng":-76.52756819999999},"type":"ENVASADO","typeSale":"CAMPANEO","paymentMethod":"EFECTIVO","folio":"123","typeDocument":"FACTURA","warehouse":"59a5b0df3ec33156d0fbe539","items":[{"nif":"abcdefghijkl","productType":"5988d40c67519cdd05854bcd","price":"7000","discount":"500","negotiable":"200","surchargue":"0"},{"nif":"mnopqrstuvwxyz","productType":"5988d41d67519cdd05854be7","price":"11000","discount":"500","negotiable":"200","surchargue":"0"}],"address":"59cee310d0e3b410f4484155","vehicle":"59a5b0df3ec33156d0fbe53a","distributor":"5988d26f67519cdd05854996","delivery":{"coordinates":{"lat":"15.1245","lng":"-38.5477"},"done":"true","order":{"clientId":"9554654asda45sd4asdad","client":{"nit":"163946661","name":"Daniel","surname":"Valdebenito"},"phone":"111111111","observation":"Esta es una observacion","paymentMethod":"EFECTIVO"}},"placeId":"ChIJb8HMxWCmMI4RoV1mdizf9Mw","destinyWarehouse":"59cee310d0e3b410f4484154","transaction":"59d2618d66cb6617dce1f444","document":"59cee2aaf0b5ba35003159a0","movement":"59d2618d66cb6617dce1f445","itemsSale":[{"productType":"5988d40c67519cdd05854bcd","quantity":1,"price":"7000","discount":0,"surcharge":0},{"productType":"5988d41d67519cdd05854be7","quantity":1,"price":"11000","discount":0,"surcharge":0}]}
 
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+{ result: 
+   { metadataServerUrl: 'https://cs95.salesforce.com/services/Soap/m/40.0/00D0x000000CnMC',
+     passwordExpired: false,
+     sandbox: true,
+     serverUrl: 'https://cs95.salesforce.com/services/Soap/u/40.0/00D0x000000CnMC',
+     sessionId: '00D0x000000CnMC!AQ4AQGezHQByHA60jeTCQPTWZxvHTeCgmQ65E2WhjOCoKsCgyk03Hz1kUbwQBeUcOUfOlekfGoI3OYeS59p4lsARQmoZWLm5',
+     userId: '005j000000BjG31AAF',
+     userInfo: 
+      { accessibilityMode: false,
+        chatterExternal: false,
+        currencySymbol: '$',
+        orgAttachmentFileSizeLimit: 5242880,
+        orgDefaultCurrencyIsoCode: 'COP',
+        orgDefaultCurrencyLocale: 'es_CO',
+        orgDisallowHtmlAttachments: false,
+        orgHasPersonAccounts: true,
+        organizationId: '00D0x000000CnMCEA0',
+        organizationMultiCurrency: false,
+        organizationName: 'UNIGAS COLOMBIA S.A E.S.P',
+        profileId: '00ej0000000w4PdAAI',
+        sessionSecondsValid: 43200,
+        userEmail: 'fotalora@unigas.com.co',
+        userFullName: 'Francisco Otalora',
+        userId: '005j000000BjG31AAF',
+        userLanguage: 'es',
+        userLocale: 'es_CO',
+        userName: 'sistemas@unigas.com.co.developer',
+        userTimeZone: 'America/Bogota',
+        userType: 'Standard',
+        userUiSkin: 'Theme3' } } }

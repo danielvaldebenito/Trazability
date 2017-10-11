@@ -44,6 +44,9 @@ module.exports = {
                 time: 'hour'
             }
         },
+        productType: {
+            types: ['ENVASADO', 'GRANEL']
+        },
         sale: {
             types: ['PROGRAMADO', 'CAMPANEO'],
             paymentMethods: ['EFECTIVO', 'DÉBITO', 'CRÉDITO']

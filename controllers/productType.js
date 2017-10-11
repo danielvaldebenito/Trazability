@@ -12,9 +12,9 @@ function getAll(req, res) {
     var limit = parseInt(req.query.limit) || 200
     var sidx = req.query.sidx || '_id'
     var sord = req.query.sord || 1
-
+    const type = req.query.type
     ProductType
-        .find()
+        .find(type ? { type: type }: {})
         .sort([[sidx, sord]])
         .paginate(page, limit, (err, records, total) => {
             if(err)

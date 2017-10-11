@@ -18,9 +18,9 @@ mongoose.connect(mongoConnectionUrl, (err, res) => {
             console.log(`Servidor corriendo correctamente en el puerto ${port}`);
             var loginService = require('./integration/connection/login')
             loginService.login()
-                .then(res => { 
-                    console.log('Conectado a web service Salesforce como', res.result.userInfo.userFullName)
-                    config.integration.sessionId = res.result.sessionId
+                .then(res => {
+                    console.log(res)
+                    
                 })
                 .catch(error => console.log(error))
         })

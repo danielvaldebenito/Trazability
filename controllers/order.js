@@ -1,21 +1,21 @@
 'use strict'
 
-var path = require('path')
-var mongoose = require('mongoose')
-var pagination = require('mongoose-pagination')
-var moment = require('moment')
-var pushSocket = require('../services/pushSocket')
-var pushNotification = require('../services/push')
+const path = require('path')
+const mongoose = require('mongoose')
+const pagination = require('mongoose-pagination')
+const moment = require('moment')
+const pushSocket = require('../services/pushSocket')
+const pushNotification = require('../services/push')
 moment.locale('es')
-var Order = require('../models/order')
-var OrderItem = require('../models/orderItem')
-var Warehouse = require('../models/warehouse')
-var Distributor = require('../models/distributor')
-var Dependence = require('../models/dependence')
-var Address = require('../models/address')
-var ProductType = require('../models/productType')
-var config = require('../config')
-
+const Order = require('../models/order')
+const OrderItem = require('../models/orderItem')
+const Warehouse = require('../models/warehouse')
+const Distributor = require('../models/distributor')
+const Dependence = require('../models/dependence')
+const Address = require('../models/address')
+const ProductType = require('../models/productType')
+const config = require('../config')
+const orderIntegration = require('../integration/connection/order')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -180,6 +180,9 @@ function saveOne (req, res) {
                 /**
                  * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                  */
+                orderIntegration.createOrder(stored)
+                .then(res => console.log('inte', res))
+                
                 if(params.vehicle){
                     pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
                 }

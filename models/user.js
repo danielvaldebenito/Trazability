@@ -20,7 +20,8 @@ var UserSchema = Schema({
     roles: [{ type: String, enum: roles }],
     dependence: {type: Schema.Types.ObjectId, ref: 'Dependence'},
     internalProcessTypes: [{ type: Schema.Types.ObjectId, ref: 'InternalProcessType'}],
-    internalProcess: [{ type: Schema.Types.ObjectId, ref: 'InternalProcess'}]
+    internalProcess: [{ type: Schema.Types.ObjectId, ref: 'InternalProcess'}],
+    online: Boolean
 })
 UserSchema.plugin(timestamp)
 module.exports = mongoose.model('User', UserSchema)
