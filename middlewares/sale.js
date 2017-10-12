@@ -25,7 +25,7 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
         {
             var sItem = {
                 productType: m.productType, // tipo de producto
-                quantity: 1, // cantidad
+                quantity: m.quantity, // cantidad (ENVASADO: 1 - GRANEL: N)
                 price: m.price,
                 discount: 0,
                 surcharge: 0

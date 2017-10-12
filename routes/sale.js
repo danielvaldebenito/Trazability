@@ -32,6 +32,12 @@ api.post('/sale/', [
     md_sale.convertMovementDetailToSaleDetail,
     md_order.saveOneByDevice
      ], SaleController.saveOne)
+
+api.post('/sale-granel/', [
+    md_auth.ensureAuth,
+    md_sale.convertMovementDetailToSaleDetail,
+    md_order.saveOneByDevice
+    ], SaleController.saveOne)
 api.put('/sale/:id', md_auth.ensureAuth, SaleController.updateOne)
 api.delete('/sale/:id', [md_auth.ensureAuth, md_auth.isAdmin], SaleController.deleteOne)
 

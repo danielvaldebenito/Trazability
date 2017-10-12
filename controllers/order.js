@@ -49,12 +49,21 @@ function getAll(req, res) {
             .populate('client')
             .populate('address')
             .populate('vehicle')
+            
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
                 if(!records)
                     return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
                 
+                if(filter){
+                    records = records.filter((record) => {
+                        return record.address.location.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                            || record.client.fullname.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                            || (record.vehicle && record.vehicle.licensePlate.toLowerCase().indexOf(filter.toLowerCase()) > -1)
+                    })
+                }
+                total = records.length
                 
                 return res
                         .status(200)
