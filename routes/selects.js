@@ -24,4 +24,6 @@ api.get('/user-rol/:distributor/:rol', md_auth.ensureAuth, SelectController.getU
 api.get('/order-states', md_auth.ensureAuth, SelectController.getOrderStates)
 /* Obtiene métodos de pago */
 api.get('/pay-methods', md_auth.ensureAuth, SelectController.getPayMethods)
+/* Obtiene las pos de un distributor */
+api.get('/pos/:distributor', md_auth.ensureAuth, SelectController.getPos)
 module.exports = api;

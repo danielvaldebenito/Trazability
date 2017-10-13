@@ -1,10 +1,12 @@
 'use strict'
 
-var mongoose = require('mongoose')
-var Sale = require('../models/sale')
-var SaleItem = require('../models/saleItem')
-var MovementItem = require('../models/movementItem')
-var Enumerable = require('linq')
+const mongoose = require('mongoose')
+const Sale = require('../models/sale')
+const Order = require('../models/order')
+const Delivery = require('../models/delivery')
+const SaleItem = require('../models/saleItem')
+const MovementItem = require('../models/movementItem')
+const Enumerable = require('linq')
 const Product = require('../models/product')
 
 
@@ -46,7 +48,6 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
     })
     
 }
-
 
 
 module.exports = {

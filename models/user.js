@@ -17,11 +17,13 @@ var UserSchema = Schema({
     vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
     device: { type: Schema.Types.ObjectId, ref: 'Device' },
     lastLogin: Date,
+    lastLogout: Date,
     roles: [{ type: String, enum: roles }],
     dependence: {type: Schema.Types.ObjectId, ref: 'Dependence'},
     internalProcessTypes: [{ type: Schema.Types.ObjectId, ref: 'InternalProcessType'}],
     internalProcess: [{ type: Schema.Types.ObjectId, ref: 'InternalProcess'}],
-    online: Boolean
+    online: Boolean,
+    disabled: { type: Boolean, default: false }
 })
 UserSchema.plugin(timestamp)
 module.exports = mongoose.model('User', UserSchema)

@@ -30,7 +30,8 @@ var SaleSchema = Schema({
             productType: { type: Schema.Types.ObjectId, ref: 'ProductType' },
             nif: String
         }
-    ]
+    ],
+    user: { type: Schema.Types.ObjectId, ref: 'User'}
 })
 SaleSchema.plugin(timestamp)
 module.exports = mongoose.model('Sale', SaleSchema)

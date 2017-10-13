@@ -19,15 +19,14 @@ function getAll(req, res) {
     var distributor = req.params.distributor
     var filter = req.query.filter;
     Vehicle
+        .where({ disabled: { $ne: true } })
         .find(filter ?  { "licensePlate": { "$regex": filter, "$options": "i" } } : {})
         .where(distributor ? { distributor: distributor } : {})
         .sort([[sidx, sord]])
         .populate({
             path: 'warehouse',
-            model: Warehouse,
             populate: {
                 path: 'dependence',
-                model: Dependence
             }
         })
         .populate('user')
@@ -71,7 +70,7 @@ function saveOne (req, res) {
 
     var vehicle = new Vehicle()
     var params = req.body
-    vehicle.licensePlate = params.licensePlate
+    vehicle.licensePlate = params.licensePlate.toUpperCase()
     vehicle.trademark = params.trademark
     vehicle.capacity = params.capacity
     vehicle.type = params.type
@@ -107,6 +106,7 @@ function saveOne (req, res) {
 function updateOne(req, res) {
     var id = req.params.id
     var update = req.body
+    update.licensePlate = req.body.licensePlate.toUpperCase()
     Vehicle.findByIdAndUpdate(id, update, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
@@ -135,7 +135,7 @@ function updateOne(req, res) {
 }
 function deleteOne(req, res){
     var id = req.params.id
-    Vehicle.findByIdAndRemove(id, (err, deleted) => {
+    Vehicle.findByIdAndUpdate(id, { disabled: true, licensePlate: null }, (err, deleted) => {
         if(err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro' })
         if(!deleted) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
         
@@ -153,7 +153,7 @@ function deleteOne(req, res){
 function validateForLicensePlate(req, res) {
     const licensePlate = req.params.licensePlate
     const transfer = req.query.transfer
-    Vehicle.findOne({ licensePlate: licensePlate })
+    Vehicle.findOne({ licensePlate: licensePlate, disabled: { $ne: true } })
         .exec((err, vehicle) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', code: -1, err})
             if(!vehicle) return res.status(404).send({ done: false, message: 'No existe vehículo con la placa: ' + licensePlate, code: 1})

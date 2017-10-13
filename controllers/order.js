@@ -49,7 +49,7 @@ function getAll(req, res) {
             .populate('client')
             .populate('address')
             .populate('vehicle')
-            
+            .populate('device')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -167,6 +167,7 @@ function saveOne (req, res) {
     order.type = params.type
     order.client = params.client
     order.address = params.address
+    order.device = params.device
     order.vehicle = params.vehicle
     order.phone = params.phone
     order.observation = params.observation

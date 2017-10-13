@@ -1,16 +1,16 @@
 'use strict'
 
-var path = require('path')
-var mongoose = require('mongoose')
-var pagination = require('mongoose-pagination')
-var Sale = require('../models/sale')
-var SaleItem = require('../models/saleItem')
-var Transaction = require('../models/transaction')
-var Movement = require('../models/movement')
-var MovementItem = require('../models/movementItem')
-var Document = require('../models/document')
-var Delivery = require('../models/delivery')
-
+const path = require('path')
+const mongoose = require('mongoose')
+const pagination = require('mongoose-pagination')
+const Sale = require('../models/sale')
+const SaleItem = require('../models/saleItem')
+const Transaction = require('../models/transaction')
+const Movement = require('../models/movement')
+const MovementItem = require('../models/movementItem')
+const Document = require('../models/document')
+const Delivery = require('../models/delivery')
+const Order = require('../models/order')
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -98,6 +98,7 @@ function saveOne (req, res) {
             
             sale.items = params.itemsSale
             sale.retreats = params.retreats
+            sale.user = req.user._id
             sale.save((err, stored) => {
                 if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
                 if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
@@ -169,11 +170,60 @@ function deleteOne(req, res){
                 })
     })
 }
+const getOneFromOrder = function (req, res, next) {
+    const orderId = req.params.order
+    Order.findById(orderId)
+        .populate('address')
+        .populate('vehicle')
+        .populate('device')
+        .populate('client')
+        .populate('items.productType')
+        .populate('user')
+        .exec((err, order) => {
+        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar pedido', code: -1, err })
+        if(!order) return res.status(404).send({ done: false, message: 'Orden no existe', code: 1})
+        Delivery.findOne({order: orderId}, (err, delivery) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar entrega', code: -1, err })
+            if(!delivery) return res.status(404).send({ done: false, message: 'No se ha realizado entrega para el pedido', code: 1})
+            if(delivery.sale) {
+                Sale
+                    .findById(delivery.sale)
+                    .populate('items.productType')
+                    .exec((err, sale) => {
+                        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', code: -1, err})
+
+                        if(!sale) return res.status(404).send({ done: false, message: 'No existe venta asociada a la entrega', code: 1})
+
+                        return res.status(200)
+                            .send({
+                                done: true,
+                                message: 'OK',
+                                code: 0,
+                                delivery,
+                                sale,
+                                order
+                            })
+                    })
+            } else {
+                return res.status(200)
+                        .send({
+                            done: true,
+                            message: 'OK',
+                            code: 0,
+                            delivery,
+                            order
+                            
+                        })
+            }
+        })
+    })
+}
 
 module.exports = {
     getAll,
     getOne,
     saveOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    getOneFromOrder
 }  

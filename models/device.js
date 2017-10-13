@@ -1,9 +1,9 @@
 'use strict'
 /* Modelo de PDA */
-var mongoose = require('mongoose')
-var timestamp = require('mongoose-timestamp')
-var Schema = mongoose.Schema
-var DeviceSchema = Schema({
+const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
+const Schema = mongoose.Schema
+const DeviceSchema = Schema({
     esn: { type: String, required: true, unique: true },
     version: String,
     token: String,

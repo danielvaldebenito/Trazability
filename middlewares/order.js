@@ -108,6 +108,8 @@ function saveOneByDevice(req, res, next) {
     }
 
 }
+
+
 module.exports = {
     clientFromOrderByDevice,
     saveOneByDevice

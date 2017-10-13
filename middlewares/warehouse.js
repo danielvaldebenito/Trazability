@@ -112,6 +112,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     }
     
 }
+
 var getWarehouseFromVehicle = function (req, res, next) {
     if(!req.body.vehicle) {
         next();

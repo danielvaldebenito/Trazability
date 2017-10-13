@@ -114,7 +114,7 @@ function loginDevice(req, res) { // VENTA
                                     .exec((err, vehicle) => {
                                         if (err) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar el vehículo', error: err })
                                         if (!vehicle) return res.status(404).send({ done: false, code: 1, message: 'No existe un vehículo con la placa ' + licensePlate })
-
+                                        if (vehicle.disabled) return res.status(404).send({ done: false, message: 'Vehículo se encuentra deshabilitado. Consulte con su administrador.', code: 1})
                                         Device.findOne({ esn: esn }, (err, device) => {
                                             if (err)
                                                 return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err })
@@ -130,7 +130,7 @@ function loginDevice(req, res) { // VENTA
                                                     if (!devStored) return res.status(404).send({ done: false, code: 1, data: null, message: 'Error al guardar PDA' })
 
                                                     User.findByIdAndUpdate(user._id, { device: devStored._id, vehicle: vehicle._id }, (err, raw) => {
-
+                                                        if(raw.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1})
                                                         return res.status(200)
                                                             .send({
                                                                 done: false,
@@ -145,6 +145,8 @@ function loginDevice(req, res) { // VENTA
                                                     const update = device.pos ? { device: device._id, lastLogin: moment(), online: true, vehicle: vehicle._id } : { device: device._id, vehicle: vehicle._id }
                                                     User.findByIdAndUpdate(user._id, update, (err, raw) => {
                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuario', err })
+                                                        
+                                                        if(raw.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1})
                                                         if (!device.pos) {
                                                             return res.status(200)
                                                                 .send({
@@ -213,7 +215,7 @@ function loginDevice(req, res) { // VENTA
 
 function logout(req, res) {
     const username = req.params.username
-    User.findOneAndUpdate({ username: username }, { online: false }, (err, user) => {
+    User.findOneAndUpdate({ username: username }, { online: false, lastLogout: moment() }, (err, user) => {
         if (err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario', err })
         return res.status(200).send({
             done: true,

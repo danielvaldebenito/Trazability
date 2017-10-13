@@ -323,7 +323,7 @@ function getUsers (req, res){
             { $or: [ { name: { "$regex": filter, "$options": "i" }},
                     { surname: { "$regex": filter, "$options": "i" }} ] }
              : {})
-        .sort([[sidx, sord]])
+        .sort([['disabled', 1],[sidx, sord]])
         .paginate(page, limit, (err, records, total) => {
             if(err)
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error', error: err})
@@ -359,6 +359,31 @@ function validateUsername (req, res) {
             return res.status(200).send({ done: true, message: 'No existe usuario', code: 0, exists: true})
         })
 }
+function disableUser (req, res) {
+    const userId = req.params.id
+    User.findByIdAndUpdate(userId, { disabled: true }, (err, updated) => {
+        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar y actualizar usuario'})
+        return res.status(200)
+                    .send({
+                        done: true,
+                        message: 'OK',
+                        code: 0
+                    })
+    })
+}
+
+function enableUser (req, res) {
+    const userId = req.params.id
+    User.findByIdAndUpdate(userId, { disabled: false }, (err, updated) => {
+        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar y actualizar usuario'})
+        return res.status(200)
+                    .send({
+                        done: true,
+                        message: 'OK',
+                        code: 0
+                    })
+    })
+}
 module.exports = {
     pruebas,
     saveUser,
@@ -369,5 +394,7 @@ module.exports = {
     getImageFile,
     getUsers,
     getOne,
-    validateUsername
+    validateUsername,
+    disableUser,
+    enableUser
 }

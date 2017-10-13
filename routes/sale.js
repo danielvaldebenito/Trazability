@@ -15,6 +15,7 @@ var api = express.Router()
 
 api.get('/sale/', md_auth.ensureAuth, SaleController.getAll)
 api.get('/sale/:id', md_auth.ensureAuth, SaleController.getOne)
+api.get('/sale-order/:order', md_auth.ensureAuth, SaleController.getOneFromOrder)
 api.post('/sale/', [
     md_auth.ensureAuth,
     md_geocoding.findCoordFromAddress,

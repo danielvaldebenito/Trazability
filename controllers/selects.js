@@ -1,13 +1,14 @@
 'use strict'
-var config = require('../config');
-var fs = require('fs')
-var User = require('../models/user')
-var Vehicle = require('../models/vehicle')
-var Dependence = require('../models/dependence')
-var PriceList = require('../models/priceList')
-var ProductType = require('../models/productType')
-var InternalProcessType = require('../models/internalProcessType')
-var mongoose = require('mongoose')
+const config = require('../config');
+const fs = require('fs')
+const User = require('../models/user')
+const Device = require('../models/device')
+const Vehicle = require('../models/vehicle')
+const Dependence = require('../models/dependence')
+const PriceList = require('../models/priceList')
+const ProductType = require('../models/productType')
+const InternalProcessType = require('../models/internalProcessType')
+const mongoose = require('mongoose')
 // .../api/select/vehicleTypes
 function getvehicleTypes (req, res) {
     var types = config.entitiesSettings.vehicle.types;
@@ -62,7 +63,9 @@ function getCountryData (req, res) {
 function getVehiclesToAsign (req, res) {
     var distributor = req.params.distributor;
     var type = req.query.type;
-    Vehicle.find( type ? { type: type } : {})
+    Vehicle
+        .where({ disabled: { $ne: true } })
+        .find( type ? { type: type } : {})
         .where(distributor ? { distributor: distributor }: {})
         .populate ({ 
             path: 'warehouse',
@@ -165,7 +168,28 @@ function getOrderStates (req, res) {
                         message: 'OK',
                         data: states})
 }
-
+function getPos(req, res) {
+    const distributor = req.params.distributor
+    const type = req.query.type
+    Device
+        .find({ pos: { $ne: null } })
+        .populate({
+            path: 'user',
+            match: {
+                distributor: distributor
+            },
+            populate: {
+                path: 'vehicle',
+                match: type ? {
+                    type: type
+                } : {}
+            }
+        })
+        .exec((err, pos) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+            return res.status(200).send({ done: true, message: 'OK', data: pos})
+        })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -177,6 +201,7 @@ module.exports = {
     getInternalProcessTypes,
     getUsersFromRol,
     getOrderStates,
-    getPayMethods
+    getPayMethods,
+    getPos
 
 }
