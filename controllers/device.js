@@ -237,7 +237,7 @@ function logout(req, res) {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1})
             
             if(bo) {
-                pushNotification.forceResetVehicle(username.device)
+                pushNotification.forceResetVehicle(user.device)
             }
             return res.status(200).send({
                 done: true,
