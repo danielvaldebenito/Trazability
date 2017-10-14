@@ -15,7 +15,6 @@ ordersNsp.on('connection', (socket) => {
   
 })
 vehicleNsp.on('connection', (socket) => {
-  console.log('Socket connected to vehicle namespace', socket.id)
   const distributor = socket.request._query.distributor;
   if(distributor) {
     socket.join(distributor)

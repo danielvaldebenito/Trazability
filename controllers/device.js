@@ -179,7 +179,7 @@ function loginDevice(req, res) { // VENTA
                                                                                         .exec((err, orders) => {
                                                                                             if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
                                                                                             
-                                                                                            pushSocket.send('/vehicles', us.distributor, 'connection')
+                                                                                            pushSocket.send('/vehicles', us.distributor, 'logout', dev)
                                                                                             return res.status(200)
                                                                                                 .send({
                                                                                                     done: true,
