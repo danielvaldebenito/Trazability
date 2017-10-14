@@ -179,7 +179,7 @@ function loginDevice(req, res) { // VENTA
                                                                                         .exec((err, orders) => {
                                                                                             if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
                                                                                             
-                                                                                            pushSocket.send('/vehicles', us.distributor, 'logout', dev)
+                                                                                            pushSocket.send('/vehicles', user.distributor, 'login', device._id)
                                                                                             return res.status(200)
                                                                                                 .send({
                                                                                                     done: true,
@@ -242,7 +242,7 @@ function logout(req, res) {
             if(bo) {
                 pushNotification.forceResetVehicle(user.device)
             }
-            pushSocket.send('/vehicles', user.distributor, 'connection')
+            pushSocket.send('/vehicles', user.distributor, 'logout', user.device)
             return res.status(200).send({
                 done: true,
                 message: 'Usuario deslogueado correctamente',
