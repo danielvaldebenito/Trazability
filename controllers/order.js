@@ -49,7 +49,7 @@ function getAll(req, res) {
             .populate('client')
             .populate('address')
             .populate({ path: 'vehicle', populate: { path: 'user'}})
-            .populate('device')
+            .populate({ path: 'device', populate: { path: 'user'}})
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -293,15 +293,17 @@ function deleteOne(req, res){
     })
 }
 function setOrderEnRuta(req, res) {
-    var body = req.body
-    var deviceId = req.body.device
-    var orders = body.orders
-    var user = req.user
+    const body = req.body
+    const deviceId = req.body.device
+    const orders = body.orders
+    const user = req.user
     console.log('set order en ruta user: ', user)
-    var distributor = req.user.distributor._id
+    const distributor = req.user.distributor._id
+    const userName = req.user.name && req.user.surname ? req.user.name + ' ' +  req.user.surname : ''
     
-    
-    Order.update({ _id: { $in: orders }}, { status: config.entitiesSettings.order.status[2], device: deviceId }, { multi: true })
+    Order.update({ _id: { $in: orders }}, 
+        { status: config.entitiesSettings.order.status[2], device: deviceId, userName: userName }, 
+        { multi: true })
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
             

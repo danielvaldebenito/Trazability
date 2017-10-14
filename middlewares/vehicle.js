@@ -3,7 +3,7 @@
 const Vehicle = require('../models/vehicle')
 const Device = require('../models/device')
 const User = require('../models/user')
-function getVehicleFromDevice (req, res, next) {
+function getVehicleFromDevice (req, res, next) { // And Get User
     const device = req.body.device
     if(!device) return next();
     Device.findById(device, (err, dev) => {
@@ -22,6 +22,8 @@ function getVehicleFromDevice (req, res, next) {
 
                 req.body.vehicle = vehicle._id
                 req.body.originWarehouse = vehicle.warehouse
+                req.body.userName = user.name && user.surname ? user.name + ' ' + user.surname : ''
+
                 next()
             })
         })
