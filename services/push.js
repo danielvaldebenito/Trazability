@@ -44,7 +44,7 @@ function newOrderAssigned (device, order) {
         var payload = {
             data: {
                 key: 'NEW_ORDER',
-                id: order
+                id: order.toString()
             }
             // notification: {
             //     title: 'Nueva Orden',

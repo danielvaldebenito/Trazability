@@ -243,8 +243,8 @@ function saveOne (req, res) {
                 orderIntegration.createOrder(stored)
                 .then(res => console.log('inte', res))
                 
-                if(params.vehicle){
-                    pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
+                if(params.device){
+                    pushNotification.newOrderAssigned(params.device, stored._id)
                 }
                 
                 pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
