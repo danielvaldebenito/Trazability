@@ -159,46 +159,51 @@ function loginDevice(req, res) { // VENTA
                                                                 if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar dispositivos anteriores del usuario', err })
                                                                 Vehicle.update({user: us._id, _id: { $ne: vehicleId }}, { user: null }, {multi:true}, (err, veh) => {
                                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar vehículos anteriores del usuario', err })
-                                                                    PriceList.find({ distributor: user.distributor })
-                                                                    .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
-                                                                    .exec((err, priceLists) => {
-                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
-                                                                        ProductType.find()
-                                                                            .exec((err, pts) => {
-                                                                                if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-    
-                                                                                Order.find({
-                                                                                    device: device._id,
-                                                                                    pendingConfirmCancel: true
-                                                                                })
-                                                                                    .select('_id')
-                                                                                    .exec((err, orders) => {
-                                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
-                                                                                        return res.status(200)
-                                                                                            .send({
-                                                                                                done: true,
-                                                                                                code: 0,
-                                                                                                data: {
-                                                                                                    user: us,
-                                                                                                    token: jwt.createToken(user),
-                                                                                                    device: dev,
-                                                                                                    vehicle: vehicle,
-                                                                                                    initialData: isSameDataKey ? {} : {
-                                                                                                        reasons: config.entitiesSettings.order.reasons,
-                                                                                                        paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                                                        productTypes: pts,
-                                                                                                        initialDataKey: initialDataKeyConfig,
-                                                                                                        maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
-                                                                                                    },
-                                                                                                    priceLists: priceLists,
-                                                                                                    pendingOrdersToCancel: orders
-                                                                                                },
-                                                                                                message: 'OK'
-                                                                                            })
+                                                                    User.update({ device: dev._id, _id: { $ne: us._id }}, { device: null, vehicle: null }, { multi: true}, (err, ok) => {
+                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuarios con el mismo device', err })
+                                                                        
+                                                                        PriceList.find({ distributor: user.distributor })
+                                                                        .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
+                                                                        .exec((err, priceLists) => {
+                                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                                            ProductType.find()
+                                                                                .exec((err, pts) => {
+                                                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+        
+                                                                                    Order.find({
+                                                                                        device: device._id,
+                                                                                        pendingConfirmCancel: true
                                                                                     })
-    
-                                                                            })
+                                                                                        .select('_id')
+                                                                                        .exec((err, orders) => {
+                                                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
+                                                                                            return res.status(200)
+                                                                                                .send({
+                                                                                                    done: true,
+                                                                                                    code: 0,
+                                                                                                    data: {
+                                                                                                        user: us,
+                                                                                                        token: jwt.createToken(user),
+                                                                                                        device: dev,
+                                                                                                        vehicle: vehicle,
+                                                                                                        initialData: isSameDataKey ? {} : {
+                                                                                                            reasons: config.entitiesSettings.order.reasons,
+                                                                                                            paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                                                            productTypes: pts,
+                                                                                                            initialDataKey: initialDataKeyConfig,
+                                                                                                            maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
+                                                                                                        },
+                                                                                                        priceLists: priceLists,
+                                                                                                        pendingOrdersToCancel: orders
+                                                                                                    },
+                                                                                                    message: 'OK'
+                                                                                                })
+                                                                                        })
+        
+                                                                                })
+                                                                        })
                                                                     })
+                                                                    
                                                                 })
                                                                 
                                                             })
