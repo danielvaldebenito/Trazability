@@ -297,8 +297,7 @@ function setOrderEnRuta(req, res) {
     const deviceId = req.body.device
     const orders = body.orders
     const user = req.user
-    console.log('set order en ruta user: ', user)
-    const distributor = req.user.distributor._id
+    const distributor = req.user.distributor
     const userName = req.user.name && req.user.surname ? req.user.name + ' ' +  req.user.surname : ''
     
     Order.update({ _id: { $in: orders }}, 

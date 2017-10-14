@@ -55,7 +55,25 @@ function newOrderAssigned (device, order) {
     })
 
 }
+function forceResetVehicle (device) {
+    Device.findById(device, (err, foundDevice) => {
+        if (err) return console.log('Error al buscar dispositivo' + device, err)
+        if (!foundDevice) return console.log('No se encontró dispositivo', device)
+        if (!foundDevice.token) return console.log('Dispositivo no tiene token asociado', foundDevice)
 
+        var payload = {
+            data: {
+                key: 'RESET_VEHICLE'
+            }
+            // notification: {
+            //     title: 'Nueva Orden',
+            //     body: 'Se ha asignado una nueva orden a su vehículo'
+            // }
+        }
+        send(foundDevice.token, payload);
+    })
+
+}
 function test(token) {
     //var token = 'ej_707oURzc:APA91bHJeVqT1W-YIJyJySb5ofPFfPeRIR2gtcu3fgtllHHER5ldhWnjKnhrIiFW4n1IPUsH61DU8nIqOSWmkFiytUlwRKGR4SpkR2EUD3lr3nIfVpzktYoK7S6hdF4hf2Aw_BCRa4l5'
     
@@ -100,5 +118,6 @@ function send(token, payload) {
 
 }
 module.exports = {
-    requestGeoreference, test, send, newOrderAssigned, cancelOrder
+    requestGeoreference, test, send, newOrderAssigned, cancelOrder,
+    forceResetVehicle
 }

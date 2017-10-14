@@ -13,7 +13,7 @@ const DeviceConfig = require('../models/deviceConfig')
 const jwt = require('../services/jwt')
 const moment = require('moment')
 const config = require('../config')
-
+const pushNotification = require('../services/push')
 function pruebas(req, res) {
     res
         .status(200)
@@ -228,12 +228,17 @@ function loginDevice(req, res) { // VENTA
 
 function logout(req, res) {
     const username = req.params.username
+    const bo = req.query.bo
     User.findOneAndUpdate({ username: username }, { online: false, lastLogout: moment(), vehicle: null }, (err, user) => {
         if (err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario', err })
         
         const veh = user.vehicle
         Vehicle.findByIdAndUpdate(veh, { user: null }, (err, vehicle) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1})
+            
+            if(bo) {
+                pushNotification.forceResetVehicle(username.device)
+            }
             return res.status(200).send({
                 done: true,
                 message: 'Usuario deslogueado correctamente',
