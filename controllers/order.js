@@ -17,20 +17,20 @@ const ProductType = require('../models/productType')
 const config = require('../config')
 const orderIntegration = require('../integration/connection/order')
 function getAll(req, res) {
-    var page = parseInt(req.query.page) || 1
-    var limit = parseInt(req.query.limit) || 200
-    var sidx = req.query.sidx || '_id'
-    var sord = req.query.sord || 1
-    var state = req.query.state
-    var date = req.query.date;
-    var splited = date ? date.split('-') : [0,0,0]
-    var year = parseInt(splited[0]) 
-    var month = parseInt(splited[1])
-    var day = parseInt(splited[2])
-    var date1 = new Date(year, month - 1, day, 0, 0, 0)
-    var date2 = new Date(year, month - 1, day, 23, 59, 59)
-    var filter = req.query.filter
-    var distributor = req.params.distributor
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 200
+    const sidx = req.query.sidx || '_id'
+    const sord = req.query.sord || 1
+    const state = req.query.state
+    const date = req.query.date;
+    const splited = date ? date.split('-') : [0,0,0]
+    const year = parseInt(splited[0]) 
+    const month = parseInt(splited[1])
+    const day = parseInt(splited[2])
+    const date1 = new Date(year, month - 1, day, 0, 0, 0)
+    const date2 = new Date(year, month - 1, day, 23, 59, 59)
+    const filter = req.query.filter
+    const distributor = req.params.distributor
     
     Order.find(state ? { status: state } : {})
             .where(date ? 
@@ -48,7 +48,7 @@ function getAll(req, res) {
             .populate('distributor')
             .populate('client')
             .populate('address')
-            .populate('vehicle')
+            .populate({ path: 'vehicle', populate: { path: 'user'}})
             .populate('device')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
@@ -78,9 +78,12 @@ function getAll(req, res) {
 }
 
 function getAllVehicle (req, res) {
-    var vehicle = req.params.vehicle
+    const vehicle = req.params.vehicle
     Order
-        .find({ vehicle: vehicle, status: config.entitiesSettings.order.status[1] })
+        .find({ 
+            vehicle: vehicle, 
+            status: config.entitiesSettings.order.status[1]
+        })
         .populate({
             path: 'items',
             select: ['-_id'],
@@ -110,6 +113,53 @@ function getAllVehicle (req, res) {
                         data: records,
                         code: 0
                     })
+        })  
+}
+
+function getAllDevice (req, res) {
+    const device = req.params.device
+    const vehicle = req.params.vehicle
+    Order
+        .find({ 
+            device: device, 
+            status: config.entitiesSettings.order.status[1]
+        })
+        .populate({
+            path: 'items',
+            select: ['-_id'],
+            populate: { path: 'productType', select: 'name'}
+        })
+        .populate({
+            path: 'address',
+            select: ['_id', 'warehouse', 'location', 'city', 'region', 'coordinates']
+        })
+        .populate({
+            path: 'client',
+            select: ['_id', 'nit', 'name', 'surname', 'fullname', 'discountSurcharges', 'phone', 'addresses', 'city', 'region']
+        })
+        .select(['-__v'])
+        .exec((err, records) => {
+            if(err)
+                return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
+            if(!records)
+                return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
+            
+            const ids = records.map((r) => { return r._id });
+            Order.update({ _id: { $in: ids } }, { vehicle: vehicle }, { multi: true },(err, raw) => {
+                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar order', code: -1})
+
+                return res
+                    .status(200)
+                    .send({ 
+                        done: true, 
+                        message: 'OK', 
+                        data: records,
+                        code: 0,
+                        raw
+                    })
+            })
+            
+            
         })  
 }
 
@@ -299,15 +349,28 @@ function confirmCancel (req, res) {
             })
     })
 }
-function assignVehicleToOrder (req, res) {
-    var vehicle = req.body.vehicle;
-    var order = req.body.order;
-    Order.findByIdAndUpdate(order, { vehicle: vehicle, status: config.entitiesSettings.order.status[1] },
+function assignDeviceToOrder (req, res) {
+    const device = req.body.device;
+    const order = req.body.order;
+    const vehicle = req.body.vehicle;
+    const originWarehouse = req.body.originWarehouse
+    const update = {
+        vehicle: vehicle, 
+        status: config.entitiesSettings.order.status[1],
+        device: device,
+        originWarehouse: originWarehouse
+    }
+    Order.findByIdAndUpdate(order, update,
     (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
+
+        pushNotification.newOrderAssigned(device, order)
         
-        pushNotification.newOrderAssigned(vehicle, updated)
-        pushSocket.send('/orders', updated.distributor, 'new-order', order._id)
+        if(req.body.old) {
+            pushNotification.cancelOrder(req.body.old, order)
+        }
+        
+        pushSocket.send('/orders', updated.distributor, 'new-order', updated._id)
         
         return res.status(200)
                 .send({
@@ -322,9 +385,10 @@ module.exports = {
     getAll,
     getOne,
     getAllVehicle,
+    getAllDevice,
     saveOne,
     updateOne,
-    assignVehicleToOrder,
+    assignDeviceToOrder,
     deleteOne,
     getDayResume,
     setOrderEnRuta,

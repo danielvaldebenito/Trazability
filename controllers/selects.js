@@ -172,22 +172,33 @@ function getPos(req, res) {
     const distributor = req.params.distributor
     const type = req.query.type
     Device
-        .find({ pos: { $ne: null } })
-        .populate({
+        .find({ pos: { $ne: null }, user : { $ne: null }})
+        .populate(type ? {
             path: 'user',
             match: {
-                distributor: distributor
+                distributor: distributor,
+                //online: true
             },
             populate: {
                 path: 'vehicle',
-                match: type ? {
-                    type: type
-                } : {}
+                match: {
+                    'type': type
+                } 
             }
+        } : {
+            path: 'user',
+            match: { distributor: distributor },
+            populate: {
+                path: 'vehicle'
+            }
+
         })
         .exec((err, pos) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
-            return res.status(200).send({ done: true, message: 'OK', data: pos})
+            
+            pos = pos.filter((p) => { return p.user != null && p.user.vehicle != null })
+            
+            return res.status(200).send({ done: true, message: 'OK', data: pos, type })
         })
 }
 module.exports = {

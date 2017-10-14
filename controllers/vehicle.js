@@ -29,7 +29,12 @@ function getAll(req, res) {
                 path: 'dependence',
             }
         })
-        .populate('user')
+        .populate({ 
+            path: 'user', 
+            populate: { 
+                path: 'device'
+            }
+        })
         .populate('distributor')
         .paginate(page, limit, (err, records, total) => {
             if(err)

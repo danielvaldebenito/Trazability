@@ -35,34 +35,25 @@ function requestGeoreference(distributor, requestId) {
         })
 }
 
-function newOrderAssigned (vehicle, order) {
-    Vehicle.findById(vehicle, (err, found) => {
-        if(err) return console.log('Error al buscar vehiculo' + vehicle, err)
-        if(!found) return console.log('No se encontró vehículo', vehicle)
-        if(!found.user) return console.log('Vehículo no tiene usuario asignado', found)
-        User.findById(found.user, (err, foundUser) => {
-            if (err) return console.log('Error al buscar usuario' + found.user, err)
-            if (!foundUser) return console.log('No se encontró usuario', found.user)
-            if (!foundUser.device) return console.log('Usuario no tiene dispositivo asignado', foundUser)
-            Device.findById(foundUser.device, (err, foundDevice) => {
-                if (err) return console.log('Error al buscar dispositivo' + foundUser.device, err)
-                if (!foundDevice) return console.log('No se encontró dispositivo', foundUser.device)
-                if (!foundDevice.token) return console.log('Dispositivo no tiene token asociado', foundDevice)
+function newOrderAssigned (device, order) {
+    Device.findById(device, (err, foundDevice) => {
+        if (err) return console.log('Error al buscar dispositivo' + device, err)
+        if (!foundDevice) return console.log('No se encontró dispositivo', device)
+        if (!foundDevice.token) return console.log('Dispositivo no tiene token asociado', foundDevice)
 
-                var payload = {
-                    data: {
-                        key: 'NEW_ORDER',
-                        id: order
-                    }
-                    // notification: {
-                    //     title: 'Nueva Orden',
-                    //     body: 'Se ha asignado una nueva orden a su vehículo'
-                    // }
-                }
-                send(foundDevice.token, payload);
-            })
-        })
+        var payload = {
+            data: {
+                key: 'NEW_ORDER',
+                id: order
+            }
+            // notification: {
+            //     title: 'Nueva Orden',
+            //     body: 'Se ha asignado una nueva orden a su vehículo'
+            // }
+        }
+        send(foundDevice.token, payload);
     })
+
 }
 
 function test(token) {

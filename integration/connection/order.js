@@ -25,7 +25,7 @@ function createOrder(order) {
                 TelefonoCta: '2917720',
                 noPedidoBO: '??',
                 tipoPedido: 'Granel',
-                POS: '',
+                POS: '', // esn
                 placaVehiculo: 'AAA000',
                 Producto1: 'K9',
                 CantidadProducto1: 1,
