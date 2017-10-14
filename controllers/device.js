@@ -225,11 +225,18 @@ function logout(req, res) {
     const username = req.params.username
     User.findOneAndUpdate({ username: username }, { online: false, lastLogout: moment(), vehicle: null }, (err, user) => {
         if (err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario', err })
-        return res.status(200).send({
-            done: true,
-            message: 'Usuario deslogueado correctamente',
-            code: 0
+        
+        const veh = user.vehicle
+        Vehicle.findByIdAndUpdate(veh, { user: null }, (err, vehicle) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1})
+            return res.status(200).send({
+                done: true,
+                message: 'Usuario deslogueado correctamente',
+                code: 0
+            })
         })
+        
+        
     })
 }
 

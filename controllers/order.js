@@ -222,8 +222,8 @@ function saveOne (req, res) {
     order.phone = params.phone
     order.observation = params.observation
     order.payMethod = params.payMethod
-    if(params.originWarehouse) {
-        order.originWarehouse = params.originWarehouse;
+    order.originWarehouse = params.originWarehouse;
+    if(params.device) {
         order.status = config.entitiesSettings.order.status[1];
     }
     order.destinyWarehouse = params.destinyWarehouse

@@ -196,7 +196,7 @@ function getPos(req, res) {
         .exec((err, pos) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
             
-            pos = pos.filter((p) => { return p.user != null && p.user.vehicle != null })
+            pos = pos.filter((p) => { return p.user != null })
             
             return res.status(200).send({ done: true, message: 'OK', data: pos, type })
         })

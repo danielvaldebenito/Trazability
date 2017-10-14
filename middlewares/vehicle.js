@@ -13,7 +13,9 @@ function getVehicleFromDevice (req, res, next) {
         User.findById(dev.user, (err, user) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar usuario', err, code: -1})
             if(!user) return res.status(404).send({ done: false, message: 'No hay un usuario en línea asociado al dispositivo', code: 1 })
-            if(!user.vehicle) return res.status(404).send({ done: false, message: 'No hay un vehículo asociado al usuario actual del dispositivo', code: 1 })
+            if(!user.vehicle) {
+                return next();
+            }
             Vehicle.findById(user.vehicle, (err, vehicle) => {
                 if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1})
                 if(!vehicle) return res.status(404).send({done: false, message: 'No existe vehículo asociado al dispositivo', code: 1})
