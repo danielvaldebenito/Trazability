@@ -14,6 +14,7 @@ const jwt = require('../services/jwt')
 const moment = require('moment')
 const config = require('../config')
 const pushNotification = require('../services/push')
+const pushSocket = require('../services/pushSocket')
 function pruebas(req, res) {
     res
         .status(200)
@@ -177,6 +178,8 @@ function loginDevice(req, res) { // VENTA
                                                                                         .select('_id')
                                                                                         .exec((err, orders) => {
                                                                                             if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
+                                                                                            
+                                                                                            pushSocket.send('/vehicles', us.distributor, 'connection')
                                                                                             return res.status(200)
                                                                                                 .send({
                                                                                                     done: true,
@@ -239,6 +242,7 @@ function logout(req, res) {
             if(bo) {
                 pushNotification.forceResetVehicle(user.device)
             }
+            pushSocket.send('/vehicles', user.distributor, 'connection')
             return res.status(200).send({
                 done: true,
                 message: 'Usuario deslogueado correctamente',

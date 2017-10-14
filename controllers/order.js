@@ -368,7 +368,7 @@ function assignDeviceToOrder (req, res) {
         pushNotification.newOrderAssigned(device, order)
         
         if(req.body.old) {
-            pushNotification.cancelOrder(req.body.old, order)
+            pushNotification.cancelOrder(req.body.old._id, order, updated.orderNumber)
         }
         
         pushSocket.send('/orders', updated.distributor, 'new-order', updated._id)
