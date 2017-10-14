@@ -325,7 +325,7 @@ function cancelOrder(req, res) {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
             var device = updated.device
             if(device) {
-                pushNotification.cancelOrder(device, id, updated.erpOrderNumber, 'yes')
+                pushNotification.cancelOrder(device, id, updated.erpOrderNumber, 'YES')
             }
             pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
@@ -368,7 +368,7 @@ function assignDeviceToOrder (req, res) {
         pushNotification.newOrderAssigned(device, order)
         
         if(req.body.old) {
-            pushNotification.cancelOrder(req.body.old._id, order, updated.orderNumber, 'no')
+            pushNotification.cancelOrder(req.body.old._id, order, updated.orderNumber, 'NO')
         }
         
         pushSocket.send('/orders', updated.distributor, 'new-order', updated._id)
