@@ -186,7 +186,7 @@ function loginDevice(req, res) { // VENTA
                                                                                                 done: true,
                                                                                                 code: 0,
                                                                                                 data: {
-                                                                                                    user: us,
+                                                                                                    user: user,
                                                                                                     token: jwt.createToken(user),
                                                                                                     device: dev,
                                                                                                     vehicle: vehicle,
