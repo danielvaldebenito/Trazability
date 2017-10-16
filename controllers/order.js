@@ -357,8 +357,7 @@ function confirmCancel (req, res) {
         const update = { status: status[4], pendingConfirmCancel: false }
         Order.update({_id: id}, update, (err, raw) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar ordenes', err})
-            if(updated.status == status[2] || updated.status == status[1])
-                pushNotification.cancelOrder(updated.device, id, updated.orderNumber, "YES")       
+      
             pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
                 .send({
