@@ -353,19 +353,11 @@ function confirmCancel (req, res) {
     Order.findById(id, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
         // update
-        const isReassign = updated.pendingConfirmReassign
-        const update = isReassign 
-                    ? { 
-                        status: status[1], 
-                        pendingConfirmReassign: false, 
-                        pendingDeviceReassign: null, 
-                        device: updated.pendingDeviceReassign, 
-                        vehicle: updated.pendingVehicleReassign,
-                        originWarehouse: updated.pendingOWReassign 
-                    } 
-                    : { status: status[4], pendingConfirmCancel: false }
+        const update = { status: status[4], pendingConfirmCancel: false }
         Order.update({_id: id}, update, (err, raw) => {
-            pushNotification.newOrderAssigned(updated.pendingDeviceReassign, id)       
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar ordenes', err})
+            if(updated.status == status[2] || updated.status == status[1])
+                pushNotification.cancelOrder(updated.device, id, updated.orderNumber, "YES")       
             pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
                 .send({
