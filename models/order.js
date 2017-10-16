@@ -43,6 +43,7 @@ const OrderSchema = Schema({
     pendingConfirmReassign: Boolean,
     pendingDeviceReassign: { type: Schema.Types.ObjectId, ref: 'Device'},
     pendingVehicleReassign: { type: Schema.Types.ObjectId, ref: 'Vehicle'},
+    pendingOWReassign: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
 })
 OrderSchema.plugin(timestamp)
 OrderSchema.plugin(autoIncrement.plugin, { 

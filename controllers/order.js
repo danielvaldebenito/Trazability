@@ -339,15 +339,20 @@ function cancelOrder(req, res) {
 
 function confirmCancel (req, res) {
     const id = req.params.id
-    const isReassign = req.params.confirm == 'YES'
     const status = config.entitiesSettings.order.status
-    const vehicle = req.body.vehicle
-    const originWarehouse = req.body.originWarehouse
     Order.findById(id, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
         // update
+        const isReassign = updated.pendingConfirmReassign
         const update = isReassign 
-                    ? { status: status[1], pendingConfirmReassign: false, pendingDeviceReassign: null, device: updated.pendingDeviceReassign, vehicle: vehicle } 
+                    ? { 
+                        status: status[1], 
+                        pendingConfirmReassign: false, 
+                        pendingDeviceReassign: null, 
+                        device: updated.pendingDeviceReassign, 
+                        vehicle: updated.pendingVehicleReassign,
+                        originWarehouse: updated.pendingOWReassign 
+                    } 
                     : { status: status[4], pendingConfirmCancel: false }
         Order.update({_id: id}, update, (err, raw) => {
             pushNotification.newOrderAssigned(updated.pendingDeviceReassign, id)       
@@ -394,10 +399,14 @@ function assignDeviceToOrder (req, res) {
 function reassignDeviceToOrder (req, res) {
     const device = req.body.device;
     const order = req.body.order;
+    const vehicle = req.body.vehicle;
+    const originWarehouse = req.body.originWarehouse
     const old = req.body.old;
     const update = {
         pendingConfirmReassign: true,
-        pendingDeviceReassign: device
+        pendingDeviceReassign: device,
+        pendingVehicleReassign: vehicle,
+        pendingOWReassign: originWarehouse
     }
     Order.findByIdAndUpdate(order, update,
     (err, updated) => {
