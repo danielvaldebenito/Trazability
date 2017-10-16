@@ -85,6 +85,7 @@ function loginDevice(req, res) { // VENTA
     const isSameDataKey = initialDataKey == initialDataKeyConfig
     User.findOne({ username: username })
         .populate('dependence')
+        .populate('distributor')
         .exec((err, user) => {
             if (err) {
                 res.status(500)
@@ -171,7 +172,7 @@ function loginDevice(req, res) { // VENTA
                                                                     User.update({ device: dev._id, _id: { $ne: us._id } }, { device: null, vehicle: null }, { multi: true }, (err, ok) => {
                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuarios con el mismo device', err })
 
-                                                                        PriceList.find({ distributor: user.distributor })
+                                                                        PriceList.find({ distributor: user.distributor._id })
                                                                             .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
                                                                             .exec((err, priceLists) => {
                                                                                 if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
@@ -179,7 +180,7 @@ function loginDevice(req, res) { // VENTA
                                                                                     .exec((err, pts) => {
                                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
 
-                                                                                        pushSocket.send('/vehicles', user.distributor, 'login', device._id)
+                                                                                        pushSocket.send('/vehicles', user.distributor._id, 'login', device._id)
                                                                                         return res.status(200)
                                                                                             .send({
                                                                                                 done: true,

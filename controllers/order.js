@@ -120,10 +120,11 @@ function getAllDevice (req, res) {
     const device = req.params.device
     const vehicle = req.params.vehicle
     const status = config.entitiesSettings.order.status
+    const statusToSend = [status[1], status[2]]
     Order
         .find({ 
             device: device, 
-            status: status[1]
+            status: { $in: statusToSend }
         })
         .populate({
             path: 'items',
