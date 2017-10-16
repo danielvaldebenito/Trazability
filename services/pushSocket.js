@@ -10,6 +10,7 @@ ordersNsp.on('connection', (socket) => {
   console.log('Socket connected to order namespace', socket.id)
   const distributor = socket.request._query.distributor;
   if(distributor) {
+    console.log('socket ' + socket.id + ' conectado al namespace ORDERS y a la room: ' + distributor)
     socket.join(distributor)
   }
   
@@ -17,6 +18,7 @@ ordersNsp.on('connection', (socket) => {
 vehicleNsp.on('connection', (socket) => {
   const distributor = socket.request._query.distributor;
   if(distributor) {
+    console.log('socket ' + socket.id + ' conectado al namespace VEHICLES a la room: ' + distributor)
     socket.join(distributor)
   }
 })

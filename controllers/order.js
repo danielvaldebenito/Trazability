@@ -250,8 +250,8 @@ function saveOne (req, res) {
                 /**
                  * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                  */
-                orderIntegration.createOrder(stored)
-                .then(res => console.log('inte', res))
+                // orderIntegration.createOrder(stored)
+                // .then(res => console.log('inte', res))
                 
                 if(params.device){
                     pushNotification.newOrderAssigned(params.device, stored._id)
@@ -316,7 +316,7 @@ function setOrderEnRuta(req, res) {
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
             
-            pushSocket.send('/orders', distributor, 'change-state-order', orders)
+            pushSocket.send('/orders', distributor._id, 'change-state-order', orders)
             return res.status(200)
                         .send({
                             done: true,
@@ -327,15 +327,15 @@ function setOrderEnRuta(req, res) {
         })
 }
 function cancelOrder(req, res) {
-    var id = req.params.id
+    const id = req.params.id
     
     Order.findByIdAndUpdate(id,
         { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true }, 
         (err, updated) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
-            var device = updated.device
+            const device = updated.device
             if(device) {
-                pushNotification.cancelOrder(device, id, updated.erpOrderNumber, 'YES')
+                pushNotification.cancelOrder(device, id, updated.orderNumber, 'YES')
             }
             pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
             return res.status(200)

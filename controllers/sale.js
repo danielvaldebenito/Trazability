@@ -11,6 +11,8 @@ const MovementItem = require('../models/movementItem')
 const Document = require('../models/document')
 const Delivery = require('../models/delivery')
 const Order = require('../models/order')
+const pushSocket = require('../services/pushSocket')
+
 function getAll(req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -68,19 +70,20 @@ function getOne (req, res) {
 function saveOne (req, res) {
     try{
         
-        var params = req.body
+        const params = req.body
        
-        var delivery = params.delivery
+        const delivery = params.delivery
 
         if(!delivery.done) {
             
-            var del = new Delivery({
+            let del = new Delivery({
                 coordinates: delivery.coordinates,
                 done: delivery.done,
                 order: params.orderId
             })
             del.save((e, deliveryStored) => {
                 if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
+                
                 return res
                 .status(200)
                 .send({
@@ -90,7 +93,7 @@ function saveOne (req, res) {
                 })
             })
         } else {
-            var sale = new Sale()
+            const sale = new Sale()
             sale.type = params.typeSale
             sale.paymentMethod = params.paymentMethod
             sale.transaction = params.transaction
@@ -104,7 +107,7 @@ function saveOne (req, res) {
                 if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
     
                 if(delivery) {
-                    var del = new Delivery({
+                    let del = new Delivery({
                         coordinates: delivery.coordinates,
                         done: delivery.done,
                         order: params.orderId,
