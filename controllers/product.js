@@ -25,7 +25,7 @@ function getOneByNif (req, res) {
             .exec((err, stock) => {
                 if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar stock del producto', err})
                 if(!stock) return res.status(404).send({ done: false, code: 1, message: 'El producto existe pero no se encuentra en ninguna bodega existente'})
-                if(!stock.warehouse) return res.status(404).send({ done: false, code: 1, message: 'No se encontró bodega'})
+                if(!stock.warehouse) return res.status(404).send({ done: false, code: 1, message: 'No se encontró bodega correspondiente.'})
                 MovementItem
                     .find({ product: product._id })
                     .populate({

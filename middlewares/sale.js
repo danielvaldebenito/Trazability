@@ -19,6 +19,7 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
 
     var total = movementDetail.length
     console.log('total', total)
+    if(total == 0) next();
     movementDetail.forEach((m) => {
         var saleItem = Enumerable.from(saleDetail)
                             .where((x) => { return x.productType == m.productType })
