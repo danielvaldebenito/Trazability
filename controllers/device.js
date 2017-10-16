@@ -24,20 +24,24 @@ function pruebas(req, res) {
 }
 
 function registerDevice(req, res) {
-    var params = req.body;
-    var firebaseToken = params.firebaseToken;
-    var esn = params.esn;
-    var version = params.version;
+    const params = req.body;
+    const firebaseToken = params.firebaseToken;
+    const esn = params.esn;
+    const version = params.version;
+    const traza = req.query.traza
     Device.findOne({ esn: esn }, (err, device) => {
         if (err)
             return res.status(500).send({ done: false, code: 1, data: null, message: 'Error al buscar PDA', error: err })
         if (!device) {
             // crearlo
-            var dev = new Device({
+            const dev = new Device({
                 esn: esn,
-                version: version,
-                token: firebaseToken,
-                tokenDate: moment(),
+                version: traza ? null : version,
+                token: traza ? null : firebaseToken,
+                tokenDate: traza ? null : moment(),
+                version2: traza ? version : null,
+                token2: traza ? version : null,
+                tokenDate2: traza ? version : null,
                 status: 1
             })
             dev.save((error, devStored) => {
@@ -49,9 +53,13 @@ function registerDevice(req, res) {
             })
         } else {
             // actualizar
-            device.version = version
-            device.tokenDate = moment()
-            device.token = firebaseToken
+            device.version = traza ? null : version
+            device.tokenDate = traza ? null : moment()
+            device.token = traza ? null : firebaseToken
+            device.version2 = traza ? version : null
+            device.tokenDate2 = traza ? moment() : null
+            device.token2 = traza ? firebaseToken : null
+
             device.save((error, updatedDevice) => {
                 if (error) return res.status(500).send({ done: false, code: 5, data: null, message: 'Error al actualizar PDA', error })
                 if (!updatedDevice) return res.status(404).send({ done: false, code: 6, data: null, message: 'Error al actualizar PDA' })

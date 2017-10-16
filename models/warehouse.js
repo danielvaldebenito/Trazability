@@ -1,11 +1,11 @@
 'use strict'
 /* Modelo de una bodega perteneciente a un local de venta*/
-var mongoose = require('mongoose')
-var timestamp = require('mongoose-timestamp')
-var config = require('../config')
-var typesEnum = config.entitiesSettings.warehouse.types
-var Schema = mongoose.Schema
-var WarehouseSchema = Schema({
+const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
+const config = require('../config')
+const typesEnum = config.entitiesSettings.warehouse.types
+const Schema = mongoose.Schema
+const WarehouseSchema = Schema({
     name: { type: String, required: true },
     dependence: { type: Schema.ObjectId, ref: 'Dependence' },
     type: {

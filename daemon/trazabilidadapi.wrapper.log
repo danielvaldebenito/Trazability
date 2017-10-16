@@ -53,3 +53,19 @@ Stacktrace:   en System.Management.ManagementScope._Clone(ManagementScope scope,
 2017-10-01 19:02:22 - Started 5672
 2017-10-11 09:47:06 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2017-10-11 09:47:07 - Started 5460
+2017-10-14 21:50:49 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2017-10-14 21:50:49 - Started 5752
+2017-10-15 15:57:03 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2017-10-15 15:57:05 - Started 5624
+2017-10-16 09:15:23 - Stopping trazabilidadapi.exe
+2017-10-16 09:15:23 - ProcessKill 5624
+2017-10-16 09:15:34 - Shutdown exception
+Message:Se produjo una excepción en el inicializador de tipo de 'System.Management.ManagementPath'.
+Stacktrace:   en System.Management.ManagementScope._Clone(ManagementScope scope, IdentifierChangedEventHandler handler)
+   en System.Management.ManagementObjectSearcher..ctor(ManagementScope scope, ObjectQuery query, EnumerationOptions options)
+   en winsw.WrapperService.GetChildPids(Int32 pid)
+   en winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   en winsw.WrapperService.StopIt()
+   en winsw.WrapperService.OnShutdown()
+2017-10-16 09:17:00 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2017-10-16 09:17:01 - Started 5748
