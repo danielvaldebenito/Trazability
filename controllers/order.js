@@ -119,10 +119,11 @@ function getAllVehicle (req, res) {
 function getAllDevice (req, res) {
     const device = req.params.device
     const vehicle = req.params.vehicle
+    const status = config.entitiesSettings.order.status
     Order
         .find({ 
             device: device, 
-            status: config.entitiesSettings.order.status[1]
+            status: status[1]
         })
         .populate({
             path: 'items',
@@ -148,15 +149,24 @@ function getAllDevice (req, res) {
             Order.update({ _id: { $in: ids } }, { vehicle: vehicle }, { multi: true },(err, raw) => {
                 if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar order', code: -1})
 
-                return res
-                    .status(200)
-                    .send({ 
-                        done: true, 
-                        message: 'OK', 
-                        data: records,
-                        code: 0,
-                        raw
-                    })
+                Order.find({ 
+                    device: device, 
+                    pendingConfirmCancel: true
+                 })
+                 .exec((err, pendingsConfirmCancel) => {
+                    if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar ordenes pendientes', code: -1})
+                    return res
+                        .status(200)
+                        .send({ 
+                            done: true, 
+                            message: 'OK', 
+                            data: records,
+                            code: 0,
+                            pendingsConfirmCancel
+                        })
+                 })
+
+                
             })
             
             
@@ -320,7 +330,7 @@ function cancelOrder(req, res) {
     var id = req.params.id
     
     Order.findByIdAndUpdate(id,
-        { status: null, pendingConfirmCancel: true }, 
+        { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true }, 
         (err, updated) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
             var device = updated.device
@@ -374,6 +384,7 @@ function assignDeviceToOrder (req, res) {
     const order = req.body.order;
     const vehicle = req.body.vehicle;
     const originWarehouse = req.body.originWarehouse
+    const old = req.body.old;
     const update = {
         vehicle: vehicle, 
         status: config.entitiesSettings.order.status[1],
@@ -384,7 +395,10 @@ function assignDeviceToOrder (req, res) {
     (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
 
-        pushNotification.newOrderAssigned(device, order)       
+        pushNotification.newOrderAssigned(device, order)      
+        if(old)
+            pushNotification.cancelOrder(old._id, order, updated.orderNumber, 'NO')
+
         pushSocket.send('/orders', updated.distributor, 'new-order', updated._id)
         return res.status(200)
                 .send({
@@ -396,34 +410,36 @@ function assignDeviceToOrder (req, res) {
             
 }
 
-function reassignDeviceToOrder (req, res) {
-    const device = req.body.device;
-    const order = req.body.order;
-    const vehicle = req.body.vehicle;
-    const originWarehouse = req.body.originWarehouse
-    const old = req.body.old;
-    const update = {
-        pendingConfirmReassign: true,
-        pendingDeviceReassign: device,
-        pendingVehicleReassign: vehicle,
-        pendingOWReassign: originWarehouse
-    }
-    Order.findByIdAndUpdate(order, update,
-    (err, updated) => {
-        if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
+// function reassignDeviceToOrder (req, res) {
+//     const device = req.body.device;
+//     const order = req.body.order;
+//     const vehicle = req.body.vehicle;
+//     const originWarehouse = req.body.originWarehouse
+//     const old = req.body.old;
+//     const update = {
+//         pendingConfirmReassign: true,
+//         pendingDeviceReassign: device,
+//         pendingVehicleReassign: vehicle,
+//         pendingOWReassign: originWarehouse
+//     }
+//     Order.findByIdAndUpdate(order, update,
+//     (err, updated) => {
+//         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})
 
-        pushNotification.cancelOrder(old._id, order, updated.orderNumber, 'NO')
-        pushSocket.send('/orders', updated.distributor, 'change-state-order', updated._id)
+//         pushNotification.cancelOrder(old._id, order, updated.orderNumber, 'NO')
+//         pushSocket.send('/orders', updated.distributor, 'change-state-order', updated._id)
         
-        return res.status(200)
-                .send({
-                    done: true,
-                    message: 'Vehículo reasignado correctamente. Pendiente de confirmación.',
-                    updated
-                })
-    })
+//         return res.status(200)
+//                 .send({
+//                     done: true,
+//                     message: 'Vehículo reasignado correctamente. Pendiente de confirmación.',
+//                     updated
+//                 })
+//     })
             
-}
+// }
+
+
 module.exports = {
     getAll,
     getOne,
@@ -432,7 +448,7 @@ module.exports = {
     saveOne,
     updateOne,
     assignDeviceToOrder,
-    reassignDeviceToOrder,
+    // reassignDeviceToOrder,
     deleteOne,
     getDayResume,
     setOrderEnRuta,

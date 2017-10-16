@@ -18,7 +18,7 @@ api.put('/order-set-en-ruta/', md_auth.ensureAuth, OrderController.setOrderEnRut
 api.put('/order-cancel/:id', md_auth.ensureAuth, OrderController.cancelOrder)
 api.put('/order-cancel-confirm/:id', [md_auth.ensureAuth], OrderController.confirmCancel)
 api.put('/order-assign-device/', [md_auth.ensureAuth, md_vehicle.getVehicleFromDevice ], OrderController.assignDeviceToOrder)
-api.put('/order-reassign-device/', [md_auth.ensureAuth, md_vehicle.getVehicleFromDevice ], OrderController.reassignDeviceToOrder)
+// api.put('/order-reassign-device/', [md_auth.ensureAuth, md_vehicle.getVehicleFromDevice ], OrderController.reassignDeviceToOrder)
 api.delete('/order/:id', [md_auth.ensureAuth, md_auth.isAdmin], OrderController.deleteOne)
 
 module.exports = api;

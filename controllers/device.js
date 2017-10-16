@@ -123,7 +123,7 @@ function loginDevice(req, res) { // VENTA
                                     .exec((err, vehicle) => {
                                         if (err) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar el vehículo', error: err })
                                         if (!vehicle) return res.status(404).send({ done: false, code: 1, message: 'No existe un vehículo con la placa ' + licensePlate })
-                                        if (vehicle.disabled) return res.status(404).send({ done: false, message: 'Vehículo se encuentra deshabilitado. Consulte con su administrador.', code: 1})
+                                        if (vehicle.disabled) return res.status(404).send({ done: false, message: 'Vehículo se encuentra deshabilitado. Consulte con su administrador.', code: 1 })
                                         Device.findOne({ esn: esn }, (err, device) => {
                                             if (err)
                                                 return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err })
@@ -139,7 +139,7 @@ function loginDevice(req, res) { // VENTA
                                                     if (!devStored) return res.status(404).send({ done: false, code: 1, data: null, message: 'Error al guardar PDA' })
 
                                                     User.findByIdAndUpdate(user._id, { device: devStored._id, vehicle: vehicle._id }, (err, raw) => {
-                                                        if(raw.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1})
+                                                        if (raw.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
                                                         return res.status(200)
                                                             .send({
                                                                 done: false,
@@ -154,8 +154,8 @@ function loginDevice(req, res) { // VENTA
                                                     const update = device.pos ? { device: dev._id, lastLogin: moment(), online: true, vehicle: vehicleId } : { device: dev._id, vehicle: vehicleId }
                                                     User.findByIdAndUpdate(user._id, update, (err, us) => {
                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuario', err })
-                                                        
-                                                        if(us.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1})
+
+                                                        if (us.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
                                                         if (!device.pos) {
                                                             return res.status(200)
                                                                 .send({
@@ -164,61 +164,52 @@ function loginDevice(req, res) { // VENTA
                                                                     message: 'Dispositivo todavía no tiene código POS asociado. Consulte con su administrador.',
                                                                 })
                                                         } else {
-                                                            Device.update({ user: us._id, _id: { $ne: dev._id}}, { user: null }, { multi: true}, (err, ok) => {
+                                                            Device.update({ user: us._id, _id: { $ne: dev._id } }, { user: null }, { multi: true }, (err, ok) => {
                                                                 if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar dispositivos anteriores del usuario', err })
-                                                                Vehicle.update({user: us._id, _id: { $ne: vehicleId }}, { user: null }, {multi:true}, (err, veh) => {
+                                                                Vehicle.update({ user: us._id, _id: { $ne: vehicleId } }, { user: null }, { multi: true }, (err, veh) => {
                                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar vehículos anteriores del usuario', err })
-                                                                    User.update({ device: dev._id, _id: { $ne: us._id }}, { device: null, vehicle: null }, { multi: true}, (err, ok) => {
+                                                                    User.update({ device: dev._id, _id: { $ne: us._id } }, { device: null, vehicle: null }, { multi: true }, (err, ok) => {
                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuarios con el mismo device', err })
-                                                                        
+
                                                                         PriceList.find({ distributor: user.distributor })
-                                                                        .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
-                                                                        .exec((err, priceLists) => {
-                                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
-                                                                            ProductType.find()
-                                                                                .exec((err, pts) => {
-                                                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
-        
-                                                                                    Order.find({
-                                                                                        device: device._id,
-                                                                                        pendingConfirmCancel: true
-                                                                                    })
-                                                                                        .select('_id')
-                                                                                        .exec((err, orders) => {
-                                                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar ordenes pendientes', err })
-                                                                                            
-                                                                                            pushSocket.send('/vehicles', user.distributor, 'login', device._id)
-                                                                                            return res.status(200)
-                                                                                                .send({
-                                                                                                    done: true,
-                                                                                                    code: 0,
-                                                                                                    data: {
-                                                                                                        user: us,
-                                                                                                        token: jwt.createToken(user),
-                                                                                                        device: dev,
-                                                                                                        vehicle: vehicle,
-                                                                                                        initialData: isSameDataKey ? {} : {
-                                                                                                            reasons: config.entitiesSettings.order.reasons,
-                                                                                                            paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                                                            productTypes: pts,
-                                                                                                            initialDataKey: initialDataKeyConfig,
-                                                                                                            maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
-                                                                                                        },
-                                                                                                        priceLists: priceLists,
-                                                                                                        pendingOrdersToCancel: orders
+                                                                            .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
+                                                                            .exec((err, priceLists) => {
+                                                                                if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                                                ProductType.find()
+                                                                                    .exec((err, pts) => {
+                                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+
+                                                                                        pushSocket.send('/vehicles', user.distributor, 'login', device._id)
+                                                                                        return res.status(200)
+                                                                                            .send({
+                                                                                                done: true,
+                                                                                                code: 0,
+                                                                                                data: {
+                                                                                                    user: us,
+                                                                                                    token: jwt.createToken(user),
+                                                                                                    device: dev,
+                                                                                                    vehicle: vehicle,
+                                                                                                    initialData: isSameDataKey ? {} : {
+                                                                                                        reasons: config.entitiesSettings.order.reasons,
+                                                                                                        paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                                                        productTypes: pts,
+                                                                                                        initialDataKey: initialDataKeyConfig,
+                                                                                                        maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
                                                                                                     },
-                                                                                                    message: 'OK'
-                                                                                                })
-                                                                                        })
-        
-                                                                                })
-                                                                        })
+                                                                                                    priceLists: priceLists
+                                                                                                },
+                                                                                                message: 'OK'
+                                                                                            })
+
+
+                                                                                    })
+                                                                            })
                                                                     })
-                                                                    
+
                                                                 })
-                                                                
+
                                                             })
-                                                            
+
                                                         }
 
                                                     })
@@ -242,12 +233,12 @@ function logout(req, res) {
     const bo = req.query.bo
     User.findOneAndUpdate({ username: username }, { online: false, lastLogout: moment(), vehicle: null }, (err, user) => {
         if (err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario', err })
-        
+
         const veh = user.vehicle
         Vehicle.findByIdAndUpdate(veh, { user: null }, (err, vehicle) => {
-            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1})
-            
-            if(bo) {
+            if (err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar vehículo', err, code: -1 })
+
+            if (bo) {
                 pushNotification.forceResetVehicle(user.device)
             }
             pushSocket.send('/vehicles', user.distributor, 'logout', user.device)
@@ -257,8 +248,8 @@ function logout(req, res) {
                 code: 0
             })
         })
-        
-        
+
+
     })
 }
 
