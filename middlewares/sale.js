@@ -19,7 +19,11 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
 
     var total = movementDetail.length
     console.log('total', total)
-    if(total == 0) next();
+    if(total == 0 && req.body.delivery.done) return res.status(500).send({done: false, code: -1, message: 'Debe agregar al menos 1 ítem'});
+    else if(total == 0) {
+        req.body.itemsSale = []
+        return next();
+    }
     movementDetail.forEach((m) => {
         var saleItem = Enumerable.from(saleDetail)
                             .where((x) => { return x.productType == m.productType })
