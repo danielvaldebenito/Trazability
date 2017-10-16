@@ -122,17 +122,21 @@ function saveOneByDevice(req, res, next) {
 }
 
 function validateDelivery (req, res, next) {
+    console.log('validating', req.body)
     if(req.body.orderId) {
         Order.findById(req.body.orderId, (err, order) => {
             if(err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error', code: -1, err })
             if(!order) return res.status(200).send({ done: false, message: 'No existe pedido con el id ' + req.body.orderId })
             if(order.status == config.entitiesSettings.order.status[3]) {
+                console.log('ya esta entregado')
                 return res.status(200).send({ done: true, message: 'OK' })
             } else {
+                console.log('no es entregado, pasa al siguiente')
                 next();
             }
         })
     } else {
+        console.log('no trae orderId')
         next();
     }
 }
