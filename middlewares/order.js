@@ -10,6 +10,7 @@ const Enumerable = require('linq')
 const config = require('../config')
 const pushSocket = require('../services/pushSocket')
 const moment = require('moment')
+const pushNotification = require('../services/push')
 const clientFromOrderByDevice = function (req, res, next) {
     const params = req.body
 
@@ -61,19 +62,30 @@ const clientFromOrderByDevice = function (req, res, next) {
 // BEFORE: createAddressWarehouseForOrder (warehouse) 
 
 function saveOneByDevice(req, res, next) {
-    const order = new Order()
+    
     const params = req.body
     if (params.delivery.orderId) {
-        const state = params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4]
-        Order.findByIdAndUpdate(params.delivery.orderId, { status: state }, (err, updated) => {
-            req.body.orderNumber = updated.orderNumber
+        const status = params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4]
+        Order.findById(params.delivery.orderId, (err, found) => {
+
+            const update = {
+                status: status,
+                vehicle: params.vehicle,
+                userName: req.user.name + ' ' + req.user.surname,
+                device: params.device 
+            }
+
+            if(found.device != params.device) {
+                pushNotification.cancelOrder(found.device, found._id, found.orderNumber, "NO")
+            }
+            req.body.orderNumber = found.orderNumber
             req.body.orderId = params.delivery.orderId
             pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
             return next()
         })
         
     } else {
-        
+        const order = new Order()
         order.commitmentDate = moment()
         order.client = params.clientId // From Middleware clientFromOrderByDevice
         order.address = params.address // From Middleware addressFromOrderByDevice
@@ -109,8 +121,24 @@ function saveOneByDevice(req, res, next) {
 
 }
 
+function validateDelivery (req, res, next) {
+    if(req.body.orderId) {
+        Order.findById(req.body.orderId, (err, order) => {
+            if(err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error', code: -1, err })
+            if(!order) return res.status(200).send({ done: false, message: 'No existe pedido con el id ' + req.body.orderId })
+            if(order.status == config.entitiesSettings.order.status[3]) {
+                return res.status(200).send({ done: true, message: 'OK' })
+            } else {
+                next();
+            }
+        })
+    } else {
+        next();
+    }
+}
 
 module.exports = {
     clientFromOrderByDevice,
-    saveOneByDevice
+    saveOneByDevice,
+    validateDelivery
 }

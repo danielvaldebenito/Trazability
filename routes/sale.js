@@ -18,6 +18,7 @@ api.get('/sale/:id', md_auth.ensureAuth, SaleController.getOne)
 api.get('/sale-order/:order', md_auth.ensureAuth, SaleController.getOneFromOrder)
 api.post('/sale/', [
     md_auth.ensureAuth,
+    md_order.validateDelivery,
     md_geocoding.findCoordFromAddress,
     md_warehouse.createAddressWarehouseForOrder,
     md_warehouse.getWarehouseFromVehicle, 
