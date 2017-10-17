@@ -59,7 +59,19 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     
     const body = req.body;
     const placeId = body.placeId
-    if(!placeId) { console.log('placeid - next', placeId); return next() }
+    if(!placeId) { 
+        const add = {
+            location: body.location || body.address.location,
+            city: body.city || body.address.city,
+            region: body.region || body.address.region,
+            client: body.clientId
+        }
+        Client.findByIdAndUpdate(body.clientId, { $push: { addresses: add } }, (err, client) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
+            
+            next();
+        })
+    }
     else {
         Address
         .findOne({ $or: [
