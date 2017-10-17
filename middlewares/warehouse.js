@@ -124,9 +124,9 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     address.save((err, addressSaved) => {
                         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
 
-                        Client.findByIdAndUpdate(body.clientId, { $push: { addresses: address } }, (err, client) => {
+                        Client.findByIdAndUpdate(body.clientId, { $addToSet: { addresses: address } }, (err, client) => {
                             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
-                            
+                            console.log('se agregó direccion a cliente', address, client)
                             req.body.destinyWarehouse = wh._id
                             req.body.address = addressSaved._id
                             next();
