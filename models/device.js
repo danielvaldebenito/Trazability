@@ -16,7 +16,8 @@ const DeviceSchema = Schema({
     pos: String,
     token2: String,
     tokenDate2: Date,
-    version2: String
+    version2: String,
+    user2: { type: Schema.Types.ObjectId, ref: 'User' },
 })
 DeviceSchema.plugin(timestamp)
 module.exports = mongoose.model('Device', DeviceSchema)

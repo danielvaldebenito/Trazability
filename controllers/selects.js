@@ -91,8 +91,11 @@ function getVehiclesToAsign (req, res) {
         })
 }
 function getDependences (req, res) {
-    var distributor = req.query.distributor;
-    Dependence.find(distributor ? { distributor: distributor }: {})
+    const distributor = req.query.distributor;
+    const dependence = req.query.dependence
+    Dependence
+        .find(distributor ? { distributor: distributor }: {})
+        .where(dependence != 'null' ? { _id:  dependence } : {})
         .exec((err, data) => {
             if(err) return res.status(500).send({ code : -1, done: false, message: 'Ha ocurrido un error', error: err })
             if(!data) return res.status(404).send({ code : 1, done: false, message: 'Error. La consulta no obtuvo datos'})

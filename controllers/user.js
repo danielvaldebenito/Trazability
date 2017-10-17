@@ -34,11 +34,10 @@ function saveUser (req, res) {
     if (roles) {
         if(roles.isAdmin){
             rolesUser.push('ADMIN')
-            user.isAdmin = true
+            
         }
         if(roles.isVehicle){
             rolesUser.push('VEHÍCULO')
-            user.vehicle = params.vehicle
         }
         if(roles.isOperator){
             var process = params.process;
@@ -52,10 +51,11 @@ function saveUser (req, res) {
                 });
                 user.internalProcessTypes = ip;
                 user.internalProcess = params.internalProcess;
-                user.dependence = params.dependence;
+                
             }
         }
         user.roles = rolesUser
+        user.dependence = params.dependence;
     }
     user.image = null
     var tempPass = Math.random().toString(36).slice(2);
@@ -309,13 +309,13 @@ function getImageFile(req, res) {
     })
 }
 function getUsers (req, res){
-    var distributor = req.params.distributor;
-    var page = parseInt(req.query.page) || 1
-    var limit = parseInt(req.query.limit) || 200
-    var sidx = req.query.sidx || 'name'
-    var sord = req.query.sord || 1
-    var filter = req.query.filter
-
+    const distributor = req.params.distributor;
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 200
+    const sidx = req.query.sidx || 'name'
+    const sord = req.query.sord || 1
+    const filter = req.query.filter
+    const dependence = req.query.dependence
     User.find({ distributor: distributor })
         .populate('vehicle')
         .populate('internalProcessTypes')
@@ -323,6 +323,7 @@ function getUsers (req, res){
             { $or: [ { name: { "$regex": filter, "$options": "i" }},
                     { surname: { "$regex": filter, "$options": "i" }} ] }
              : {})
+        .where(dependence != 'null' ? { dependence: dependence }: {})
         .sort([['disabled', 1],[sidx, sord]])
         .paginate(page, limit, (err, records, total) => {
             if(err)
