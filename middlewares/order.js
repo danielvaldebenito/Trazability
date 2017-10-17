@@ -11,7 +11,7 @@ const config = require('../config')
 const pushSocket = require('../services/pushSocket')
 const moment = require('moment')
 const pushNotification = require('../services/push')
-const clientFromOrderByDevice = function (req, res, next) {
+const clientFromOrderByDevice = function (req, res, next) { // Client as json object NO string id
     const params = req.body
 
     const client = params.client
