@@ -36,14 +36,17 @@ function registerDevice(req, res) {
             // crearlo
             const dev = new Device({
                 esn: esn,
-                version: traza ? null : version,
-                token: traza ? null : firebaseToken,
-                tokenDate: traza ? null : moment(),
-                version2: traza ? version : null,
-                token2: traza ? version : null,
-                tokenDate2: traza ? version : null,
                 status: 1
             })
+            if(traza) {
+                dev.version2 = version;
+                dev.token2 = firebaseToken;
+                dev.tokenDate2 = moment();
+            } else {
+                dev.version = version;
+                dev.token = firebaseToken;
+                dev.tokenDate = moment();
+            }
             dev.save((error, devStored) => {
                 if (error) return res.status(500).send({ done: false, code: 2, data: null, message: 'Error al guardar PDA', error: error })
                 if (!devStored) return res.status(404).send({ done: false, code: 3, data: null, message: 'Error al guardar PDA' })
@@ -53,12 +56,16 @@ function registerDevice(req, res) {
             })
         } else {
             // actualizar
-            device.version = traza ? null : version
-            device.tokenDate = traza ? null : moment()
-            device.token = traza ? null : firebaseToken
-            device.version2 = traza ? version : null
-            device.tokenDate2 = traza ? moment() : null
-            device.token2 = traza ? firebaseToken : null
+            if(traza) {
+                device.version2 = version;
+                device.tokenDate2 = moment();
+                device.token2 = firebaseToken;
+            } else {
+                device.version = version
+                device.tokenDate = moment()
+                device.token = firebaseToken
+            }
+            
 
             device.save((error, updatedDevice) => {
                 if (error) return res.status(500).send({ done: false, code: 5, data: null, message: 'Error al actualizar PDA', error })
