@@ -14,59 +14,63 @@ const config = require('../config')
 function getOneByNif (req, res) {
     const nif = req.params.nif
     const limit = req.query.limit || 10
-    Product.findOne({ nif: nif }, (err, product) => {
-        if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar producto', err})
-        if(!product) 
-            return res.status(404).send({ done: false, code: 1, message: 'El producto buscado no existe ' + nif})
-        
-        Stock
-            .findOne({ product: product._id })
-            .populate('warehouse')
-            .exec((err, stock) => {
-                if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar stock del producto', err})
-                if(!stock) return res.status(404).send({ done: false, code: 1, message: 'El producto existe pero no se encuentra en ninguna bodega existente'})
-                if(!stock.warehouse) return res.status(404).send({ done: false, code: 1, message: 'No se encontró bodega correspondiente.'})
-                MovementItem
-                    .find({ product: product._id })
-                    .populate({
-                        path: 'movement',
-                        populate: {
-                            path: 'transaction'
-                        },
-                        populate: {
-                            path: 'warehouse',
-                            populate: { path: 'dependence' }
-                        }
-                    })
-                    .limit(limit)
-                    .exec((err, movs) => {
-                        if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar los moviemientos del producto', err})
-                        if(!movs) return res.status(404).send({ done: false, code: 1, message: 'El producto buscado no existe'})
-                        
-                        var promise = getWarehouseByType(stock.warehouse._id)
-                        promise
-                        .then(response => {
-                            console.log(response)
-                            res.status(200)
-                            .send({
-                                done: true, 
-                                code: 0,
-                                message: 'OK',
-                                data: {
-                                    product,
-                                    movs,
-                                    stock,
-                                    response
+    Product
+        .findOne({ nif: nif })
+        .populate('productType')
+        .exec((err, product) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar producto', err})
+            if(!product) 
+                return res.status(404).send({ done: false, code: 1, message: 'El producto buscado no existe ' + nif})
+            
+            Stock
+                .findOne({ product: product._id })
+                .populate('warehouse')
+                .exec((err, stock) => {
+                    if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar stock del producto', err})
+                    if(!stock) return res.status(404).send({ done: false, code: 1, message: 'El producto existe pero no se encuentra en ninguna bodega existente'})
+                    if(!stock.warehouse) return res.status(404).send({ done: false, code: 1, message: 'No se encontró bodega correspondiente.'})
+                    MovementItem
+                        .find({ product: product._id })
+                        .populate({
+                            path: 'movement',
+                            populate: [
+                                {
+                                    path: 'transaction'
+                                },
+                                {
+                                    path: 'warehouse'
                                 }
+                            ]
+                        })
+                        .limit(limit)
+                        .exec((err, movs) => {
+                            if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar los moviemientos del producto', err})
+                            if(!movs) return res.status(404).send({ done: false, code: 1, message: 'El producto buscado no existe'})
+                            
+                            var promise = getWarehouseByType(stock.warehouse._id)
+                            promise
+                            .then(response => {
+                                console.log(response)
+                                res.status(200)
+                                .send({
+                                    done: true, 
+                                    code: 0,
+                                    message: 'OK',
+                                    data: {
+                                        product,
+                                        movs,
+                                        stock,
+                                        response
+                                    }
+                                })
+                                
+                            }, error => {
+                                return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener bodega por tipo', error})
+                            })
+                            .catch(reason => {
+                                return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener bodega por tipo', reason})
                             })
                             
-                        }, error => {
-                            return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener bodega por tipo', error})
-                        })
-                        .catch(reason => {
-                            return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener bodega por tipo', reason})
-                        })
-                        
                 })
         })
     })
@@ -86,19 +90,25 @@ function getWarehouseByType(id) {
                     console.log('type', type)
                     switch (type) {
                         case types[0]: 
-                            Vehicle.findOne({ warehouse: id }, (err, vehicle) => {
-                                if (err) {
-                                    console.log(err);
-                                    reject(err)
-                                }
-                                
-                                if(!vehicle) reject ('No se encontró vehículo para la bodega de tipo vehículo')
-                                console.log('vehicle', vehicle)
-                                return resolve({ type, vehicle})
-                            })
+                            Vehicle.
+                                findOne({ warehouse: id })
+                                .populate('distributor')
+                                .exec((err, vehicle) => {
+                                    if (err) {
+                                        console.log(err);
+                                        reject(err)
+                                    }
+                                    
+                                    if(!vehicle) reject ('No se encontró vehículo para la bodega de tipo vehículo')
+                                    console.log('vehicle', vehicle)
+                                    return resolve({ type, vehicle})
+                                })
                         break;
                         case types[1]: 
-                            Address.findOne({ warehouse: id }, (err, address) => {
+                            Address
+                            .findOne({ warehouse: id })
+                            .populate('client')
+                            .exec((err, address) => {
                                 if(err) {
                                     console.log(err);
                                     reject(err)
@@ -109,14 +119,17 @@ function getWarehouseByType(id) {
                             })
                         break;
                         case types[2]: 
-                            Store.findOne({ warehouse: id }, (err, store) => {
-                                if(err) {
-                                    console.log(err);
-                                    reject(err)
-                                }
-                                
-                                if(!store) reject('No se encontró almacén para la bodega de tipo almacén')
-                                resolve({ type, store})
+                            Store
+                                .findOne({ warehouse: id })
+                                .populate('dependence')
+                                .exec((err, store) => {
+                                    if(err) {
+                                        console.log(err);
+                                        reject(err)
+                                    }
+                                    
+                                    if(!store) reject('No se encontró almacén para la bodega de tipo almacén')
+                                    resolve({ type, store})
                             })
                         break;
                         case types[3]: 
@@ -131,7 +144,11 @@ function getWarehouseByType(id) {
                             })
                         break;
                         case types[4]: 
-                            InternalProcess.findOne({ warehouse: id }, (err, internalProcess) => {
+                            InternalProcess
+                            .findOne({ warehouse: id })
+                            .populate('dependence')
+                            .populate('internalProcessType')
+                            .exec((err, internalProcess) => {
                                 if(err) {
                                     console.log(err);
                                     reject(err)
