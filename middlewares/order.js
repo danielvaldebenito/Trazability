@@ -72,7 +72,8 @@ function saveOneByDevice(req, res, next) {
                 status: status,
                 vehicle: params.vehicle,
                 userName: req.user.name + ' ' + req.user.surname,
-                device: params.device 
+                device: params.device,
+                originWarehouse: params.originWarehouse
             }
 
             if(found.device != params.device) {
