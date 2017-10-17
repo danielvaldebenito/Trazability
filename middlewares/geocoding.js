@@ -3,7 +3,7 @@
 const request = require('request')
 const config = require('../config')
 exports.findCoordFromAddress = function (req, res, next) {
-        console.log('find address', req.body)
+        
         const API_KEY = config.googleApiKey;
         const BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
         const params = req.body
@@ -30,7 +30,7 @@ exports.findCoordFromAddress = function (req, res, next) {
                 } else {
                     req.body.placeId = '000'
                 }
-                console.log('placeid', req.body.placeId)
+                
                 next()
             }
             else {

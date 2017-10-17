@@ -1,9 +1,11 @@
 'use strict'
 /* Modelo de distribuidor */
-var mongoose = require('mongoose')
-var timestamp = require('mongoose-timestamp')
-var Schema = mongoose.Schema;
-var DistributorSchema = Schema({
+const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
+const Schema = mongoose.Schema;
+const Warehouse = require('../models/warehouse')
+const Dependence = require('../models/dependence')
+const DistributorSchema = Schema({
     name: {
         type: String,
         required: [ true, 'El nombre es requerido'],
@@ -17,4 +19,32 @@ var DistributorSchema = Schema({
     intern: {type: Boolean, default: false}
 })
 DistributorSchema.plugin(timestamp)
+
+DistributorSchema.post('save', (doc) => {
+    // Create dependence
+    let dependence = new Dependence({
+        name: 'Virtual Dependence ' + doc._id,
+        isPlant: false,
+        distributor: doc._id,
+        virtual: true
+    })
+    dependence.save((err, dep) => {
+        if(err) throw err
+        console.log('creada dependencia virtual para el distributor ' + doc.name)
+        // Create decrease warehouse
+        let warehouse = new Warehouse({
+            type: 'MERMAS',
+            name: 'Mermas ' + doc.name,
+            dependence: dep._id
+        })
+        warehouse.save((err, stored) => {
+            if(err) throw err
+            console.log('creada warehouse de mermas para el distributor ' + doc.name)
+        })
+    })
+    
+})
+
+
+
 module.exports = mongoose.model('Distributor', DistributorSchema)

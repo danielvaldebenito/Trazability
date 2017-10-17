@@ -10,7 +10,7 @@ function sendMail (to, subject, temp, name) {
             <h3>Hola ${name}</h3>
             <h5>Te hemos enviado tu contraseña temporal:</h5>
             <p>${temp}</p>
-            <h5>Ingresa al sistema con tu nombre de usuario y esta contraseña. Luego crea tu propia contraseña</h5>
+            <h5>Ingresa a <a href="${config.clientUrl}">${config.clientUrl}</a>  con tu nombre de usuario y esta contraseña. Luego crea tu propia contraseña</h5>
             <hr>
             <small>No respondas este correo, es sólo informativo</small>
         `)

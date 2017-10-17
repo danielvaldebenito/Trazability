@@ -10,6 +10,7 @@ var DependenceSchema = Schema({
     phone: String,
     isPlant: { type: Boolean, default: false },
     distributor: { type: Schema.ObjectId, ref: 'Distributor' },
+    virtual: { type: Boolean, default: false }
 })
 
 

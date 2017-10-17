@@ -87,7 +87,6 @@ function getWarehouseByType(id) {
                 if(err) reject(err)
                 else {
                     const type = wh.type
-                    console.log('type', type)
                     switch (type) {
                         case types[0]: 
                             Vehicle.
@@ -100,7 +99,6 @@ function getWarehouseByType(id) {
                                     }
                                     
                                     if(!vehicle) reject ('No se encontró vehículo para la bodega de tipo vehículo')
-                                    console.log('vehicle', vehicle)
                                     return resolve({ type, vehicle})
                                 })
                         break;

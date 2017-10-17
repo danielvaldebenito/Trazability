@@ -1,13 +1,14 @@
 'use strict'
 
-var mongoose = require('mongoose')
-var Warehouse = require('../models/warehouse')
-var Decrease = require('../models/decrease')
-var Address = require ('../models/address')
-var Vehicle = require ('../models/vehicle')
-var InternalProcess = require('../models/internalProcess')
-var config = require('../config')
-var createInternalProcessWarehouse = function(req, res, next) {
+const mongoose = require('mongoose')
+const Warehouse = require('../models/warehouse')
+const Decrease = require('../models/decrease')
+const Address = require ('../models/address')
+const Vehicle = require ('../models/vehicle')
+const InternalProcess = require('../models/internalProcess')
+const Client = require('../models/client')
+const config = require('../config')
+const createInternalProcessWarehouse = function(req, res, next) {
     console.log('createInternalProcessWarehouse', req.body)
     var warehouse = new Warehouse()
     warehouse.name = req.body.name
@@ -78,13 +79,13 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                 next();
             } else { // Si no se crea una bodega y la direccion, y se envía al siguiente la bodega
 
-                var warehouse = new Warehouse()
+                let warehouse = new Warehouse()
                 warehouse.name = body.location || body.address.location
                 warehouse.type = 'DIRECCION_CLIENTE'
                 warehouse.save((err, wh) => {
                     if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', error: err })
                     
-                    var address = new Address()
+                    let address = new Address()
                     address.location = body.location || body.address.location 
                     address.city = body.city || body.address.city 
                     address.region = body.region || body.address.region
@@ -100,10 +101,18 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     } else {
                         address.coordinates = body.coordinates
                     }  
-                    address.save((error, addressSaved) => {
-                        req.body.destinyWarehouse = wh._id
-                        req.body.address = addressSaved._id
-                        next();
+                    address.save((err, addressSaved) => {
+                        if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
+
+                        Client.findByIdAndUpdate(body.clientId, { $push: { addresses: address } }, (err, client) => {
+                            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
+                            
+                            req.body.destinyWarehouse = wh._id
+                            req.body.address = addressSaved._id
+                            next();
+                        })
+
+                        
                     })
                 })
             }
