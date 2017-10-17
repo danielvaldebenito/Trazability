@@ -76,12 +76,18 @@ function saveOneByDevice(req, res, next) {
             }
 
             if(found.device != params.device) {
-                pushNotification.cancelOrder(found.device, found._id, found.orderNumber, "NO")
+                pushNotification.cancelOrder(found.device, found._id.toString(), found.orderNumber, "NO")
             }
-            req.body.orderNumber = found.orderNumber
-            req.body.orderId = params.delivery.orderId
-            pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
-            return next()
+            Order.update({ _id: params.delivery.orderId}, update, (err, updated) => {
+                if(err) return res.status(200).send({ done: false, message: 'Error al actualizar pedido', err, code:-1})
+                
+                req.body.orderNumber = found.orderNumber
+                req.body.orderId = params.delivery.orderId
+                pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
+                return next()
+            })
+
+           
         })
         
     } else {
