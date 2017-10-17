@@ -66,6 +66,7 @@ const createNormalMovementItems = function(req, res, next) {
     const length = items.length
     const total = both ? items.length * 2 : items.length
     let count = 0
+    console.log('creando items', items, total)
     items.forEach((i, index) => {
         let nif = i.nif
         let product = {
