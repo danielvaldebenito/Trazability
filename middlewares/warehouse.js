@@ -49,6 +49,11 @@ var createAddressFromClient = function (req, res, next) {
     address.save((err, add) => {
         if(err) return res.status(500).send({ message: 'Error en middleware al crear dirección', error: err })
         if(!add) return res.status(500).send({ message: 'Error en middleware al crear dirección'})
+        Client.findByIdAndUpdate(params.client, { $addToSet: { addresses: address } }, (err, client) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
+           
+            next();
+        })
         next ()
     })
 
@@ -63,20 +68,14 @@ var createAddressWarehouseForOrder = function(req, res, next) {
         const location = body.location || body.address.location;
         const city = body.city || body.address.city;
         const region = body.region || body.address.region; 
-        const conditions = {
-            _id: body.clientId,
-            'addresses.location': { $ne: location },
-            'addresses.city': { $ne: city },
-            'addresses.region': { $ne: region }
-        }
         const add = {
             location: location,
             city: city,
             region: region
         }
-        Client.findOneAndUpdate(conditions, { $addToSet: { addresses: add } }, (err, client) => {
+        Client.findByIdAndUpdate(body.client, { $addToSet: { addresses: add } }, (err, client) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
-            console.log('se agregó direccion a cliente', add, client)
+            
             next();
         })
     }
@@ -88,14 +87,14 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                 location: body.location || body.address.location,
                 city: body.city || body.address.city,
                 region: body.region || body.address.region,
-                client: body.clientId
+                client: body.client
             }]})
         .exec((err, record) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al buscar placeId', error: err })
             if(record) { /* Si existe una direccion con ese placeId */
                 req.body.destinyWarehouse = record.warehouse // Se envia la bodega
                 req.body.address = record._id
-                console.log('Existe direccion', placeId, record)
+                
                 next();
             } else { // Si no se crea una bodega y la direccion, y se envía al siguiente la bodega
 
@@ -109,7 +108,7 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     address.location = body.location || body.address.location 
                     address.city = body.city || body.address.city 
                     address.region = body.region || body.address.region
-                    address.client = body.clientId 
+                    address.client = body.client 
                     address.warehouse = wh._id
                     if(placeId != '000')
                         address.placeId = placeId
@@ -124,9 +123,9 @@ var createAddressWarehouseForOrder = function(req, res, next) {
                     address.save((err, addressSaved) => {
                         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
 
-                        Client.findByIdAndUpdate(body.clientId, { $addToSet: { addresses: address } }, (err, client) => {
+                        Client.findByIdAndUpdate(body.client, { $addToSet: { addresses: address } }, (err, client) => {
                             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
-                            console.log('se agregó direccion a cliente', address, client)
+                           
                             req.body.destinyWarehouse = wh._id
                             req.body.address = addressSaved._id
                             next();
