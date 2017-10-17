@@ -60,7 +60,7 @@ const createNormalMovementItems = function(req, res, next) {
     } else {
         items = params.items
     }
-    console.log('creando items', items, total)
+    console.log('creando items', items)
     if(!items || !items.length || !items.length == 0) 
         return next()
     const both = inputMovement && outputMovement
