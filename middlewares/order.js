@@ -22,7 +22,7 @@ const clientFromOrderByDevice = function (req, res, next) { // Client as json ob
     Client.findOne({ nit: nit })
         .exec((err, found) => {
             if (found) {
-                req.body.clientId = found._id
+                req.body.client = found._id
                 console.log('cliente encontrado', found._id)
                 next()
             } else {
