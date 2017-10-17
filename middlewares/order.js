@@ -47,8 +47,7 @@ const clientFromOrderByDevice = function (req, res, next) {
                 newclient.save((err, stored) => {
                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al guardar cliente en middleware clientFromOrderByDevice', err })
                     if (!stored) return res.status(404).send({ done: false, code: 1, message: 'Error al guardar cliente en middleware clientFromOrderByDevice' })
-                    req.body.clientId = stored._id
-                    console.log('cliente creado', stored._id)
+                    req.body.client = stored._id
                     return next()
                 })
             }

@@ -20,6 +20,7 @@ api.post('/sale/', [
     md_auth.ensureAuth,
     md_order.validateDelivery,
     md_geocoding.findCoordFromAddress,
+    md_order.clientFromOrderByDevice,
     md_warehouse.createAddressWarehouseForOrder,
     md_warehouse.getWarehouseFromVehicle, 
     md_transaction.createSaleTransaction, 
@@ -29,8 +30,7 @@ api.post('/sale/', [
     md_movement.createOutputMovementFromSale, 
     md_movement.createOutputMovementFromRetreat,
     md_movementItem.createMovementItems,
-    md_movementItem.createMovementItemsByRetreat, 
-    md_order.clientFromOrderByDevice, 
+    md_movementItem.createMovementItemsByRetreat,  
     md_sale.convertMovementDetailToSaleDetail,
     md_order.saveOneByDevice
      ], SaleController.saveOne)
