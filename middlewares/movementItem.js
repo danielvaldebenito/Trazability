@@ -60,7 +60,6 @@ const createNormalMovementItems = function(req, res, next) {
     } else {
         items = params.items
     }
-    console.log('creando items', items)
     if(!items || !items.length || !items.length == 0) 
         return next()
     const both = inputMovement && outputMovement
@@ -69,6 +68,7 @@ const createNormalMovementItems = function(req, res, next) {
     let count = 0
     
     items.forEach((i, index) => {
+        console.log('item' + index, i)
         let nif = i.nif
         let product = {
             nif: nif,
@@ -87,8 +87,11 @@ const createNormalMovementItems = function(req, res, next) {
                 product: id,
                 movement: inputMovement || outputMovement,
             })
+
+            console.log('product: ', doc)
             // Movimiento de entrada
             Movement.findByIdAndUpdate(movementItem.movement, { $push: { "items": movementItem._id }}, (err, movement) => {
+                if(err) return res.status(500).send({ done: false, message: 'Error al actualizar movement', err})
                 movementItem.save((err, mi) => {
                     if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
                     count++;
