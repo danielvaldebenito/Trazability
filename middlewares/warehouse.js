@@ -60,15 +60,23 @@ var createAddressWarehouseForOrder = function(req, res, next) {
     const body = req.body;
     const placeId = body.placeId
     if(!placeId) { 
-        const add = {
-            location: body.location || body.address.location,
-            city: body.city || body.address.city,
-            region: body.region || body.address.region,
-            client: body.clientId
+        const location = body.location || body.address.location;
+        const city = body.city || body.address.city;
+        const region = body.region || body.address.region; 
+        const conditions = {
+            _id: body.clientId,
+            'addresses.location': { $ne: location },
+            'addresses.city': { $ne: city },
+            'addresses.region': { $ne: region }
         }
-        Client.findByIdAndUpdate(body.clientId, { $push: { addresses: add } }, (err, client) => {
+        const add = {
+            location: location,
+            city: city,
+            region: region
+        }
+        Client.findOneAndUpdate(conditions, { $addToSet: { addresses: add } }, (err, client) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en middleware', err })
-            
+            console.log('se agregó direccion a cliente', add, client)
             next();
         })
     }
