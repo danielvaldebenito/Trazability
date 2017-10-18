@@ -57,6 +57,7 @@ function getAll(req, res) {
                 if(!records)
                     return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
                 
+                const old = records.length
                 if(filter){
                     records = records.filter((record) => {
                         return record.address.location.toLowerCase().indexOf(filter.toLowerCase()) > -1
@@ -64,7 +65,7 @@ function getAll(req, res) {
                             || (record.vehicle && record.vehicle.licensePlate.toLowerCase().indexOf(filter.toLowerCase()) > -1)
                     })
                 }
-                total = records.length
+                total = total - (old - records.length)
                 
                 return res
                         .status(200)
@@ -206,8 +207,12 @@ function getDayResume (req, res) {
 function getOne (req, res) {
     var id = req.params.id
     Order.findById(id)
-        .populate('originWarehouse')
-        .populate('destinyWarehouse')
+            .populate({path:'items.productType', model: ProductType })
+            .populate('distributor')
+            .populate('client')
+            .populate('address')
+            .populate({ path: 'vehicle', populate: { path: 'user'}})
+            .populate({ path: 'device', populate: { path: 'user'}})
         .exec( (err, record) => {
             if(err) return res.status(500).send({ done: false, message: 'Error en la petición'})
             if(!record) return res.status(404).send({ done: false, message: 'No se pudo obtener el registro'})
