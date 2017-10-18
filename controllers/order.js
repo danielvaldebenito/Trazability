@@ -60,7 +60,7 @@ function getAll(req, res) {
                 if(filter){
                     records = records.filter((record) => {
                         return record.address.location.toLowerCase().indexOf(filter.toLowerCase()) > -1
-                            || record.client.fullname.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                            || (record.client && record.client.fullname.toLowerCase().indexOf(filter.toLowerCase()) > -1)
                             || (record.vehicle && record.vehicle.licensePlate.toLowerCase().indexOf(filter.toLowerCase()) > -1)
                     })
                 }
