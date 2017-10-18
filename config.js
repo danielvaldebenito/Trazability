@@ -4,11 +4,11 @@ module.exports = {
     secretjwt: 'commzgate1548',
     daysExpToken: 30,
     autocreateDecreaseWarehouse: true,
-    googleApiKey: 'AIzaSyCdo5HgF-LydsGMOxv4QEuSo9G24DlfgDU',
+    googleApiKey: process.env.UNIGAS_TRAZABILIDAD_GOOGLEAPIKEY || 'AIzaSyCdo5HgF-LydsGMOxv4QEuSo9G24DlfgDU',
     erpKeyAccess: 'xrwp6y1oo1q',
-    sendGridApiKey: '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',
+    sendGridApiKey: process.env.UNIGAS_TRAZABILIDAD_SENDGRIDAPIKEY || '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',
     sendGridConfig: {
-        senderMail: 'daniel.valdebenito@commzgate-la.com'
+        senderMail: process.env.UNIGAS_TRAZABILIDAD_SENDGRIDSENDERMAIL ||  'daniel.valdebenito@commzgate-la.com'
     },
     pushNotifications: {
         codes: [
