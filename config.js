@@ -1,5 +1,5 @@
 module.exports = {
-    clientUrl: 'http://trazabilidad-unigas.commzgate.cl',
+    clientUrl: 'http://trazabilidad.commzgate.co/',
     country: 'Colombia',
     secretjwt: 'commzgate1548',
     daysExpToken: 30,

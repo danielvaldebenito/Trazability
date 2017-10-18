@@ -5,14 +5,13 @@ var apiWSDL = __dirname + '/../wsdl/sfdcPartner.wsdl';
 const createOrderWsdl = __dirname + '/../wsdl/creaPedido_ws.wsdl'
 const loginService = require('../connection/login')
 
-function createOrder(order, algo) {
-    if(!order) return
-    console.log({order, algo})
+function createOrder(order, sessionId) {
+    console.log({ order, sessionId })
     const p = new Promise(function(resolve, reject) {
     
         soap.createClient(createOrderWsdl, function(err, client) {
             if(err) throw new Error(err);
-            const sHeader = { SessionHeader: { sessionId: '00D0x000000CnMC!AQ4AQPxySff64PP_fFOTdeQAVItyl3ZgRDQlS0Tqbqwo7rOpmw6g483FT4dbhc1OhKwhNa0t.VPvb5.W9FVhMxsv8FaPIxzZ' }};
+            const sHeader = { SessionHeader: { sessionId: sessionId }};
             client.addSoapHeader(sHeader, '', 'tns', '')
             
             const args = {

@@ -42,9 +42,9 @@ function getAll(req, res) {
                     }
                 } : {})
             .where(distributor ? { distributor: distributor } : {})
-            .sort([[sidx, sord]])
-            .populate('originWarehouse')
-            .populate('destinyWarehouse')
+            .sort([['orderNumber', 1]])
+            //.populate('originWarehouse')
+            //.populate('destinyWarehouse')
             .populate({path:'items.productType', model: ProductType })
             .populate('distributor')
             .populate('client')
@@ -260,8 +260,12 @@ function saveOne (req, res) {
                         if(err) return res.status(500).send({ done: false, message: 'Error al popular orden', err})
 
                         const loginPromise = loginIntegration.login();
-                        const sendOrderPromise = orderIntegration.createOrder(populated)
-                        loginPromise.then(sendOrderPromise);
+                        loginPromise.then(logued => {
+                            orderIntegration.createOrder(populated, logued)
+                                .then(result => {
+                                    console.log(result)
+                                })
+                        });
                         
                         
                         if(params.device){
