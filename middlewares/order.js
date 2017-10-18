@@ -83,7 +83,7 @@ function saveOneByDevice(req, res, next) {
                 
                 req.body.orderNumber = found.orderNumber
                 req.body.orderId = params.delivery.orderId
-                pushSocket.send('/orders', params.distributor, 'change-state-order', params.delivery.orderId)
+                pushSocket.send('orders', params.distributor, 'change-state-order', params.delivery.orderId)
                 return next()
             })
 
@@ -117,7 +117,7 @@ function saveOneByDevice(req, res, next) {
                     /**
                      * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                      */
-                    pushSocket.send('/orders', params.distributor, 'new-order', stored)
+                    pushSocket.send('orders', params.distributor, 'new-order', stored)
                     req.body.orderNumber = stored.orderNumber
                     req.body.orderId = stored._id
                     next()
