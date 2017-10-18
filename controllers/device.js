@@ -106,6 +106,14 @@ function loginDevice(req, res) { // VENTA
                             message: 'El usuario no existe',
                             data: null
                         })
+                } else if(user.disabled) {
+                    res.status(200)
+                    .send({
+                        done: true,
+                        code: 2,
+                        message: 'Usuario se encuentra deshabilitado',
+                        data: null
+                    })
                 } else {
                     // Comprobar contraseña
                     bcrypt.compare(password, user.password, (error, check) => {
@@ -286,6 +294,14 @@ function loginTrazability(req, res) {
                             message: 'El usuario no existe',
                             data: null
                         })
+                } else if(user.disabled) {
+                    res.status(200)
+                    .send({
+                        done: true,
+                        code: 2,
+                        message: 'El usuario se encuentra deshabilitado',
+                        data: null
+                    })
                 } else {
                     // Comprobar contraseña
                     bcrypt.compare(password, user.password, (error, check) => {

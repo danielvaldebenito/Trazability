@@ -37,6 +37,7 @@ api.post('/sale/', [
 
 api.post('/sale-granel/', [
     md_auth.ensureAuth,
+    md_order.validateDelivery,
     md_sale.convertMovementDetailToSaleDetail,
     md_order.saveOneByDevice
     ], SaleController.saveOne)
