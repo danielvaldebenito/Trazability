@@ -1,6 +1,7 @@
 'use strict'
 var Enumerable = require('linq')
 var pushService = require('../services/push')
+const pushSocket = require('../services/pushSocket')
 var list = [
     {
         id: 1,
@@ -53,9 +54,17 @@ function testNotification (req, res) {
         }); 
     
 }
-
+function testPushSocket(req, res) {
+    const namespace = req.params.namespace
+    const room = req.params.room
+    const tag = req.params.tag
+    const data = req.body
+    pushSocket.send(namespace, room, tag, data)
+    res.status(200).send('OK')
+}
 module.exports = {
     getList,
     getOne,
-    testNotification
+    testNotification,
+    testPushSocket
 }

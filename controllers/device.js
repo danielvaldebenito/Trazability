@@ -95,11 +95,11 @@ function loginDevice(req, res) { // VENTA
         .populate('distributor')
         .exec((err, user) => {
             if (err) {
-                res.status(500)
+                return res.status(500)
                     .send({ done: false, data: null, code: -1, message: 'Error en la petición', error: err })
             } else {
                 if (!user) {
-                    res.status(200)
+                    return res.status(200)
                         .send({
                             done: true,
                             code: 2,
@@ -107,7 +107,7 @@ function loginDevice(req, res) { // VENTA
                             data: null
                         })
                 } else if(user.disabled) {
-                    res.status(200)
+                    return res.status(200)
                     .send({
                         done: true,
                         code: 2,
@@ -119,7 +119,7 @@ function loginDevice(req, res) { // VENTA
                     bcrypt.compare(password, user.password, (error, check) => {
                         if (error) return res.status(500).send({ done: false, data: null, code: -1, message: 'Ocurrió un error', error: error })
                         if (!check) {
-                            res.status(200)
+                            return res.status(200)
                                 .send({
                                     done: true,
                                     code: 1,
@@ -191,11 +191,12 @@ function loginDevice(req, res) { // VENTA
                                                                             .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
                                                                             .exec((err, priceLists) => {
                                                                                 if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
-                                                                                ProductType.find()
+                                                                                ProductType
+                                                                                    .find()
                                                                                     .exec((err, pts) => {
                                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
 
-                                                                                        pushSocket.send('/vehicles', user.distributor._id, 'login', device._id)
+                                                                                        pushSocket.send('vehicles', user.distributor._id, 'login', device._id)
                                                                                         return res.status(200)
                                                                                             .send({
                                                                                                 done: true,
@@ -257,7 +258,7 @@ function logout(req, res) {
             if (bo) {
                 pushNotification.forceResetVehicle(user.device)
             }
-            pushSocket.send('/vehicles', user.distributor, 'logout', user.device)
+            pushSocket.send('vehicles', user.distributor, 'logout', user.device)
             return res.status(200).send({
                 done: true,
                 message: 'Usuario deslogueado correctamente',
@@ -352,6 +353,8 @@ function loginTrazability(req, res) {
                                             Device.update({ _id: device._id }, { user2: user._id }, (err, raw) => {
                                                 if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error })
                                                 User.update({ _id: user._id }, { device: device._id }, (err, raw) => {
+
+                                                    pushSocket.send('vehicles', user.distributor._id, 'login', device._id)
                                                     return res.status(200)
                                                         .send({
                                                             done: true,
@@ -371,6 +374,7 @@ function loginTrazability(req, res) {
                                         }
                                     })
                                 } else {
+                                    pushSocket.send('vehicles', user.distributor._id, 'login', {})
                                     return res.status(200)
                                         .send({
                                             done: true,

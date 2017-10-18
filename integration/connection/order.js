@@ -6,7 +6,6 @@ const createOrderWsdl = __dirname + '/../wsdl/creaPedido_ws.wsdl'
 const loginService = require('../connection/login')
 
 function createOrder(order, sessionId) {
-    console.log({ order, sessionId })
     const p = new Promise(function(resolve, reject) {
     
         soap.createClient(createOrderWsdl, function(err, client) {

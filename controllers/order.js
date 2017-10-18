@@ -277,7 +277,7 @@ function saveOne (req, res) {
                             pushNotification.newOrderAssigned(params.device, stored._id)
                         }
                         
-                        pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
+                        pushSocket.send('orders', params.distributor, 'new-order', stored._id)
                         return res
                             .status(200)
                             .send({
@@ -338,7 +338,7 @@ function setOrderEnRuta(req, res) {
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
             
-            pushSocket.send('/orders', distributor._id, 'change-state-order', orders)
+            pushSocket.send('orders', distributor._id, 'change-state-order', orders)
             return res.status(200)
                         .send({
                             done: true,
@@ -359,7 +359,7 @@ function cancelOrder(req, res) {
             if(device) {
                 pushNotification.cancelOrder(device, id, updated.orderNumber, 'YES')
             }
-            pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
+            pushSocket.send('orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
                 .send({
                     done: true,
@@ -379,7 +379,7 @@ function confirmCancel (req, res) {
         Order.update({_id: id}, update, (err, raw) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar ordenes', err})
       
-            pushSocket.send('/orders', updated.distributor, 'change-state-order', id)
+            pushSocket.send('orders', updated.distributor, 'change-state-order', id)
             return res.status(200)
                 .send({
                     done: true,
@@ -412,7 +412,7 @@ function assignDeviceToOrder (req, res) {
         if(old)
             pushNotification.cancelOrder(old._id, order, updated.orderNumber, 'NO')
 
-        pushSocket.send('/orders', updated.distributor, 'new-order', updated._id)
+        pushSocket.send('orders', updated.distributor, 'new-order', updated._id)
         return res.status(200)
                 .send({
                     done: true,
