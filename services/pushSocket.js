@@ -24,7 +24,7 @@ vehicleNsp.on('connection', (socket) => {
 })
 function send(namespace, room, tag, data) {
   console.log('sending push socket', { namespace, room, tag, data })
-  io.of(namespace).in(room).emit(tag, data)
+  io.of(namespace).to(room).emit(tag, data)
 }
 module.exports = io;
 module.exports = { send }
