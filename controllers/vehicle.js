@@ -12,16 +12,18 @@ const Distributor = require('../models/distributor')
 const config = require('../config')
 
 function getAll(req, res) {
-    var page = parseInt(req.query.page) || 1
-    var limit = parseInt(req.query.limit) || 200
-    var sidx = req.query.sidx || '_id'
-    var sord = req.query.sord || 1
-    var distributor = req.params.distributor
-    var filter = req.query.filter;
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 200
+    const sidx = req.query.sidx || '_id'
+    const sord = req.query.sord || 1
+    const distributor = req.params.distributor
+    const filter = req.query.filter;
+    const dependence = req.query.dependence
     Vehicle
         .where({ disabled: { $ne: true } })
         .find(filter ?  { "licensePlate": { "$regex": filter, "$options": "i" } } : {})
         .where(distributor ? { distributor: distributor } : {})
+        .where(!dependence || dependence == 'null' ? {} : { dependence: dependence })
         .sort([[sidx, sord]])
         .populate({
             path: 'warehouse',
@@ -82,23 +84,11 @@ function saveOne (req, res) {
     vehicle.warehouse = params.warehouse
     vehicle.user = params.user
     vehicle.distributor = params.distributor
+    vehicle.dependence = params.dependence
     vehicle.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         
-        if(params.user) {
-            User.findByIdAndUpdate(params.user, { vehicle: stored._id }, (err, updatedUser) => {
-                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario seleccionado', error: err })
-            })
-            Vehicle.update(
-                { user: params.user, _id: { $ne: stored._id }}, 
-                { user: undefined }, 
-                { multi: true }, 
-                (err, raw) => {
-                    if(err) console.log(err)
-                    console.log('raw', raw)
-            })
-        }
         return res
                 .status(200)
                 .send({ 

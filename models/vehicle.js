@@ -12,6 +12,7 @@ var VehicleSchema = Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     type: { type: String, enum: ['ENVASADO', 'GRANEL'], default: 'ENVASADO' },
     warehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' },
+    dependence: { type: Schema.Types.ObjectId, ref: 'Dependence' },
     distributor: { type: Schema.Types.ObjectId, ref: 'Distributor' },
     disabled: { type: Boolean, default: false }
 })

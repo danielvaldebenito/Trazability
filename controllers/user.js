@@ -319,11 +319,13 @@ function getUsers (req, res){
     User.find({ distributor: distributor })
         .populate('vehicle')
         .populate('internalProcessTypes')
+        .populate('dependence')
+        .populate('device')
         .where(filter ?
             { $or: [ { name: { "$regex": filter, "$options": "i" }},
                     { surname: { "$regex": filter, "$options": "i" }} ] }
              : {})
-        .where(dependence != 'null' ? { dependence: dependence }: {})
+        .where(!dependence || dependence == 'null' ? {} : { dependence: dependence })
         .sort([['disabled', 1],[sidx, sord]])
         .paginate(page, limit, (err, records, total) => {
             if(err)
