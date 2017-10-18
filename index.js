@@ -16,13 +16,7 @@ mongoose.connect(mongoConnectionUrl, (err, res) => {
         console.log('La conexión a la Base de datos corriendo correctamente', config.database);
         var server = app.listen(port, () => {
             console.log(`Servidor corriendo correctamente en el puerto ${port}`);
-            var loginService = require('./integration/connection/login')
-            loginService.login()
-                .then(res => {
-                    console.log(res)
-                    
-                })
-                .catch(error => console.log(error))
+            
         })
         require('./services/pushSocket')
     }

@@ -106,6 +106,7 @@ function saveOneByDevice(req, res, next) {
         order.observation = params.observation
         order.payMethod = params.paymentMethod
         order.device = params.device
+        order.userName = req.user.name + ' ' + req.user.surname
         order.save((err, stored) => {
             if (err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if (!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

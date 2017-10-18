@@ -1,6 +1,5 @@
 var soap = require('soap');
 var apiWSDL = __dirname + '/../wsdl/sfdcPartner.wsdl';
-const testSaveOrder = __dirname + '/../wsdl/creaPedido_ws.wsdl';
 var config = require('../../config')
 function login() {
     var p = new Promise(function(resolve, reject) {
@@ -19,8 +18,8 @@ function login() {
                     config.integration.sessionId = sessionId
                     const sHeader = { SessionHeader: { sessionId: sessionId }};
                     client.addSoapHeader(sHeader, '', 'tns', '')
-                    
-                    resolve(result)
+                    console.log('sessionid', result.result.sessionId)
+                    resolve(result.result.sessionId)
                 } else {
                     reject('No hubo resultados')
                 }

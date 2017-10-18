@@ -31,6 +31,7 @@ function getOneByNif (req, res) {
                     if(!stock.warehouse) return res.status(404).send({ done: false, code: 1, message: 'No se encontró bodega correspondiente.'})
                     MovementItem
                         .find({ product: product._id })
+                        .sort([['createdAt', -1]])
                         .populate({
                             path: 'movement',
                             populate: [

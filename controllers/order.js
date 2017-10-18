@@ -16,6 +16,7 @@ const Address = require('../models/address')
 const ProductType = require('../models/productType')
 const config = require('../config')
 const orderIntegration = require('../integration/connection/order')
+const loginIntegration = require('../integration/connection/login')
 function getAll(req, res) {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 200
@@ -243,29 +244,40 @@ function saveOne (req, res) {
     order.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
-        Order.update(
-            { _id: stored._id }, 
+        Order.findByIdAndUpdate(stored._id, 
             { erpId: stored.orderNumber, erpOrderNumber: stored.orderNumber, erpUpdated: false  },
             (err, raw) => {
 
                 /**
                  * TODO: ERP INTEGRATION: Informar pedido a SalesForce
                  */
-                // orderIntegration.createOrder(stored)
-                // .then(res => console.log('inte', res))
-                
-                if(params.device){
-                    pushNotification.newOrderAssigned(params.device, stored._id)
-                }
-                
-                pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
-                return res
-                    .status(200)
-                    .send({
-                        done: true,
-                        message: 'Registro guardado exitosamente',
-                        stored: stored
+                Order.findById(stored._id)
+                    .populate('address')
+                    .populate('device')
+                    .populate('client')
+                    .populate({ path: 'items', populate: { path: 'productType'}})
+                    .exec((err, populated) => {
+                        if(err) return res.status(500).send({ done: false, message: 'Error al popular orden', err})
+
+                        const loginPromise = loginIntegration.login();
+                        const sendOrderPromise = orderIntegration.createOrder(populated)
+                        loginPromise.then(sendOrderPromise);
+                        
+                        
+                        if(params.device){
+                            pushNotification.newOrderAssigned(params.device, stored._id)
+                        }
+                        
+                        pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
+                        return res
+                            .status(200)
+                            .send({
+                                done: true,
+                                message: 'Registro guardado exitosamente',
+                                stored: stored
+                            })
                     })
+                
             }
         )
         
