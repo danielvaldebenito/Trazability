@@ -330,7 +330,7 @@ function loginTrazability(req, res) {
 
                                                 User.update({ _id: user._id }, { device: devStored._id }, (err, raw) => {
                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar usuario con su dispositivo', err })
-
+                                                    
                                                     return res.status(200)
                                                         .send({
                                                             done: true,
@@ -354,7 +354,7 @@ function loginTrazability(req, res) {
                                                 if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error })
                                                 User.update({ _id: user._id }, { device: device._id }, (err, raw) => {
 
-                                                    pushSocket.send('vehicles', user.distributor._id, 'login', device._id)
+                                                   
                                                     return res.status(200)
                                                         .send({
                                                             done: true,
@@ -374,7 +374,6 @@ function loginTrazability(req, res) {
                                         }
                                     })
                                 } else {
-                                    pushSocket.send('vehicles', user.distributor._id, 'login', {})
                                     return res.status(200)
                                         .send({
                                             done: true,
