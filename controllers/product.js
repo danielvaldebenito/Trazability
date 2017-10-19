@@ -15,7 +15,7 @@ function getOneByNif (req, res) {
     const nif = req.params.nif
     const limit = req.query.limit || 10
     Product
-        .findOne({ nif: nif })
+        .findOne({ $or: [ { nif: nif }, { formatted: nif } ] })
         .populate('productType')
         .exec((err, product) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar producto', err})
