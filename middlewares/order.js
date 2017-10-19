@@ -54,35 +54,42 @@ const clientFromOrderByDevice = function (req, res, next) { // Client as json ob
 // BEFORE: createAddressWarehouseForOrder (warehouse) 
 
 function saveOneByDevice(req, res, next) {
-    
+
     const params = req.body
     if (params.delivery.orderId) {
         const status = params.delivery.done ? config.entitiesSettings.order.status[3] : config.entitiesSettings.order.status[4]
         Order.findById(params.delivery.orderId, (err, found) => {
-
+            const history = {
+                user: req.user.sub,
+                userName: `${req.user.name} ${req.user.surname}`,
+                device: params.device,
+                date: moment(),
+                event: params.delivery.done ? config.entitiesSettings.order.eventsHistory[3] : config.entitiesSettings.order.eventsHistory[6]// Entregado / NO entregado
+            }
             const update = {
                 status: status,
                 vehicle: params.vehicle,
                 userName: req.user.name + ' ' + req.user.surname,
                 device: params.device,
-                originWarehouse: params.originWarehouse
+                originWarehouse: params.originWarehouse,
+                $push: { history: history }
             }
 
-            if(found.device != params.device) {
+            if (found.device != params.device) {
                 pushNotification.cancelOrder(found.device, found._id.toString(), found.orderNumber, "NO")
             }
-            Order.update({ _id: params.delivery.orderId}, update, (err, updated) => {
-                if(err) return res.status(200).send({ done: false, message: 'Error al actualizar pedido', err, code:-1})
-                
+            Order.update({ _id: params.delivery.orderId }, update, (err, updated) => {
+                if (err) return res.status(200).send({ done: false, message: 'Error al actualizar pedido', err, code: -1 })
+
                 req.body.orderNumber = found.orderNumber
                 req.body.orderId = params.delivery.orderId
                 pushSocket.send('orders', params.distributor, 'change-state-order', params.delivery.orderId)
                 return next()
             })
 
-           
+
         })
-        
+
     } else {
         const order = new Order()
         order.commitmentDate = moment()
@@ -100,20 +107,67 @@ function saveOneByDevice(req, res, next) {
         order.payMethod = params.paymentMethod
         order.device = params.device
         order.userName = req.user.name + ' ' + req.user.surname
+        const history = {
+            user: req.user.sub,
+            userName: `${req.user.name} ${req.user.surname}`,
+            device: params.device,
+            date: moment(),
+            type: config.entitiesSettings.order.eventsHistory[0] // Creación
+        }
+        let histories = []
+        histories.push(history)
+        if(params.device) {
+            order.status = config.entitiesSettings.order.status[1];
+            const history2 = {
+                user: req.user.sub,
+                userName: `${req.user.name} ${req.user.surname}`,
+                device: params.device,
+                date: moment(),
+                type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+            }
+            histories.push(history2)
+        }
+        const history3 = {
+            user: req.user.sub,
+            device: params.device,
+            userName: `${req.user.name} ${req.user.surname}`,
+            date: moment(),
+            type: config.entitiesSettings.order.eventsHistory[4] // Entregado
+        }
+        histories.push(history3)
+        order.history = histories;
         order.save((err, stored) => {
             if (err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
             if (!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
-            Order.update(
-                { _id: stored._id },
+
+            Order.findByIdAndUpdate(stored._id,
                 { erpId: stored.orderNumber, erpOrderNumber: stored.orderNumber, erpUpdated: false },
                 (err, raw) => {
-                    /**
-                     * TODO: ERP INTEGRATION: Informar pedido a SalesForce
-                     */
-                    pushSocket.send('orders', params.distributor, 'new-order', stored)
-                    req.body.orderNumber = stored.orderNumber
-                    req.body.orderId = stored._id
-                    next()
+
+                    Order.findById(stored._id)
+                        .populate('address')
+                        .populate('device')
+                        .populate('client')
+                        .populate('items.productType')
+                        .exec((err, populated) => {
+                            if (err) return res.status(500).send({ done: false, message: 'Error al popular orden', err })
+
+                            const loginPromise = loginIntegration.login();
+                            loginPromise.then(logued => {
+                                orderIntegration.createOrder(populated, logued)
+                                    .then(result => {
+                                        console.log(result)
+                                    })
+                            });
+                            if (params.device) {
+                                pushNotification.newOrderAssigned(params.device, stored._id)
+                            }
+                            pushSocket.send('orders', params.distributor, 'new-order', stored._id)
+                            req.body.orderNumber = stored.orderNumber
+                            req.body.orderId = stored._id
+                            next()
+                        })
+
                 }
             )
         })
@@ -121,13 +175,13 @@ function saveOneByDevice(req, res, next) {
 
 }
 
-function validateDelivery (req, res, next) {
+function validateDelivery(req, res, next) {
     console.log('validating', req.body)
-    if(req.body.delivery.orderId) {
+    if (req.body.delivery.orderId) {
         Order.findById(req.body.delivery.orderId, (err, order) => {
-            if(err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error', code: -1, err })
-            if(!order) return res.status(200).send({ done: false, message: 'No existe pedido con el id ' + req.body.delivery.orderId })
-            if(order.status == config.entitiesSettings.order.status[3]) {
+            if (err) return res.status(200).send({ done: false, message: 'Ha ocurrido un error', code: -1, err })
+            if (!order) return res.status(200).send({ done: false, message: 'No existe pedido con el id ' + req.body.delivery.orderId })
+            if (order.status == config.entitiesSettings.order.status[3]) {
                 console.log('ya esta entregado')
                 return res.status(200).send({ done: true, message: 'OK' })
             } else {

@@ -17,6 +17,7 @@ const ProductType = require('../models/productType')
 const config = require('../config')
 const orderIntegration = require('../integration/connection/order')
 const loginIntegration = require('../integration/connection/login')
+
 function getAll(req, res) {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 200
@@ -241,22 +242,39 @@ function saveOne (req, res) {
     order.observation = params.observation
     order.payMethod = params.payMethod
     order.originWarehouse = params.originWarehouse;
-    if(params.device) {
-        order.status = config.entitiesSettings.order.status[1];
-    }
     order.destinyWarehouse = params.destinyWarehouse
     order.distributor = params.distributor
     order.items = params.items
+    const history = {
+        user: req.user.sub,
+        userName: `${req.user.name} ${req.user.surname}`,
+        device: params.device,
+        date: moment(),
+        type: config.entitiesSettings.order.eventsHistory[0] // Creación
+    }
+    let histories = []
+    histories.push(history)
+    if(params.device) {
+        order.status = config.entitiesSettings.order.status[1];
+        const history2 = {
+            user: req.user.sub,
+            userName: `${req.user.name} ${req.user.surname}`,
+            device: params.device,
+            date: moment(),
+            type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+        }
+        histories.push(history2)
+    }
+    order.history = histories;
     order.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
+        
+        
         Order.findByIdAndUpdate(stored._id, 
             { erpId: stored.orderNumber, erpOrderNumber: stored.orderNumber, erpUpdated: false  },
             (err, raw) => {
 
-                /**
-                 * TODO: ERP INTEGRATION: Informar pedido a SalesForce
-                 */
                 Order.findById(stored._id)
                     .populate('address')
                     .populate('device')
@@ -332,9 +350,15 @@ function setOrderEnRuta(req, res) {
     const user = req.user
     const distributor = req.user.distributor
     const userName = req.user.name && req.user.surname ? req.user.name + ' ' +  req.user.surname : ''
-    
+    const history = {
+        user: req.user.sub,
+        userName: `${req.user.name} ${req.user.surname}`,
+        device: body.device,
+        date: moment(),
+        type: config.entitiesSettings.order.eventsHistory[2] // En ruta
+    }
     Order.update({ _id: { $in: orders }}, 
-        { status: config.entitiesSettings.order.status[2], device: deviceId, userName: userName }, 
+        { status: config.entitiesSettings.order.status[2], device: deviceId, userName: userName, $push: { history: history } }, 
         { multi: true })
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
@@ -363,7 +387,14 @@ function cancelOrder(req, res) {
                             done: false,
                             message: 'La orden no puede ser cancelada, pues ya fue entregado. Actualice el monitor'
                         })
-            const update = { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true }
+            const history = {
+                user: req.user.sub,
+                userName: `${req.user.name} ${req.user.surname}`,
+                device: found.device,
+                date: moment(),
+                type: config.entitiesSettings.order.eventsHistory[4] // Cancelación
+            }
+            const update = { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true, $push: { history: history } }
             Order.update({ _id: id}, update, (err, raw) => {
                 if(device) {
                     pushNotification.cancelOrder(device, id, found.orderNumber, 'YES')
@@ -386,7 +417,14 @@ function confirmCancel (req, res) {
     Order.findById(id, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
         // update
-        const update = { status: status[4], pendingConfirmCancel: false }
+        const history = {
+            user: req.user.sub,
+            userName: `${req.user.name} ${req.user.surname}`,
+            device: updated.device,
+            date: moment(),
+            type: config.entitiesSettings.order.eventsHistory[5] // Confirmación Cancelación
+        }
+        const update = { status: status[4], pendingConfirmCancel: false, $push: { history: history } }
         Order.update({_id: id}, update, (err, raw) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar ordenes', err})
       
@@ -409,12 +447,25 @@ function assignDeviceToOrder (req, res) {
     const vehicle = req.body.vehicle;
     const originWarehouse = req.body.originWarehouse
     const old = req.body.old;
+
+    const history = {
+        user: req.user.sub,
+        userName: `${req.user.name} ${req.user.surname}`,
+        device: device,
+        oldDevice: old ? old._id : null,
+        date: moment(),
+        type: old ? config.entitiesSettings.order.eventsHistory[8] : config.entitiesSettings.order.eventsHistory[1]  // Reasignacion / Asignación
+    }
     const update = {
         vehicle: vehicle, 
         status: config.entitiesSettings.order.status[1],
         device: device,
-        originWarehouse: originWarehouse
+        originWarehouse: originWarehouse,
+        $push: {
+            history: history
+        }
     }
+
     Order.findByIdAndUpdate(order, update,
     (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al actualizar orden', err})

@@ -39,6 +39,7 @@ module.exports = {
             types: ['ENVASADO', 'GRANEL'],
             status: ['RECIBIDO', 'ASIGNADO', 'EN RUTA', 'ENTREGADO', 'CANCELADO'],
             reasons: ['RAZON 1','RAZON 2','RAZON 3'],
+            eventsHistory: ['CREACIÓN', 'ASIGNACIÓN', 'EN RUTA', 'ENTREGA', 'CANCELACIÓN', 'CONFIRMACIÓN CANCELACIÓN','NO ENTREGA', 'INFORMADO', 'REASIGNACIÓN'],
             maxProductTypesForOrder: 4,
             delayCommitted: {
                 value: 1,

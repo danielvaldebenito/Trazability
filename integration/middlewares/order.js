@@ -1,13 +1,15 @@
 'use strict'
 
-var mongoose = require('mongoose')
-var Warehouse = require('../../models/warehouse')
-var Address = require('../../models/address')
-var Vehicle = require ('../../models/vehicle')
-var Client = require('../../models/client')
-var ProductType = require('../../models/productType')
-var config = require ('../../config')
-var NodeGeocoder = require('node-geocoder')
+const mongoose = require('mongoose')
+const Warehouse = require('../../models/warehouse')
+const Address = require('../../models/address')
+const Vehicle = require ('../../models/vehicle')
+const Client = require('../../models/client')
+const ProductType = require('../../models/productType')
+const config = require ('../../config')
+const NodeGeocoder = require('node-geocoder')
+const Device = require('../../models/device')
+const Distributor = require('../../models/distributor')
 var options = {
     provider: 'google',
     httpAdapter: 'https',
@@ -47,7 +49,6 @@ var getVehicleFromLicensePlate = function (req, res, next) {
                 .exec((err, vehicle) => {
                     if(vehicle) {
                         req.body.vehicle = vehicle._id
-                        req.body.distributor = vehicle.distributor
                         req.body.originWarehouse = vehicle.warehouse
                     }
                     next()
@@ -65,8 +66,30 @@ var firstValidate = function (req, res, next) {
     }
     next()
 }
+const getDeviceFromPos = function (req, res, next) {
+    let params = req.body
+    if (!params.pos) return next();
+    Device.findOne({ pos: params.pos }, (err, device) => {
+        if(err) return res.status(500).send({ done: false, message: 'Error al buscar pos'})
+        if(!device) return next();
+        req.body.device = device._id
+        return next();
+    })    
+}
+const getDistributorByNit = function (req, res, next) {
+    let params = req.body
+    if(!params.distributorNit) return next();
+    Distributor.findOne({ nit: params.distributorNit}, (err, distributor) => {
+        if(err) return res.status(500).send({ done: false, message: 'Error al buscar distribuidor', err})
+        if(!distributor) return next()
+        req.body.distributor = distributor._id
+        next();
+    })
+}
 module.exports = {
     firstValidate,
     getProductType,
-    getVehicleFromLicensePlate
+    getVehicleFromLicensePlate,
+    getDeviceFromPos,
+    getDistributorByNit
 }

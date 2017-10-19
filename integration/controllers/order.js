@@ -18,29 +18,51 @@ var pushNotification = require('../../services/push')
 
 
 function saveOrderFromErpIntegration (req, res) {
-    console.log('on save order', req.body)
+
     var order = new Order()
     var params = req.body
     order.erpId = params.salesforceId
     order.erpOrderNumber = params.orderNumber
     order.commitmentDate = moment(params.commitmentDate, "DD-MM-YYYY HH:mm:ss").isValid() ? moment(params.commitmentDate, "DD-MM-YYYY HH:mm:ss") : null;
-    order.type = params.type
+    order.type = params.type == 'Granel' ? 'GRANEL' : 'ENVASADO'
     order.phone = params.phone
     order.observation = params.observation
     order.payMethod = params.payMethod
-    order.client = params.clientId // From Middleware clientFromOrderByDevice
+    order.client = params.client // From Middleware clientFromOrderByDevice
     order.address = params.address  // From Middleware createAddressWarehouseForOrder
     order.vehicle = params.vehicle // From Middleware getVehicleFromLicensePlate
+    order.status = config.entitiesSettings.order.status[0];
     if(params.originWarehouse) {
         order.originWarehouse = params.originWarehouse; // From Middleware getWarehouseFromVehicle
-        order.status = 'ASIGNADO';
+        order.status = config.entitiesSettings.order.status[1]; // ASIGNADO
     }
     order.destinyWarehouse = params.destinyWarehouse // From Middleware createAddressWarehouseForOrder
     order.distributor = params.distributor // From Middleware getVehicleFromLicensePlate
     order.items = params.items
-
+    order.erpUpdated = true
+    order.device = params.device // TODO: Middleware from pos
+    order.userName = 'SALESFORCE'
+    const history = {
+        device: params.device,
+        date: moment(),
+        type: config.entitiesSettings.order.eventsHistory[0] // Creación
+    }
+    const histories = []
+    histories.push(history)
+    if(params.device) {
+        const history2 = {
+            device: params.device,
+            date: moment(),
+            type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+        }
+        histories.push(history2)
+    }
+    order.history = histories;
     order.save((err, stored) => {
-        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
+        if(err) { 
+            console.log('error', err); 
+            return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
+        }
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         
         if(params.vehicle){

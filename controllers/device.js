@@ -424,6 +424,12 @@ function getConfig(req, res) {
             })
     })
 }
+
+function getDevices(req, res) {
+    const filter = req.query.filter
+}
+
+
 module.exports = {
     pruebas,
     registerDevice,

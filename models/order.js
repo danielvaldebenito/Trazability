@@ -7,6 +7,7 @@ const autoIncrement = require('mongoose-auto-increment')
 const config = require('../config')
 const status = config.entitiesSettings.order.status;
 const types = config.entitiesSettings.order.types;
+const events = config.entitiesSettings.order.eventsHistory;
 const Schema = mongoose.Schema
 const urlConnection = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
 const connection = mongoose.createConnection(urlConnection)
@@ -32,7 +33,7 @@ const OrderSchema = Schema({
     }],
     orderNumber: Number,
     observation: String,
-    erpId: Number,
+    erpId: String,
     erpOrderNumber: Number,
     erpUpdated: Boolean,
     payMethod: String,
@@ -44,6 +45,14 @@ const OrderSchema = Schema({
     pendingDeviceReassign: { type: Schema.Types.ObjectId, ref: 'Device'},
     pendingVehicleReassign: { type: Schema.Types.ObjectId, ref: 'Vehicle'},
     pendingOWReassign: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
+    history: [{
+        user: { type: Schema.Types.ObjectId, ref: 'User'},
+        userName: String,
+        device: { type: Schema.Types.ObjectId, ref: 'Device'},
+        oldDevice: { type: Schema.Types.ObjectId, ref: 'Device'},
+        date: Date,
+        event: { type: String, enum: events }
+    }]
 })
 OrderSchema.plugin(timestamp)
 OrderSchema.plugin(autoIncrement.plugin, { 
