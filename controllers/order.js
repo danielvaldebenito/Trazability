@@ -261,7 +261,7 @@ function saveOne (req, res) {
                     .populate('address')
                     .populate('device')
                     .populate('client')
-                    .populate({ path: 'items', populate: { path: 'productType'}})
+                    .populate('items.productType')
                     .exec((err, populated) => {
                         if(err) return res.status(500).send({ done: false, message: 'Error al popular orden', err})
 

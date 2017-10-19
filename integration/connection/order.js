@@ -15,19 +15,19 @@ function createOrder(order, sessionId) {
             
             const args = {
                 clienteExiste: 'NO',
-                tipoCuenta: '',
+                tipoCuenta: 'Cuenta Empresas',
                 nombreCliente: order.client.name,
                 apellidosCliente: order.client.surname,
                 tipoDocumentoCta: order.client.nit,
                 noDocumento: 'Registrado',
-                idSalesforceCta: null,
-                direccionCta: order.address.location,
-                departamentoCta: order.address.region, // CAPS
-                ciudadCta: order.address.city, // caps
+                idSalesforceCta: null, // 0010x000002IS9y
+                direccionCta: order.address.location ? order.address.location.toUpperCase() : '',
+                departamentoCta: order.address.region ? order.address.region.toUpperCase() : '', // SIN TILDES
+                ciudadCta: order.address.city ? order.address.city.toUpperCase() : '', // SIN TILDES
                 TelefonoCta: order.client.phone,
-                noPedidoBO: order.orderNumber,
-                tipoPedido: order.type,
-                POS: order.device ? order.device.pos : '', // esn
+                noPedidoBO: order.orderNumber.toString(),
+                tipoPedido: order.type == 'ENVASADO' ? 'Cilindro Individual' : 'Granel',
+                POS: order.device ? order.device.esn : '', // esn * para pruebas usar pos006
                 placaVehiculo: order.vehicle ? order.vehicle.licensePlate : '',
                 Producto1: order.items[0].productType.code,
                 CantidadProducto1: order.items[0].quantity,
