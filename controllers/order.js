@@ -250,7 +250,7 @@ function saveOne (req, res) {
         userName: `${req.user.name} ${req.user.surname}`,
         device: params.device,
         date: moment(),
-        type: config.entitiesSettings.order.eventsHistory[0] // Creación
+        event: config.entitiesSettings.order.eventsHistory[0] // Creación
     }
     let histories = []
     histories.push(history)
@@ -261,7 +261,7 @@ function saveOne (req, res) {
             userName: `${req.user.name} ${req.user.surname}`,
             device: params.device,
             date: moment(),
-            type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+            event: config.entitiesSettings.order.eventsHistory[1] // Asignación
         }
         histories.push(history2)
     }
@@ -355,7 +355,7 @@ function setOrderEnRuta(req, res) {
         userName: `${req.user.name} ${req.user.surname}`,
         device: body.device,
         date: moment(),
-        type: config.entitiesSettings.order.eventsHistory[2] // En ruta
+        event: config.entitiesSettings.order.eventsHistory[2] // En ruta
     }
     Order.update({ _id: { $in: orders }}, 
         { status: config.entitiesSettings.order.status[2], device: deviceId, userName: userName, $push: { history: history } }, 
@@ -392,7 +392,7 @@ function cancelOrder(req, res) {
                 userName: `${req.user.name} ${req.user.surname}`,
                 device: found.device,
                 date: moment(),
-                type: config.entitiesSettings.order.eventsHistory[4] // Cancelación
+                event: config.entitiesSettings.order.eventsHistory[4] // Cancelación
             }
             const update = { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true, $push: { history: history } }
             Order.update({ _id: id}, update, (err, raw) => {
@@ -422,7 +422,7 @@ function confirmCancel (req, res) {
             userName: `${req.user.name} ${req.user.surname}`,
             device: updated.device,
             date: moment(),
-            type: config.entitiesSettings.order.eventsHistory[5] // Confirmación Cancelación
+            event: config.entitiesSettings.order.eventsHistory[5] // Confirmación Cancelación
         }
         const update = { status: status[4], pendingConfirmCancel: false, $push: { history: history } }
         Order.update({_id: id}, update, (err, raw) => {
@@ -454,7 +454,7 @@ function assignDeviceToOrder (req, res) {
         device: device,
         oldDevice: old ? old._id : null,
         date: moment(),
-        type: old ? config.entitiesSettings.order.eventsHistory[8] : config.entitiesSettings.order.eventsHistory[1]  // Reasignacion / Asignación
+        event: old ? config.entitiesSettings.order.eventsHistory[8] : config.entitiesSettings.order.eventsHistory[1]  // Reasignacion / Asignación
     }
     const update = {
         vehicle: vehicle, 

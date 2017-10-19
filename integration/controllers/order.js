@@ -45,7 +45,8 @@ function saveOrderFromErpIntegration (req, res) {
     const history = {
         device: params.device,
         date: moment(),
-        type: config.entitiesSettings.order.eventsHistory[0] // Creación
+        userName: 'SALESFORCE',
+        event: config.entitiesSettings.order.eventsHistory[0] // Creación
     }
     const histories = []
     histories.push(history)
@@ -53,7 +54,8 @@ function saveOrderFromErpIntegration (req, res) {
         const history2 = {
             device: params.device,
             date: moment(),
-            type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+            userName: 'SALESFORCE',
+            event: config.entitiesSettings.order.eventsHistory[1] // Asignación
         }
         histories.push(history2)
     }

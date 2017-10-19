@@ -112,7 +112,7 @@ function saveOneByDevice(req, res, next) {
             userName: `${req.user.name} ${req.user.surname}`,
             device: params.device,
             date: moment(),
-            type: config.entitiesSettings.order.eventsHistory[0] // Creación
+            event: config.entitiesSettings.order.eventsHistory[0] // Creación
         }
         let histories = []
         histories.push(history)
@@ -123,7 +123,7 @@ function saveOneByDevice(req, res, next) {
                 userName: `${req.user.name} ${req.user.surname}`,
                 device: params.device,
                 date: moment(),
-                type: config.entitiesSettings.order.eventsHistory[1] // Asignación
+                event: config.entitiesSettings.order.eventsHistory[1] // Asignación
             }
             histories.push(history2)
         }
@@ -132,7 +132,7 @@ function saveOneByDevice(req, res, next) {
             device: params.device,
             userName: `${req.user.name} ${req.user.surname}`,
             date: moment(),
-            type: config.entitiesSettings.order.eventsHistory[4] // Entregado
+            event: config.entitiesSettings.order.eventsHistory[4] // Entregado
         }
         histories.push(history3)
         order.history = histories;
