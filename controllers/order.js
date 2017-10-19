@@ -67,6 +67,7 @@ function getAll(req, res) {
                 }
                 total = total - (old - records.length)
                 
+                
                 return res
                         .status(200)
                         .send({ 
