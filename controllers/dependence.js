@@ -19,6 +19,7 @@ function getAll(req, res) {
     Dependence
             .find( distributor ? { distributor : distributor } : {})
             .where ( filter ? { name: { $regex: filter, $options: 'i' } }: {})
+            .where({ virtual: { $ne: true }})
             .sort([[sidx, sord]])
             .populate({ path: 'distributor', model: Distributor, match: { _id: distributor } })
             .paginate(page, limit, (err, records, total) => {

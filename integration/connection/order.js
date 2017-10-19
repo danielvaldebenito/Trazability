@@ -52,7 +52,7 @@ function createOrder(order, sessionId) {
                 Importe: 0,
                 Observacion: 'Sin observaciones'
             }
-            
+            console.log('to salesforce',JSON.stringify(args))
             client.creaPedido_mtd(JSON.stringify(args), (created) => console.log('respuesta wsdl', created))
         });
 
