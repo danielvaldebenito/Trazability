@@ -102,7 +102,7 @@ function saveOne (req, res) {
             
             sale.items = params.itemsSale
             sale.retreats = params.retreats
-            sale.user = req.user._id
+            sale.user = req.user.sub
             sale.save((err, stored) => {
                 if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
                 if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

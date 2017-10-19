@@ -7,7 +7,9 @@ var types = config.entitiesSettings.transaction.types;
 var Schema = mongoose.Schema
 var TransactionSchema = Schema({
     type: { type: String, require: true, enum: types },
-    movements: [{ type: Schema.Types.ObjectId, ref: 'Movement'}]
+    movements: [{ type: Schema.Types.ObjectId, ref: 'Movement'}],
+    device: [{ type: Schema.Types.ObjectId, ref: 'Device'}],
+    user: [{ type: Schema.Types.ObjectId, ref: 'User'}]
 })
 TransactionSchema.plugin(timestamp)
 module.exports = mongoose.model('Transaction', TransactionSchema)

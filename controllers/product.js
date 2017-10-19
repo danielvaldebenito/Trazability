@@ -34,6 +34,9 @@ function getOneByNif (req, res) {
                         .sort([['createdAt', -1]])
                         .populate({
                             path: 'movement',
+                            options: {
+                                sort: { 'type': -1 }
+                            },
                             populate: [
                                 {
                                     path: 'transaction'
@@ -43,6 +46,7 @@ function getOneByNif (req, res) {
                                 }
                             ]
                         })
+                        
                         .limit(limit)
                         .exec((err, movs) => {
                             if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar los moviemientos del producto', err})
