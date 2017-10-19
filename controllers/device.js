@@ -338,7 +338,7 @@ function loginTrazability(req, res) {
                                                             data: {
                                                                 user: user,
                                                                 token: jwt.createToken(user),
-                                                                devStored,
+                                                                device: devStored,
                                                                 initialData: isSameDataKey ? {} : {
                                                                     initialDataKey: initialDataKeyConfig
                                                                 }
@@ -362,7 +362,7 @@ function loginTrazability(req, res) {
                                                             data: {
                                                                 user: user,
                                                                 token: jwt.createToken(user),
-                                                                updatedDevice: device,
+                                                                device: device,
                                                                 initialData: isSameDataKey ? {} : {
                                                                     initialDataKey: initialDataKeyConfig
                                                                 }
