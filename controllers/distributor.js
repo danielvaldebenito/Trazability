@@ -69,6 +69,9 @@ function saveOne (req, res) {
     distributor.contact = params.contact
     distributor.phone = params.phone
     distributor.image = params.image
+    distributor.address = params.address
+    distributor.city = params.city
+    distributor.region = params.region
     distributor.intern = false
     distributor.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })

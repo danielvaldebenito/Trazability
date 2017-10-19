@@ -16,7 +16,10 @@ const DistributorSchema = Schema({
     contact: String,
     phone: String,
     image: String,
-    intern: {type: Boolean, default: false}
+    intern: {type: Boolean, default: false},
+    address: String,
+    city: String,
+    region: String
 })
 DistributorSchema.plugin(timestamp)
 
