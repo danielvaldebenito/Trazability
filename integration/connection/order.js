@@ -52,8 +52,13 @@ function createOrder(order, sessionId) {
                 Importe: 0,
                 Observacion: 'Sin observaciones'
             }
-            console.log('to salesforce',JSON.stringify(args))
-            client.creaPedido_mtd(JSON.stringify(args), (created) => console.log('respuesta wsdl', created))
+            let list = [];
+            list.push(args)
+            const send = {
+                invoiceList: list
+            }
+            console.log('to salesforce', send)
+            client.creaPedido_mtd(JSON.stringify(send), (created) => console.log('respuesta wsdl', created))
         });
 
     });
