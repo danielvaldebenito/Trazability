@@ -79,7 +79,8 @@ function saveOne (req, res) {
             let del = new Delivery({
                 coordinates: delivery.coordinates,
                 done: delivery.done,
-                order: params.orderId
+                order: params.orderId,
+                reason: delivery.reason
             })
             del.save((e, deliveryStored) => {
                 if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })
@@ -111,7 +112,8 @@ function saveOne (req, res) {
                         coordinates: delivery.coordinates,
                         done: delivery.done,
                         order: params.orderId,
-                        sale: stored._id
+                        sale: stored._id,
+                        reason: delivery.reason
                     })
                     del.save((e, deliveryStored) => {
                         if(e) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar la entrega', error: e })

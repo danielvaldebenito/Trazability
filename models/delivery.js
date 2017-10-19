@@ -9,6 +9,7 @@ var DeliverySchema = Schema({
         lng: Number
     },
     done: { type: Boolean, require: true },
+    reason: String,
     image: String,
     order: { type: Schema.Types.ObjectId, ref: 'Order' },
     sale: { type: Schema.Types.ObjectId, ref: 'Sale' }

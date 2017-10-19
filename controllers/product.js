@@ -51,7 +51,6 @@ function getOneByNif (req, res) {
                             var promise = getWarehouseByType(stock.warehouse._id)
                             promise
                             .then(response => {
-                                console.log(response)
                                 res.status(200)
                                 .send({
                                     done: true, 

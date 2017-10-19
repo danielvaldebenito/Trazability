@@ -351,21 +351,31 @@ function setOrderEnRuta(req, res) {
 function cancelOrder(req, res) {
     const id = req.params.id
     
-    Order.findByIdAndUpdate(id,
-        { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true }, 
-        (err, updated) => {
-            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar orden', err})
-            const device = updated.device
-            if(device) {
-                pushNotification.cancelOrder(device, id, updated.orderNumber, 'YES')
-            }
-            pushSocket.send('orders', updated.distributor, 'change-state-order', id)
-            return res.status(200)
-                .send({
-                    done: true,
-                    message: 'OK',
-                    code: 0
-                })
+    Order.findById(id, 
+        (err, found) => {
+            if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al buscar orden', err})
+            const device = found.device
+            const status = found.status
+            if(status == config.entitiesSettings.order.status[3])
+                return res.status(200)
+                        .send({
+                            done: false,
+                            message: 'La orden no puede ser cancelada, pues ya fue entregado. Actualice el monitor'
+                        })
+            const update = { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true }
+            Order.update({ _id: id}, update, (err, raw) => {
+                if(device) {
+                    pushNotification.cancelOrder(device, id, found.orderNumber, 'YES')
+                }
+                pushSocket.send('orders', found.distributor, 'change-state-order', id)
+                return res.status(200)
+                    .send({
+                        done: true,
+                        message: 'OK',
+                        code: 0
+                    })
+            })
+            
     })
 }
 

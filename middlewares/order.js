@@ -26,23 +26,16 @@ const clientFromOrderByDevice = function (req, res, next) { // Client as json ob
                 console.log('cliente encontrado', found._id)
                 next()
             } else {
-                const address = {
-                    location: params.address.location,
-                    city: params.address.city,
-                    region: params.address.region
-                }
-                const addresses = []
-                addresses.push(address)
+
                 const newclient = new Client({
                     nit: client.nit,
                     name: client.name,
                     surname: client.surname,
-                    phone: client.phone,
+                    phone: req.body.phone,
                     email: client.email,
                     contact: client.name + ' ' + client.surname,
                     completeName: client.name + ' ' + client.surname,
-                    quick: true,
-                    addresses: addresses
+                    quick: true
                 })
                 newclient.save((err, stored) => {
                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al guardar cliente en middleware clientFromOrderByDevice', err })
