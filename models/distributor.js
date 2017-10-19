@@ -23,7 +23,7 @@ DistributorSchema.plugin(timestamp)
 DistributorSchema.post('save', (doc) => {
     // Create dependence
     let dependence = new Dependence({
-        name: 'Virtual Dependence ' + doc._id,
+        name: 'Virtual Dependence ' + doc.name,
         isPlant: false,
         distributor: doc._id,
         virtual: true

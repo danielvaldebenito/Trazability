@@ -2,6 +2,7 @@
 var Enumerable = require('linq')
 var pushService = require('../services/push')
 const pushSocket = require('../services/pushSocket')
+const productService = require('../services/product')
 var list = [
     {
         id: 1,
@@ -62,9 +63,22 @@ function testPushSocket(req, res) {
     pushSocket.send(namespace, room, tag, data)
     res.status(200).send('OK')
 }
+
+function testFormatNif (req, res) {
+    const nif = req.params.nif
+    const promise = productService.formatNif(nif)
+    promise.then(result => {
+        res.status(200).send(result)
+    })
+    promise.catch(err => { return res.status(500).send({ err }) })
+
+        
+}
+
 module.exports = {
     getList,
     getOne,
     testNotification,
-    testPushSocket
+    testPushSocket,
+    testFormatNif
 }

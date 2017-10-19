@@ -1,10 +1,11 @@
 'use strict'
 
-var mongoose = require('mongoose')
-var Movement = require('../models/movement')
-var MovementItem = require('../models/movementItem')
-var Product = require('../models/product')
-var createMovementItems = function(req, res, next) {
+const mongoose = require('mongoose')
+const Movement = require('../models/movement')
+const MovementItem = require('../models/movementItem')
+const Product = require('../models/product')
+const productService = require('../services/product')
+const createMovementItems = function(req, res, next) {
     
     var params = req.body
     if (!params.delivery.done) {
@@ -71,60 +72,71 @@ const createNormalMovementItems = function(req, res, next) {
     items.forEach((i, index) => {
         console.log('item' + index, i)
         let nif = i.nif
-        let product = {
-            nif: nif,
-            productType: i.productType,
-            createdByPda: true,
-            createdBy: req.user.username
-        }
-        Product.findOneAndUpdate({ nif: nif }, product, { upsert: true, new: true, projection: { _id: true }  }, (err, doc) => {
-            if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
-            
-            const id = doc._id
-            
-            const movementItem = new MovementItem ({
-                fill: i.fill,
-                active: i.active,
-                product: id,
-                movement: inputMovement || outputMovement,
-            })
+        
+        productService.formatNif(nif)
+            .then(formatted => {
+                let product = {
+                    nif: nif,
+                    productType: i.productType,
+                    createdByPda: true,
+                    createdBy: req.user.username,
+                    formatted: formatted
+                }
 
-            console.log('product: ', doc)
-            // Movimiento de entrada
-            Movement.findByIdAndUpdate(movementItem.movement, { $push: { "items": movementItem._id }}, (err, movement) => {
-                if(err) return res.status(500).send({ done: false, message: 'Error al actualizar movement', err})
-                movementItem.save((err, mi) => {
-                    if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
-                    count++;
-                    if(count == total) {
-                        next()
-                    } else {
-                        if(both) {
-                            const movementItem2 = new MovementItem ({
-                                fill: i.fill,
-                                active: i.active,
-                                product: id,
-                                movement: outputMovement,
-                            })
-                            // Movimiento de salida
-                            Movement.findByIdAndUpdate(movementItem2.movement, { $push: { "items": movementItem2._id }}, (err, movement) => {
-                                if(err) return res.status(500).send({ done: false, message: 'Error Buscar movimiento ' + movementItem.movement, err})
-                                movementItem2.save((err, mi) => {
-                                    if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
-                                    count++
-                                    if(count == total) {
-                                        next()
-                                    }
-                                })
-                                
-                            })
-                            
-                        } 
-                    }
+                Product.findOneAndUpdate({ nif: nif }, product, { upsert: true, new: true, projection: { _id: true }  }, (err, doc) => {
+                    if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                     
+                    const id = doc._id
+                    
+                    const movementItem = new MovementItem ({
+                        fill: i.fill,
+                        active: i.active,
+                        product: id,
+                        movement: inputMovement || outputMovement,
+                    })
+        
+                    console.log('product: ', doc)
+                    // Movimiento de entrada
+                    Movement.findByIdAndUpdate(movementItem.movement, { $push: { "items": movementItem._id }}, (err, movement) => {
+                        if(err) return res.status(500).send({ done: false, message: 'Error al actualizar movement', err})
+                        movementItem.save((err, mi) => {
+                            if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
+                            count++;
+                            if(count == total) {
+                                next()
+                            } else {
+                                if(both) {
+                                    const movementItem2 = new MovementItem ({
+                                        fill: i.fill,
+                                        active: i.active,
+                                        product: id,
+                                        movement: outputMovement,
+                                    })
+                                    // Movimiento de salida
+                                    Movement.findByIdAndUpdate(movementItem2.movement, { $push: { "items": movementItem2._id }}, (err, movement) => {
+                                        if(err) return res.status(500).send({ done: false, message: 'Error Buscar movimiento ' + movementItem.movement, err})
+                                        movementItem2.save((err, mi) => {
+                                            if(err) return res.status(500).send({ done: false, message: 'Error al guardar movimiento item', err})
+                                            count++
+                                            if(count == total) {
+                                                next()
+                                            }
+                                        })
+                                        
+                                    })
+                                    
+                                } 
+                            }
+                            
+                        })
+                    })
                 })
             })
-        })
+            .catch(error => { throw error })
+        
+        
+        
+        
     })    
 }
 const invertVariables = function (req, res, next) {

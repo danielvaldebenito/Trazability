@@ -138,8 +138,8 @@ function loginDevice(req, res) { // VENTA
                                 Vehicle.findByIdAndUpdate(vehicleId, { user: user._id })
                                     .exec((err, vehicle) => {
                                         if (err) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar el vehículo', error: err })
-                                        if (!vehicle) return res.status(404).send({ done: false, code: 1, message: 'No existe un vehículo con la placa ' + licensePlate })
-                                        if (vehicle.disabled) return res.status(404).send({ done: false, message: 'Vehículo se encuentra deshabilitado. Consulte con su administrador.', code: 1 })
+                                        if (!vehicle) return res.status(200).send({ done: false, code: 1, message: 'No existe un vehículo con la placa ' + licensePlate })
+                                        if (vehicle.disabled) return res.status(200).send({ done: false, message: 'Vehículo se encuentra deshabilitado. Consulte con su administrador.', code: 1 })
                                         Device.findOne({ esn: esn }, (err, device) => {
                                             if (err)
                                                 return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al buscar PDA', error: err })
@@ -155,7 +155,7 @@ function loginDevice(req, res) { // VENTA
                                                     if (!devStored) return res.status(404).send({ done: false, code: 1, data: null, message: 'Error al guardar PDA' })
 
                                                     User.findByIdAndUpdate(user._id, { device: devStored._id, vehicle: vehicle._id }, (err, raw) => {
-                                                        if (raw.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
+                                                        if (raw.disabled) return res.status(200).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
                                                         return res.status(200)
                                                             .send({
                                                                 done: false,
@@ -171,7 +171,7 @@ function loginDevice(req, res) { // VENTA
                                                     User.findByIdAndUpdate(user._id, update, (err, us) => {
                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuario', err })
 
-                                                        if (us.disabled) return res.status(404).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
+                                                        if (us.disabled) return res.status(200).send({ done: false, message: 'Usuario se encuentra deshabilitado. Consulte con su administrador.', code: -1 })
                                                         if (!device.pos) {
                                                             return res.status(200)
                                                                 .send({
@@ -288,7 +288,7 @@ function loginTrazability(req, res) {
                     .send({ done: false, data: null, code: -1, message: 'Error en la petición', error: err })
             } else {
                 if (!user) {
-                    res.status(200)
+                    return res.status(200)
                         .send({
                             done: true,
                             code: 2,
@@ -296,7 +296,7 @@ function loginTrazability(req, res) {
                             data: null
                         })
                 } else if(user.disabled) {
-                    res.status(200)
+                    return res.status(200)
                     .send({
                         done: true,
                         code: 2,
@@ -390,7 +390,7 @@ function loginTrazability(req, res) {
                                 }
                             })
                         } else {
-                            res.status(200)
+                            return res.status(200)
                                 .send({
                                     done: true,
                                     code: 1,
