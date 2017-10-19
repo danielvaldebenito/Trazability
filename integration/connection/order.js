@@ -57,7 +57,7 @@ function createOrder(order, sessionId) {
             const send = {
                 invoiceList: list
             }
-            console.log('to salesforce', send)
+            console.log('to salesforce', JSON.stringify(send))
             client.creaPedido_mtd(JSON.stringify(send), (created) => console.log('respuesta wsdl', created))
         });
 
