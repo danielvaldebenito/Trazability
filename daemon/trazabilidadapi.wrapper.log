@@ -69,3 +69,5 @@ Stacktrace:   en System.Management.ManagementScope._Clone(ManagementScope scope,
    en winsw.WrapperService.OnShutdown()
 2017-10-16 09:17:00 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2017-10-16 09:17:01 - Started 5748
+2017-10-20 10:47:13 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\Users\Daniel\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\Daniel\OneDrive\Pega\COMMZGATE\trazability\api\index.js --log "Trazabilidad-API wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2017-10-20 10:47:13 - Started 5868

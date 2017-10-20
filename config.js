@@ -30,10 +30,13 @@ module.exports = {
     entitiesSettings: {
         initialDataKey: 1,
         document: {
-            types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA', 'COMODATO']
+            types: ['FACTURA', 'GUÍA DE DESPACHO', 'ORDEN DE COMPRA', 'COMODATO', 'TCO']
         },
         inventoryAdjustment: {
             reasons: ['MOTIVO 1', 'MOTIVO 2']
+        },
+        maintenance: {
+            reasons: ['RAZÓN A', 'RAZÓN B', 'RAZÓN C', 'RAZÓN D']
         },
         order: {
             types: ['ENVASADO', 'GRANEL'],

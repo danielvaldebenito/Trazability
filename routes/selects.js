@@ -26,4 +26,6 @@ api.get('/order-states', md_auth.ensureAuth, SelectController.getOrderStates)
 api.get('/pay-methods', md_auth.ensureAuth, SelectController.getPayMethods)
 /* Obtiene las pos de un distributor */
 api.get('/pos/:distributor', md_auth.ensureAuth, SelectController.getPos)
+/* Obtiene las razones para envio a mantención */
+api.get('/maintenance-reasons', md_auth.ensureAuth, SelectController.getReasonsMaintenance)
 module.exports = api;

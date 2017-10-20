@@ -194,6 +194,7 @@ const getOneFromOrder = function (req, res, next) {
                 Sale
                     .findById(delivery.sale)
                     .populate('items.productType')
+                    .populate('user')
                     .exec((err, sale) => {
                         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', code: -1, err})
 

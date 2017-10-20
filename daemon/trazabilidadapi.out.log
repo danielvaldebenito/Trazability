@@ -3838,3 +3838,24 @@ Servidor corriendo correctamente en el puerto 3548
         userUiSkin: 'Theme3' } } }
 [32minfo[39m: GET /api/product/a1a1a1a1a1a1 200 283.476 ms - 3438 body: {}
 
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: OPTIONS /api/test 200 5.631 ms - 8 body: {}
+
+[32minfo[39m: GET /api/test 304 2.279 ms - - body: {}
+
+[32minfo[39m: OPTIONS /api/devices?page=1&distributor=59cab75255d684c66bc30c1a 404 5.522 ms - 154 body: {}
+
+[32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548

@@ -225,6 +225,8 @@ const getInternalProcessWarehouse = function (req, res, next) {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar proceso interno en getInternalProcessWarehouse', err })
     
             if(!founds) return res.status(200).send({ done: false, message: 'No se ha encontrado proceso interno ' + internalProcess })
+            
+            if(!founds.length || founds.length == 0) return res.status(200).send({ done: false, message: 'No se encontró el proceso interno buscado'})
             const length = founds.length
             let count = 0
             founds.forEach(function(element) {
@@ -248,6 +250,7 @@ const getInternalProcessWarehouse = function (req, res, next) {
 const getWarehousesFromMovement = function (req, res, next) {
     const transactionType = req.body.transactionType
     const types = config.entitiesSettings.transaction.types
+    console.log('getwarehousesfrommovement', req.body)
     switch(transactionType)
     {
         case types[3]: // mantencion

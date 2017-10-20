@@ -340,7 +340,8 @@ function loginTrazability(req, res) {
                                                                 token: jwt.createToken(user),
                                                                 device: devStored,
                                                                 initialData: isSameDataKey ? {} : {
-                                                                    initialDataKey: initialDataKeyConfig
+                                                                    initialDataKey: initialDataKeyConfig,
+                                                                    maintenanceReasons: config.entitiesSettings.maintenance.reasons
                                                                 }
                                                             },
                                                             message: 'OK',
@@ -364,7 +365,8 @@ function loginTrazability(req, res) {
                                                                 token: jwt.createToken(user),
                                                                 device: device,
                                                                 initialData: isSameDataKey ? {} : {
-                                                                    initialDataKey: initialDataKeyConfig
+                                                                    initialDataKey: initialDataKeyConfig,
+                                                                    maintenanceReasons: config.entitiesSettings.maintenance.reasons
                                                                 }
                                                             },
                                                             message: 'OK'
@@ -376,16 +378,9 @@ function loginTrazability(req, res) {
                                 } else {
                                     return res.status(200)
                                         .send({
-                                            done: true,
-                                            code: 0,
-                                            message: 'OK',
-                                            data: {
-                                                user: user,
-                                                token: jwt.createToken(user),
-                                                initialData: isSameDataKey ? {} : {
-                                                    initialDataKey: initialDataKeyConfig
-                                                }
-                                            }
+                                            done: false,
+                                            code: 1,
+                                            message: 'No se recibió ESN',
                                         })
                                 }
                             })
@@ -427,8 +422,56 @@ function getConfig(req, res) {
 
 function getDevices(req, res) {
     const filter = req.query.filter
+    const distributor = req.query.distributor
+    const limit = req.query.limit || 200
+    const page = req.query.page || 1
+
+    Device.find()
+        .where(filter ? { 
+            $or: [
+                { esn: { $regex: filter, $options: 'i'} },
+                { pos: { $regex: filter, $options: 'i'} }
+            ]
+        } : {})
+        .sort([['pos', 1]])
+        .populate('user')
+        .paginate(page, limit, (err, records, total) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
+
+            return res
+                .status(200)
+                .send({ 
+                    done: true, 
+                    message: 'OK', 
+                    data: records, 
+                    total: total
+                })
+        })
+
 }
 
+function setPos(req, res) {
+    const deviceId = req.body.device
+    const pos = req.body.pos
+    Device.findById(deviceId, (err, device) => {
+        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar device', err})
+        if(!device) return res.status(404).send({ done: false, message: 'No existe dispositivo'})
+        Device.findOne ({ 
+            _id: { $ne: device._id },
+            pos: pos
+         }, (err, dev) => {
+             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar otros devices', err})
+             if(dev) return res.status(200).send({ done: false, message: 'La POS ingresada está siendo ocupada para el dispositivo: ' + dev.esn})
+         
+             Device.update({ _id: device._id }, { pos: pos }, (err, ok) => {
+                 if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al establecer POS', err})
+                 if(!ok) return res.status(404).send({ done: false, message: '¡Ocurrió algo inesperado!'})
+                 return res.status(200)
+                        .send({ done: true, message: 'POS establecida correctamente'})
+             })
+        })
+    })
+}
 
 module.exports = {
     pruebas,
@@ -436,5 +479,7 @@ module.exports = {
     loginDevice,
     loginTrazability,
     logout,
-    getConfig
+    getConfig,
+    getDevices,
+    setPos
 }

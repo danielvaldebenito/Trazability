@@ -1,17 +1,18 @@
 'use strict'
-var express = require('express')
-var MovementController = require('../controllers/movement')
-var md_auth = require('../middlewares/authenticated')
-var md_transaction = require('../middlewares/transaction')
-var md_movement = require('../middlewares/movement')
-var md_movementItem = require('../middlewares/movementItem')
-var md_wh = require('../middlewares/warehouse')
-var api = express.Router()
-
+const express = require('express')
+const MovementController = require('../controllers/movement')
+const md_auth = require('../middlewares/authenticated')
+const md_transaction = require('../middlewares/transaction')
+const md_movement = require('../middlewares/movement')
+const md_movementItem = require('../middlewares/movementItem')
+const md_wh = require('../middlewares/warehouse')
+const md_document = require('../middlewares/document')
+const api = express.Router()
 
 api.post('/movement/', 
     [
          md_auth.ensureAuth,
+         md_document.createDocument,
          md_wh.getWarehousesFromMovement,
          md_wh.getVehicleWarehouse,
          md_wh.getInternalProcessWarehouse,

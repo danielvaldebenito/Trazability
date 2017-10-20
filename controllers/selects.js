@@ -43,8 +43,7 @@ function initialDataToDevice(req, res) {
             )
     
 }
-function getPayMethods(req, res)
-{
+function getPayMethods(req, res){
     var paymentMethods = config.entitiesSettings.sale.paymentMethods;
     
         return res
@@ -205,6 +204,10 @@ function getPos(req, res) {
             return res.status(200).send({ done: true, message: 'OK', data: pos, type })
         })
 }
+function getReasonsMaintenance(req, res) {
+    const reasons = config.entitiesSettings.maintenance.reasons;
+    return res.status(200).send({done: true, data: reasons })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -217,6 +220,6 @@ module.exports = {
     getUsersFromRol,
     getOrderStates,
     getPayMethods,
-    getPos
-
+    getPos,
+    getReasonsMaintenance
 }
