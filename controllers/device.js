@@ -434,7 +434,11 @@ function getDevices(req, res) {
             ]
         } : {})
         .sort([['pos', 1]])
-        .populate('user')
+        .populate({ 
+            path: 'user', 
+            populate: { 
+                path: 'distributor'
+            }})
         .paginate(page, limit, (err, records, total) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
 

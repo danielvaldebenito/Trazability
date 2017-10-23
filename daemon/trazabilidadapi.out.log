@@ -3859,3 +3859,10 @@ La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabili
   user: 'unigas',
   password: '09v9085a' }
 Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
