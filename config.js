@@ -36,7 +36,7 @@ module.exports = {
             reasons: ['MOTIVO 1', 'MOTIVO 2']
         },
         maintenance: {
-            reasons: ['RAZÓN A', 'RAZÓN B', 'RAZÓN C', 'RAZÓN D']
+            reasons: ['EMBELLECIMIENTO', 'ESCAPE VÁLVULA', 'ESCAPE BRIDA', 'DAÑO VÁLVULA', 'BRIDA', 'ABOLLADURA', 'BASE', 'CUERPO', 'RETORNO OK']
         },
         order: {
             types: ['ENVASADO', 'GRANEL'],
