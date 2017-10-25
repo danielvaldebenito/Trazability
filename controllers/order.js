@@ -44,14 +44,15 @@ function getAll(req, res) {
                 } : {})
             .where(distributor ? { distributor: distributor } : {})
             .sort([['orderNumber', 1]])
-            //.populate('originWarehouse')
-            //.populate('destinyWarehouse')
             .populate({path:'items.productType', model: ProductType })
             .populate('distributor')
             .populate('client')
             .populate('address')
             .populate({ path: 'vehicle', populate: { path: 'user'}})
             .populate({ path: 'device', populate: { path: 'user'}})
+            .populate('history.device')
+            .populate('history.user')
+            .populate('history.oldDevice')
             .paginate(page, limit, (err, records, total) => {
                 if(err)
                     return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err})
@@ -76,7 +77,9 @@ function getAll(req, res) {
                             message: 'OK', 
                             data: records, 
                             total: total,
-                            code: 0
+                            code: 0,
+                            date1,
+                            date2
                         })
                     })
 }

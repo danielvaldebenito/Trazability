@@ -8,7 +8,7 @@ var port = process.env.PORT || 3548;
 var mongoConnectionUrl = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
 //var mongoConnectionUrl = 'mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad'
 
-mongoose.connect(mongoConnectionUrl, (err, res) => {
+mongoose.connect(mongoConnectionUrl, { useMongoClient: true }, (err, res) => {
     if(err) {
         console.log('error al conectarse a la base de datos', mongoConnectionUrl)
         throw err;

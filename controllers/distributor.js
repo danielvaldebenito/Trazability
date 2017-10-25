@@ -140,10 +140,19 @@ function deleteOne(req, res){
     })
 }
 
+function finishTutorial (req, res) {
+    const distributor = req.params.distributor
+    Distributor.findByIdAndUpdate(distributor, { tutorial: true }, (err, updated) => {
+        if(err) return res.status(500).send({ done: false, message: 'Error al finalizar tutorial'})
+        return res.status(200).send({ done: true, message: 'Iniciación finalizada correctamente' })
+    })
+}
+
 module.exports = {
     getAll,
     getOne,
     saveOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    finishTutorial
 }  

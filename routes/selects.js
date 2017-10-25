@@ -28,4 +28,6 @@ api.get('/pay-methods', md_auth.ensureAuth, SelectController.getPayMethods)
 api.get('/pos/:distributor', md_auth.ensureAuth, SelectController.getPos)
 /* Obtiene las razones para envio a mantención */
 api.get('/maintenance-reasons', md_auth.ensureAuth, SelectController.getReasonsMaintenance)
+/* Obtiene los tipos de transctions */
+api.get('/transaction-types', md_auth.ensureAuth, SelectController.getTransactionTypes)
 module.exports = api;

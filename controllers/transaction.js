@@ -1,6 +1,8 @@
 'use strict'
 
 const Transaction = require('../models/transaction')
+
+
 function getOne (req, res) {
     const id = req.params.id
     Transaction.findById(id)

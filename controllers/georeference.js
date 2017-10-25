@@ -58,6 +58,7 @@ function getForRequest(req, res) {
                         if(!distances) {
                             return res.status(404).send({ done: false, code: 3, message: 'Error al obtener los datos' })
                         }
+                        console.log(JSON.stringify(distances))
                         var minor = 999999999999;
                         var minorDistanceDevice;
                         var minorText = ''
@@ -69,6 +70,7 @@ function getForRequest(req, res) {
                                     if (distances.rows[0].elements[j].status == 'OK') {
                                         var mts = distances.rows[i].elements[j].distance.value;
                                         var text = distances.rows[i].elements[j].distance.text;
+                                        console.log('distancia ' + i, mts)
                                         if(minor > mts) {
                                             minor = mts;
                                             minorDistanceDevice = geos[i];
@@ -79,15 +81,15 @@ function getForRequest(req, res) {
                                     if(i == origins.length - 1 && j == destinations.length - 1) {
                                         
                                         if(minorDistanceDevice) {
-                                            Vehicle
-                                                .findById(minorDistanceDevice.vehicle)
-                                                .exec ((err, veh) => {
+                                            Device
+                                                .findById(minorDistanceDevice.device)
+                                                .exec ((err, dev) => {
                                                     return res
                                                     .status(200)
                                                     .send({ 
                                                         done: true, 
                                                         code: 0, 
-                                                        data: { minor, minorDistanceDevice, minorText, veh }, 
+                                                        data: { minor, minorDistanceDevice, minorText, dev }, 
                                                         message: 'OK' 
                                                     })
                                                 })
@@ -97,7 +99,7 @@ function getForRequest(req, res) {
                                                 .send({ 
                                                     done: true, 
                                                     code: 1, 
-                                                    message: 'No hay vehículos a menor distancia' 
+                                                    message: 'No hay dispositivos a menor distancia' 
                                                 })
                                         }
                                         

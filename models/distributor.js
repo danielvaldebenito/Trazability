@@ -19,7 +19,8 @@ const DistributorSchema = Schema({
     intern: {type: Boolean, default: false},
     address: String,
     city: String,
-    region: String
+    region: String,
+    tutorial: Boolean
 })
 DistributorSchema.plugin(timestamp)
 

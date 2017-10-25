@@ -208,6 +208,10 @@ function getReasonsMaintenance(req, res) {
     const reasons = config.entitiesSettings.maintenance.reasons;
     return res.status(200).send({done: true, data: reasons })
 }
+function getTransactionTypes (req, res) {
+    const tt = config.entitiesSettings.transaction.types;
+    return res.status(200).send({ done: true, data: tt })
+}
 module.exports = {
     getvehicleTypes,
     initialDataToDevice,
@@ -221,5 +225,6 @@ module.exports = {
     getOrderStates,
     getPayMethods,
     getPos,
-    getReasonsMaintenance
+    getReasonsMaintenance,
+    getTransactionTypes
 }

@@ -18,8 +18,8 @@ function createOrder(order, sessionId) {
                 tipoCuenta: 'Cuenta Empresas',
                 nombreCliente: order.client.name,
                 apellidosCliente: order.client.surname,
-                tipoDocumentoCta: order.client.nit,
-                noDocumento: 'Registrado',
+                tipoDocumentoCta: 'Cédula de ciudadanía',
+                noDocumento: order.client.nit,
                 idSalesforceCta: null, // 0010x000002IS9y
                 direccionCta: order.address.location ? order.address.location.toUpperCase() : '',
                 departamentoCta: order.address.region ? order.address.region.toUpperCase() : '', // SIN TILDES
@@ -57,9 +57,10 @@ function createOrder(order, sessionId) {
             const send = {
                 invoiceList: list
             }
-            console.log('to salesforce', JSON.stringify(send))
-            client.creaPedido_mtd(JSON.stringify(send), (created) => console.log('respuesta wsdl', created))
-        });
+            client.creaPedido_mtd({ strIdPedido: JSON.stringify(send)}, (err, respuesta) => {
+                console.log({err, respuesta})
+            });
+        }); 
 
     });
 
@@ -67,4 +68,11 @@ function createOrder(order, sessionId) {
 
 }
 
+function replaceTildes(str) {
+    str.replace('á', 'a')
+        .replace('é', 'e')
+        .replace('í', 'i')
+        .replace('ó', 'o')
+        .replace('ú', 'u')
+}
 module.exports = { createOrder }

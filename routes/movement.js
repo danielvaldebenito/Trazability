@@ -9,6 +9,7 @@ const md_wh = require('../middlewares/warehouse')
 const md_document = require('../middlewares/document')
 const api = express.Router()
 
+api.get('/movements', md_auth.ensureAuth, MovementController.getAll)
 api.post('/movement/', 
     [
          md_auth.ensureAuth,
