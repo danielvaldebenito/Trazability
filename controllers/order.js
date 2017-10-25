@@ -361,7 +361,13 @@ function setOrderEnRuta(req, res) {
         event: config.entitiesSettings.order.eventsHistory[2] // En ruta
     }
     Order.update({ _id: { $in: orders }}, 
-        { status: config.entitiesSettings.order.status[2], device: deviceId, userName: userName, $push: { history: history } }, 
+        { 
+            status: config.entitiesSettings.order.status[2], 
+            device: deviceId, 
+            userName: userName,
+            distributor: distributor._id, 
+            $push: { history: history } 
+        }, 
         { multi: true })
         .exec((err, raw) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })

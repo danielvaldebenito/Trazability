@@ -11,7 +11,6 @@ var api = express.Router()
 api.post('/order/', [ 
     md_auth.ensureAuth,
     md_order.firstValidate,
-    md_order.getDistributorByNit, 
     md_order1.clientFromOrderByDevice,
     md_order.getDeviceFromPos,
     md_geocoding.findCoordFromAddress,

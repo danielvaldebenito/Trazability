@@ -13,6 +13,7 @@ const TransferSchema = Schema({
     transaction: {type: Schema.Types.ObjectId, ref: 'Transaction' },
     stations: [
         {
+            transaction: {type: Schema.Types.ObjectId, ref: 'Transaction' },
             destinyDependence: {type: Schema.Types.ObjectId, ref: 'Dependence' },
             documents: [String],
             putUp: [{

@@ -11,6 +11,8 @@ const config = require('../config')
 const pushSocket = require('../services/pushSocket')
 const moment = require('moment')
 const pushNotification = require('../services/push')
+const orderIntegration = require('../integration/connection/order')
+const loginIntegration = require('../integration/connection/login')
 const clientFromOrderByDevice = function (req, res, next) { // Client as json object NO string id
     const params = req.body
 
@@ -117,7 +119,6 @@ function saveOneByDevice(req, res, next) {
         let histories = []
         histories.push(history)
         if(params.device) {
-            order.status = config.entitiesSettings.order.status[1];
             const history2 = {
                 user: req.user.sub,
                 userName: `${req.user.name} ${req.user.surname}`,
@@ -132,7 +133,7 @@ function saveOneByDevice(req, res, next) {
             device: params.device,
             userName: `${req.user.name} ${req.user.surname}`,
             date: moment(),
-            event: config.entitiesSettings.order.eventsHistory[4] // Entregado
+            event: config.entitiesSettings.order.eventsHistory[3] // Entregado
         }
         histories.push(history3)
         order.history = histories;
@@ -159,9 +160,7 @@ function saveOneByDevice(req, res, next) {
                                         console.log(result)
                                     })
                             });
-                            if (params.device) {
-                                pushNotification.newOrderAssigned(params.device, stored._id)
-                            }
+                            
                             pushSocket.send('orders', params.distributor, 'new-order', stored._id)
                             req.body.orderNumber = stored.orderNumber
                             req.body.orderId = stored._id

@@ -43,7 +43,8 @@ function saveStation (req, res) {
                 destinyDependence: req.body.destinationDependence,
                 documents: req.body.documents,
                 putUp: req.body.putUp,
-                putDown: req.body.putDown
+                putDown: req.body.putDown,
+                transaction: req.body.transaction
             }
             Transfer.update({ _id: transfer._id }, { $push: { stations: station } }, (err, raw) => {
                 if(err) return res.status(500).send({ done: false, message: 'Error al actualizar transferencia', err, code: -1})
