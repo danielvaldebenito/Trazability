@@ -24,7 +24,7 @@ function createOrder(order, sessionId) {
                 direccionCta: order.address.location ? order.address.location.toUpperCase() : '',
                 departamentoCta: order.address.region ? order.address.region.toUpperCase() : '', // SIN TILDES
                 ciudadCta: order.address.city ? order.address.city.toUpperCase() : '', // SIN TILDES
-                TelefonoCta: order.client.phone,
+                TelefonoCta: order.phone,
                 noPedidoBO: order.orderNumber.toString(),
                 tipoPedido: order.type == 'ENVASADO' ? 'Cilindro Individual' : 'Granel',
                 POS: order.device ? order.device.esn : '', // esn * para pruebas usar pos006
