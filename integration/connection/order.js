@@ -4,7 +4,8 @@ const soap = require('soap')
 var apiWSDL = __dirname + '/../wsdl/sfdcPartner.wsdl';
 const createOrderWsdl = __dirname + '/../wsdl/creaPedido_ws.wsdl'
 const loginService = require('../connection/login')
-
+const Order = require('../../models/order')
+const Client = require('../../models/client')
 function createOrder(order, sessionId) {
     const p = new Promise(function(resolve, reject) {
     
@@ -14,20 +15,20 @@ function createOrder(order, sessionId) {
             client.addSoapHeader(sHeader, '', 'tns', '')
             
             const args = {
-                clienteExiste: 'NO',
+                clienteExiste: order.client.erpId ? 'SÍ' : 'NO',
                 tipoCuenta: 'Cuenta Empresas',
                 nombreCliente: order.client.name,
                 apellidosCliente: order.client.surname,
                 tipoDocumentoCta: 'Cédula de ciudadanía',
                 noDocumento: order.client.nit,
-                idSalesforceCta: null, // 0010x000002IS9y
+                idSalesforceCta: order.client.erpId || null, // 0010x000002IS9y
                 direccionCta: order.address.location ? order.address.location.toUpperCase() : '',
                 departamentoCta: order.address.region ? order.address.region.toUpperCase() : '', // SIN TILDES
                 ciudadCta: order.address.city ? order.address.city.toUpperCase() : '', // SIN TILDES
                 TelefonoCta: order.phone,
                 noPedidoBO: order.orderNumber.toString(),
                 tipoPedido: order.type == 'ENVASADO' ? 'Cilindro Individual' : 'Granel',
-                POS: order.device ? order.device.esn : '', // esn * para pruebas usar pos006
+                POS: order.device ? order.device.pos : '', // esn * para pruebas usar pos006
                 placaVehiculo: order.vehicle ? order.vehicle.licensePlate : '',
                 Producto1: order.items[0].productType.code,
                 CantidadProducto1: order.items[0].quantity,
@@ -59,6 +60,38 @@ function createOrder(order, sessionId) {
             }
             client.creaPedido_mtd({ strIdPedido: JSON.stringify(send)}, (err, respuesta) => {
                 console.log({err, respuesta})
+
+                if(err) {
+                    reject(err)
+                } else {
+                    if(respuesta) {
+                        let result = respuesta.result;
+                        let jsonResult = JSON.parse(result);
+                        console.log(jsonResult)
+                        if(jsonResult.estadoTransaccion == 'Fallido') {
+                            reject('Fallido')
+                        } else if (jsonResult.estadoTransaccion == 'Exitoso') {
+                            const idClienteSF = jsonResult.idClienteSF
+                            const idPedidoSF = jsonResult.idPedidoSF
+                            const noPedidoSF = jsonResult.noPedidoSF
+                            let promise = updateOrderFromSalesForce(order._id, idPedidoSF, noPedidoSF)
+                            
+                            promise.then(() => {
+                                console.log('Pedido actualizado correctamente')
+                                if(idClienteSF) {
+                                    updateClientFromSalesForce(order.client._id, idClienteSF).then(() => {
+                                        resolve()
+                                    })
+                                } else {
+                                    resolve()
+                                }
+                                
+                            })
+                        } else {
+                            reject('Respuesta desconocida')
+                        }
+                    }
+                }
             });
         }); 
 
@@ -67,12 +100,38 @@ function createOrder(order, sessionId) {
     return p;
 
 }
-
+function updateOrderFromSalesForce (idOrder, idPedidoSF, noPedidoSF) {
+    return new Promise ((resolve, reject) =>  {
+        Order.findByIdAndUpdate(idOrder, 
+            { 
+                erpId: idPedidoSF,
+                erpOrderNumber: noPedidoSF,
+                erpUpdated: true
+            }, (err, done) => {
+                if(err) reject(err)
+                resolve()
+            })
+    })
+}
+function updateClientFromSalesForce(id, idsf) {
+    return new Promise((resolve, reject) => {
+        Client.findByIdAndUpdate(id, { erpId: idsf }, (err, client) => {
+            if(err) reject (err)
+            resolve()
+        })
+    })
+}
 function replaceTildes(str) {
-    str.replace('á', 'a')
-        .replace('é', 'e')
-        .replace('í', 'i')
-        .replace('ó', 'o')
-        .replace('ú', 'u')
+    return str.replace('á', 'a')
+            .replace('é', 'e')
+            .replace('í', 'i')
+            .replace('ó', 'o')
+            .replace('ú', 'u')
+            .replace('Á', 'A')
+            .replace('É', 'E')
+            .replace('Í', 'I')
+            .replace('Ó', 'O')
+            .replace('Ú', 'U')
+
 }
 module.exports = { createOrder }

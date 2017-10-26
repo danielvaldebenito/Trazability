@@ -26,7 +26,8 @@ var ClientSchema = Schema({
         location: String,
         city: String,
         region: String
-    }]
+    }],
+    erpId: String
 }, 
 {
     toObject: { virtuals: true },

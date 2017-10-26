@@ -34,7 +34,10 @@ function getAll (req, res) {
                 }
             },
             {
-                path: 'warehouse'
+                path: 'warehouse',
+                populate: {
+                    path: 'dependence'
+                }
             }]
             }, 
             {

@@ -13,6 +13,7 @@ api.post('/order/', [
     md_order.firstValidate,
     md_order1.clientFromOrderByDevice,
     md_order.getDeviceFromPos,
+    md_order.getDistributorByNit,
     md_geocoding.findCoordFromAddress,
     md_wh.createAddressWarehouseForOrder, 
     md_order.getVehicleFromLicensePlate,

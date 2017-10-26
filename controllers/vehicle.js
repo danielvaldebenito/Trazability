@@ -105,19 +105,7 @@ function updateOne(req, res) {
     Vehicle.findByIdAndUpdate(id, update, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
-        if(update.user) {
-            User.findByIdAndUpdate(update.user, { vehicle: updated._id }, (err, updatedUser) => {
-                if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar usuario seleccionado', error: err })
-            })
-            Vehicle.update(
-                { user: update.user, _id: { $ne: updated._id }}, 
-                { user: undefined }, 
-                { multi: true }, 
-                (err, raw) => {
-                    if(err) console.log(err)
-                    console.log('raw', raw)
-            })
-        }
+        
         return res
                 .status(200)
                 .send({ 

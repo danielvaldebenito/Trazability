@@ -37,7 +37,7 @@ function saveOrderFromErpIntegration (req, res) {
         order.status = config.entitiesSettings.order.status[1]; // ASIGNADO
     }
     order.destinyWarehouse = params.destinyWarehouse // From Middleware createAddressWarehouseForOrder
-    //order.distributor = params.distributor // From Middleware getVehicleFromLicensePlate
+    order.distributor = params.distributor // From Middleware getVehicleFromLicensePlate
     order.items = params.items
     order.erpUpdated = true
     order.device = params.device 

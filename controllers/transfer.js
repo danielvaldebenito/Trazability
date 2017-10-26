@@ -13,7 +13,8 @@ function saveOne (req, res) {
             licensePlate: licensePlate,
             vehicle: body.vehicleId,
             active: true,
-            documents: body.documents
+            documents: body.documents,
+            transaction: body.transaction
         })
     
         transfer.save((err, stored) => {

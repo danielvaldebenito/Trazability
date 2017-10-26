@@ -250,7 +250,6 @@ const getInternalProcessWarehouse = function (req, res, next) {
 const getWarehousesFromMovement = function (req, res, next) {
     const transactionType = req.body.transactionType
     const types = config.entitiesSettings.transaction.types
-    console.log('getwarehousesfrommovement', req.body)
     switch(transactionType)
     {
         case types[3]: // mantencion
