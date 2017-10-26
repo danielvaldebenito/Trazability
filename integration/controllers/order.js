@@ -31,9 +31,9 @@ function saveOrderFromErpIntegration (req, res) {
     order.client = params.client // From Middleware clientFromOrderByDevice
     order.address = params.address  // From Middleware createAddressWarehouseForOrder
     order.vehicle = params.vehicle // From Middleware getVehicleFromLicensePlate
+    order.originWarehouse = params.originWarehouse; // From Middleware getWarehouseFromVehicle
     order.status = config.entitiesSettings.order.status[0];
-    if(params.originWarehouse) {
-        order.originWarehouse = params.originWarehouse; // From Middleware getWarehouseFromVehicle
+    if(params.device) {
         order.status = config.entitiesSettings.order.status[1]; // ASIGNADO
     }
     order.destinyWarehouse = params.destinyWarehouse // From Middleware createAddressWarehouseForOrder
