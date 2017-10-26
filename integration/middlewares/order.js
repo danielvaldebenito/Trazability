@@ -33,7 +33,7 @@ var getProductType = function (req, res, next) {
                             req.body.items[index].productType = pt._id
                             total--
                             if(total == 0) {
-                                next()
+                                return next()
                             }
                         })
         }, this);
