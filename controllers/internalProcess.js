@@ -158,14 +158,17 @@ function updateOne(req, res) {
             InternalProcess.findByIdAndUpdate(id, update, (err, updated) => {
                 if (err) return res.status(500).send({ done: false, message: 'Error en la petición' })
                 if (!updated) return res.status(404).send({ done: false, message: 'No se pudo actualizar el registro' })
-                
-                return res
+                Warehouse.findByIdAndUpdate(updated.warehouse, { name: update.name }, (err, wh) => {
+                    if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+                    return res
                     .status(200)
                     .send({
                         done: true,
                         message: 'OK',
                         updated
                     })
+                })
+                
             })
         }
     })

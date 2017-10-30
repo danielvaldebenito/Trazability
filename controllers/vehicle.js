@@ -106,14 +106,19 @@ function updateOne(req, res) {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
         
-        return res
-                .status(200)
-                .send({ 
-                    done: true, 
-                    message: 'Registro editado exitosamente', 
-                    data: updated,
-                    code: 0
-                })
+        Warehouse.findByIdAndUpdate(updated.warehouse, { name: update.licensePlate }, (err, wh) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+
+            return res
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'Registro editado exitosamente', 
+                data: updated,
+                code: 0
+            })
+        })
+        
     })
 }
 function deleteOne(req, res){
