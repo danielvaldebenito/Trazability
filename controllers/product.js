@@ -143,7 +143,8 @@ function getAllProductsFormat (req, res) {
     })
     .exec((err, products) => {
         const data = products.map((product, index) => {
-            return product.formatted + '|' + product.productType.code
+            let pt = product.productType
+            return product.formatted + '|' + (pt ? pt.code : '') 
         })
         let date = new Date()
         let day = date.getDate()
