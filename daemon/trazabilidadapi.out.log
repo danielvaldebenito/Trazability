@@ -3881,3 +3881,22 @@ La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabili
   password: '09v9085a' }
 Servidor corriendo correctamente en el puerto 3548
 [32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: OPTIONS /api/test 200 11.895 ms - 8 body: {}
+
+[32minfo[39m: GET /api/test 200 2.297 ms - 61 body: {}
+
+[32minfo[39m: OPTIONS /api/test 200 87.031 ms - 8 body: {}
+
+[32minfo[39m: GET /api/test 304 2.025 ms - - body: {}
+
+[32minfo[39m: POST /api/product-exists/1-1-2-1 404 2.547 ms - 166 body: {"transactionType":"MANTENCIÓN","items":[{"nif":"11-111111-123456"}],"device":"59e0d4a970f0ac2ba0bde18d","originLocation":"59d7e938f4ae8914c0eeff17","destinationLocation":"59cbcd113d2a9c15e4d44233","folio":"654654","typeDocument":"TCO","reason":"RAZÓN A"}
+
+[32minfo[39m: GET /api/product-exists/1-1-2-1 404 0.916 ms - 165 body: {}
+
