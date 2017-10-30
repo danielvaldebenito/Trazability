@@ -146,24 +146,15 @@ function getAllProductsFormat (req, res) {
             let pt = product.productType
             return product.formatted + '|' + (pt ? pt.code : '') 
         })
-        let date = new Date()
-        let day = date.getDate()
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let today = day + '-' + month + '-' + year;
-        fs.writeFileSync('./uploads/products/products-' + today + '.json', JSON.stringify(data))
+
+        fs.writeFileSync('./uploads/products/products.json', JSON.stringify(data))
         return res.status(200).send({ done: true, message: 'OK, archivo escrito'})
     })
 
 }
 
 function getJsonProducts (req, res){
-    let date = new Date()
-    let day = date.getDate()
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let today = day + '-' + month + '-' + year;
-    const filePath = './uploads/products/products-' + today + '.json'
+    const filePath = './uploads/products/products.json'
     fs.exists(filePath, (exists) => {
         if(exists) {
             return res.sendFile(path.resolve(filePath))
