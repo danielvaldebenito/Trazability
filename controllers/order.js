@@ -373,6 +373,16 @@ function setOrderEnRuta(req, res) {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar', error: err, code: -1 })
             
             pushSocket.send('orders', distributor._id, 'change-state-order', orders)
+
+            /**TODO: Informar a Salesforce */
+            loginIntegration.login()
+                .then(sessionId => {
+                    Order.find({ _id: { $in: orders }}, (err, o) => {
+                        orderIntegration.changeState(o, sessionId)
+                            .then(result => console.log(result))
+                    })
+                })
+            
             return res.status(200)
                         .send({
                             done: true,

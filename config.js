@@ -41,7 +41,17 @@ module.exports = {
         order: {
             types: ['ENVASADO', 'GRANEL'],
             status: ['RECIBIDO', 'ASIGNADO', 'EN RUTA', 'ENTREGADO', 'CANCELADO'],
-            reasons: ['RAZON 1','RAZON 2','RAZON 3'],
+            reasons: ['Aún tiene suministro',
+                'Cilindro de otra compañía',
+                'Dirección errada',
+                'El usuario cancela pedido',
+                'El usuario no se encuentra',
+                'El usuario no tiene dinero',
+                'Pedido duplicado',
+                'Zona de difícil acceso',
+                'Gas Natural',
+                'Tanque o instalación no Aptos para suministro'
+            ],
             eventsHistory: ['CREACIÓN', 'ASIGNACIÓN', 'EN RUTA', 'ENTREGA', 'CANCELACIÓN', 'CONFIRMACIÓN CANCELACIÓN','NO ENTREGA', 'INFORMADO', 'REASIGNACIÓN'],
             maxProductTypesForOrder: 4,
             delayCommitted: {

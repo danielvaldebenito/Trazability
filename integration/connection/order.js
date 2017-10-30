@@ -3,6 +3,7 @@
 const soap = require('soap')
 var apiWSDL = __dirname + '/../wsdl/sfdcPartner.wsdl';
 const createOrderWsdl = __dirname + '/../wsdl/creaPedido_ws.wsdl'
+const changeStatus = __dirname + '/../wsdl/cambioEstadoPedido.wsdl'
 const loginService = require('../connection/login')
 const Order = require('../../models/order')
 const Client = require('../../models/client')
@@ -23,8 +24,8 @@ function createOrder(order, sessionId) {
                 noDocumento: order.client.nit,
                 idSalesforceCta: order.client.erpId || null, // 0010x000002IS9y
                 direccionCta: order.address.location ? order.address.location.toUpperCase() : '',
-                departamentoCta: order.address.region ? order.address.region.toUpperCase() : '', // SIN TILDES
-                ciudadCta: order.address.city ? order.address.city.toUpperCase() : '', // SIN TILDES
+                departamentoCta: order.address.region ? replaceTildes(order.address.region.toUpperCase()) : '', // SIN TILDES
+                ciudadCta: order.address.city ? replaceTildes(order.address.city.toUpperCase()) : '', // SIN TILDES
                 TelefonoCta: order.phone,
                 noPedidoBO: order.orderNumber.toString(),
                 tipoPedido: order.type == 'ENVASADO' ? 'Cilindro Individual' : 'Granel',
@@ -70,20 +71,19 @@ function createOrder(order, sessionId) {
                         console.log(jsonResult)
                         if(jsonResult.estadoTransaccion == 'Fallido') {
                             reject('Fallido')
-                        } else if (jsonResult.estadoTransaccion == 'Exitoso') {
+                        } else if (jsonResult.estadoTransaccion == 'Existoso') {
                             const idClienteSF = jsonResult.idClienteSF
                             const idPedidoSF = jsonResult.idPedidoSF
                             const noPedidoSF = jsonResult.noPedidoSF
                             let promise = updateOrderFromSalesForce(order._id, idPedidoSF, noPedidoSF)
                             
                             promise.then(() => {
-                                console.log('Pedido actualizado correctamente')
                                 if(idClienteSF) {
                                     updateClientFromSalesForce(order.client._id, idClienteSF).then(() => {
-                                        resolve()
+                                        resolve('Pedido y Cliente Actualizado')
                                     })
                                 } else {
-                                    resolve()
+                                    resolve('Pedido Actualizado')
                                 }
                                 
                             })
@@ -99,6 +99,25 @@ function createOrder(order, sessionId) {
 
     return p;
 
+}
+
+function changeState(order, sessionId) {
+    return new Promise ((resolve, reject) => {
+        soap.createClient(changeStatus, (err, client) => {
+            if(err) reject(err)
+            const sHeader = { SessionHeader: { sessionId: sessionId }};
+            client.addSoapHeader(sHeader, '', 'tns', '')
+            // {"invoiceList":[{"idSalesforce":"0060x000001reYN","noPedido":"151486","Estado":"Notificado al Conductor"}]}
+            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: 'Notificado al Conductor' };
+            let array = []
+            array.push(args)
+            let send = { invoiceList: send }
+            client.cambioEtapaPedido_mtd(JSON.stringify(send), (err, ok) => {
+                if(err) reject(err)
+                resolve(ok)
+            })
+        })
+    })
 }
 function updateOrderFromSalesForce (idOrder, idPedidoSF, noPedidoSF) {
     return new Promise ((resolve, reject) =>  {
@@ -134,4 +153,4 @@ function replaceTildes(str) {
             .replace('Ú', 'U')
 
 }
-module.exports = { createOrder }
+module.exports = { createOrder, changeState }

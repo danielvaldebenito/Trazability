@@ -157,6 +157,8 @@ function getJsonProducts (req, res){
     const filePath = './uploads/products/products.json'
     fs.exists(filePath, (exists) => {
         if(exists) {
+            res.setHeader('Content-disposition', 'attachment; filename= products.json');
+            res.setHeader('Content-type', 'application/json');
             return res.sendFile(path.resolve(filePath))
         } else {
             return res.status(400).send({message: 'Archivo no existe'})
