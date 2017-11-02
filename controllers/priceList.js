@@ -8,13 +8,14 @@ var PriceList = require('../models/priceList')
 var Price = require('../models/price')
 var ProductType = require('../models/productType');
 function getAll(req, res) {
-    var page = parseInt(req.query.page) || 1
-    var limit = parseInt(req.query.limit) || 200
-    var sidx = req.query.sidx || '_id'
-    var sord = req.query.sord || 1
-    var distributor = req.params.distributor
-
-    PriceList.find({ distributor: distributor })
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 200
+    const sidx = req.query.sidx || '_id'
+    const sord = req.query.sord || 1
+    //const distributor = req.params.distributor
+    const city = req.query.city
+    const region = req.query.region
+    PriceList.find(region ? city ? { city: city, region: region }: { region: region }: {})
             .sort([[sidx, sord]])
             .populate('items.productType')
             .paginate(page, limit, (err, records, total) => {
@@ -57,10 +58,11 @@ function getOne (req, res) {
 }
 function saveOne (req, res) {
 
-    var priceList = new PriceList()
-    var params = req.body
+    let priceList = new PriceList()
+    const params = req.body
     priceList.name = params.name
-    priceList.distributor = params.distributor
+    priceList.region = params.region
+    priceList.city = params.city
     priceList.items = params.items
     
     priceList.save((err, stored) => {
@@ -79,8 +81,8 @@ function saveOne (req, res) {
     })
 }
 function updateOne(req, res) {
-    var id = req.params.id
-    var update = req.body
+    const id = req.params.id
+    const update = req.body
     PriceList.findByIdAndUpdate(id, update, (err, updated) => {
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error en la petición', error: err})
         if(!updated) return res.status(404).send({ done: false, code: 1, message: 'No se pudo actualizar el registro'})
@@ -101,24 +103,14 @@ function deleteOne(req, res){
         if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al eliminar el registro' })
         if(!deleted) return res.status(404).send({ done: false, code: 1, message: 'No se pudo eliminar el registro' })
         
-        Price.find({ priceList: deleted._id })
-            .remove((errr, deletedPrices) => {
-                if(errr) return res.status(500).send({ done: false, code:-1, message: 'Error al eliminar el item del registro' })
-                if(!deletedPrices) return res.status(404).send({ done: false, code: 1, message: 'No se pudo eliminar el item del registro' })
-                
-                return res
-                .status(200)
-                .send({ 
-                    done: true, 
-                    message: 'Registro eliminado', 
-                    deleted,
-                    code: 0
-                })
-
-            })
-        
-
-        
+        return res
+        .status(200)
+        .send({ 
+            done: true, 
+            message: 'Registro eliminado', 
+            deleted,
+            code: 0
+        })
     })
 }
 

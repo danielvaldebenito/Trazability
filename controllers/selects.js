@@ -110,8 +110,9 @@ function getDependences (req, res) {
         })
 }
 function getPriceLists (req, res) {
-    var distributor = req.params.distributor;
-    PriceList.find(distributor ? { distributor: distributor } : {})
+    //var distributor = req.params.distributor;
+    var city = req.params.city
+    PriceList.find(city ? { city: city } : {})
         .exec((err, pls) => {
             if (err) return res.status(500).send ({ done: false, code: -1, message: 'Error al obtener lista de precio', err: err});
             if(!pls) return res.status(404).send ({ done: false, code: 1, message: 'Error. No se pudo encontrar registros'})

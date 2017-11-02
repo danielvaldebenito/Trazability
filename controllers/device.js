@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const bcrypt = require('bcrypt-nodejs')
 const User = require('../models/user')
+const Distributor = require('../models/distributor')
 const Device = require('../models/device')
 const Order = require('../models/order')
 const Vehicle = require('../models/vehicle')
@@ -187,40 +188,49 @@ function loginDevice(req, res) { // VENTA
                                                                     User.update({ device: dev._id, _id: { $ne: us._id } }, { device: null, vehicle: null }, { multi: true }, (err, ok) => {
                                                                         if (err) return res.status(500).send({ done: false, code: -1, message: 'Error al actualizar usuarios con el mismo device', err })
 
-                                                                        PriceList.find({ distributor: user.distributor._id })
-                                                                            .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
-                                                                            .exec((err, priceLists) => {
-                                                                                if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
-                                                                                ProductType
-                                                                                    .find()
-                                                                                    .exec((err, pts) => {
-                                                                                        if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+                                                                        Distributor.findById(user.distributor._id, (err, dist) => {
+                                                                            if(err) return res.status(500).send({ done: false, message: 'No existe distribuidor', err})
+                                                                            let cities = []
+                                                                            if(dist.deliveryLocations) {
+                                                                                cities = dist.deliveryLocations.map((c) => { return c.city });
+                                                                            }
 
-                                                                                        pushSocket.send('vehicles', user.distributor._id, 'login', device._id)
-                                                                                        return res.status(200)
-                                                                                            .send({
-                                                                                                done: true,
-                                                                                                code: 0,
-                                                                                                data: {
-                                                                                                    user: user,
-                                                                                                    token: jwt.createToken(user),
-                                                                                                    device: dev,
-                                                                                                    vehicle: vehicle,
-                                                                                                    initialData: isSameDataKey ? {} : {
-                                                                                                        reasons: config.entitiesSettings.order.reasons,
-                                                                                                        paymentMethods: config.entitiesSettings.sale.paymentMethods,
-                                                                                                        productTypes: pts,
-                                                                                                        initialDataKey: initialDataKeyConfig,
-                                                                                                        maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
+                                                                            PriceList.find({ city: { $in: cities } })
+                                                                                .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
+                                                                                .exec((err, priceLists) => {
+                                                                                    if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                                                    ProductType
+                                                                                        .find()
+                                                                                        .exec((err, pts) => {
+                                                                                            if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener tipos de producto', err })
+
+                                                                                            pushSocket.send('vehicles', user.distributor._id, 'login', device._id)
+                                                                                            return res.status(200)
+                                                                                                .send({
+                                                                                                    done: true,
+                                                                                                    code: 0,
+                                                                                                    data: {
+                                                                                                        user: user,
+                                                                                                        token: jwt.createToken(user),
+                                                                                                        device: dev,
+                                                                                                        vehicle: vehicle,
+                                                                                                        initialData: isSameDataKey ? {} : {
+                                                                                                            reasons: config.entitiesSettings.order.reasons,
+                                                                                                            paymentMethods: config.entitiesSettings.sale.paymentMethods,
+                                                                                                            productTypes: pts,
+                                                                                                            initialDataKey: initialDataKeyConfig,
+                                                                                                            maxProductTypesForOrder: config.entitiesSettings.order.maxProductTypesForOrder
+                                                                                                        },
+                                                                                                        priceLists: priceLists
                                                                                                     },
-                                                                                                    priceLists: priceLists
-                                                                                                },
-                                                                                                message: 'OK'
+                                                                                                    message: 'OK'
                                                                                             })
 
 
                                                                                     })
                                                                             })
+                                                                        })
+                                                                        
                                                                     })
 
                                                                 })

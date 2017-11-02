@@ -73,6 +73,7 @@ function saveOne (req, res) {
     distributor.city = params.city
     distributor.region = params.region
     distributor.intern = false
+    distributor.deliveryLocations = params.deliveryLocations
     distributor.save((err, stored) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error al guardar', error: err })
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })

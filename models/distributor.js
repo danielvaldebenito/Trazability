@@ -20,7 +20,13 @@ const DistributorSchema = Schema({
     address: String,
     city: String,
     region: String,
-    tutorial: Boolean
+    tutorial: Boolean,
+    deliveryLocations: [
+        {
+            region: String,
+            city: String
+        }
+    ]
 })
 DistributorSchema.plugin(timestamp)
 
