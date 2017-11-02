@@ -26,7 +26,7 @@ function getOneByNif (req, res) {
             
             Stock
                 .findOne({ product: product._id })
-                .populate('warehouse')
+                .populate({ path: 'warehouse', populate: { path: 'dependence' }})
                 .exec((err, stock) => {
                     if(err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al buscar stock del producto', err})
                     if(!stock) return res.status(404).send({ done: false, code: 1, message: 'El producto existe pero no se encuentra en ninguna bodega existente'})

@@ -146,11 +146,19 @@ function deleteOne(req, res){
                 })
     })
 }
-
+function getWarehousesOfOne (req, res) {
+    const dependence = req.params.id
+    Warehouse.find({ dependence: dependence })
+        .exec((err, warehouses) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+            return res.status(200).send({ done: true, message: 'OK', warehouses})
+        })
+}
 module.exports = {
     getAll,
     getOne,
     saveOne,
     updateOne,
-    deleteOne
+    deleteOne,
+    getWarehousesOfOne
 }  

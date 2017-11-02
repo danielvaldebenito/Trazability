@@ -3900,3 +3900,11 @@ Servidor corriendo correctamente en el puerto 3548
 
 [32minfo[39m: GET /api/product-exists/1-1-2-1 404 0.916 ms - 165 body: {}
 
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: Iniciando aplicación
