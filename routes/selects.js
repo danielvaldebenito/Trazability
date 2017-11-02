@@ -13,7 +13,7 @@ api.get('/vehicles/:distributor?', md_auth.ensureAuth, SelectController.getVehic
 /* Obtiene la totalidad de dependencias de un distribuidor */
 api.get('/dependences/:distributor?', md_auth.ensureAuth, SelectController.getDependences)
 /* Obtiene lista de precios */
-api.get('/pricelists/:city?', md_auth.ensureAuth, SelectController.getPriceLists)
+api.get('/pricelists/:distributor', md_auth.ensureAuth, SelectController.getPriceLists)
 /* Obtiene roles de usuario */
 api.get('/roles', md_auth.ensureAuth, SelectController.getRoles)
 /* Obtiene procesos internos de planta en el sistema */

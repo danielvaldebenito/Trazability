@@ -3,6 +3,7 @@ const config = require('../config');
 const fs = require('fs')
 const User = require('../models/user')
 const Device = require('../models/device')
+const Distributor = require('../models/distributor')
 const Vehicle = require('../models/vehicle')
 const Dependence = require('../models/dependence')
 const PriceList = require('../models/priceList')
@@ -110,14 +111,20 @@ function getDependences (req, res) {
         })
 }
 function getPriceLists (req, res) {
-    //var distributor = req.params.distributor;
-    var city = req.params.city
-    PriceList.find(city ? { city: city } : {})
-        .exec((err, pls) => {
-            if (err) return res.status(500).send ({ done: false, code: -1, message: 'Error al obtener lista de precio', err: err});
-            if(!pls) return res.status(404).send ({ done: false, code: 1, message: 'Error. No se pudo encontrar registros'})
-            
-            return res.status(200)
+    const distributor = req.params.distributor
+    Distributor.findById(distributor, (err, dist) => {
+        if(err) return res.status(500).send({ done: false, message: 'Error al obtener distributor', err})
+        const dl = dist.deliveryLocations
+        let cities = []
+        if(dl) {
+            cities = dl.map((item) => { return item.city })
+        }
+        PriceList.find({ city: { $in: cities }})
+            .exec((err, pls) => {
+                if (err) return res.status(500).send ({ done: false, code: -1, message: 'Error al obtener lista de precio', err: err});
+                if(!pls) return res.status(404).send ({ done: false, code: 1, message: 'Error. No se pudo encontrar registros'})
+                
+                return res.status(200)
                         .send({
                             done: true,
                             code: 0,
@@ -125,6 +132,8 @@ function getPriceLists (req, res) {
                             data: pls
                         })
         })
+    })
+    
 }
 function getRoles (req, res) {
     var roles = config.entitiesSettings.user.roles;
