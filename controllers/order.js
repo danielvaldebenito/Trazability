@@ -374,12 +374,13 @@ function setOrderEnRuta(req, res) {
             
             pushSocket.send('orders', distributor._id, 'change-state-order', orders)
 
-            /**TODO: Informar a Salesforce */
             loginIntegration.login()
                 .then(sessionId => {
                     Order.find({ _id: { $in: orders }}, (err, o) => {
-                        orderIntegration.changeState(o, sessionId)
-                            .then(result => console.log(result))
+                        if(o && o.erpUpdated) {
+                            orderIntegration.changeState(o, sessionId)
+                                .then(result => console.log(result))
+                        }
                     })
                 })
             

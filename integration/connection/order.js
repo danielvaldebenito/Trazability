@@ -111,7 +111,7 @@ function changeState(order, sessionId) {
             const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: 'Notificado al Conductor' };
             let array = []
             array.push(args)
-            let send = { invoiceList: send }
+            let send = { invoiceList: args }
             client.cambioEtapaPedido_mtd(JSON.stringify(send), (err, ok) => {
                 if(err) reject(err)
                 resolve(ok)
