@@ -174,19 +174,26 @@ function updateOne(req, res) {
     })
     
 }
+const User = require('../models/user')
 function deleteOne(req, res) {
     var id = req.params.id
     InternalProcess.findByIdAndRemove(id, (err, deleted) => {
         if (err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro' })
         if (!deleted) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
 
-        return res
+        User.update({ internalProcess: id }, { $pull: { internalProcess: id } }, { multi: true }, (err, raw) => {
+            if(err) return res.status(500).send({ done: false, message: 'Error al actualizar usuarios', err})
+            
+            return res
             .status(200)
             .send({
                 done: true,
                 message: 'Registro eliminado',
-                deleted
+                deleted,
+                raw
             })
+        })
+        
     })
 }
 
