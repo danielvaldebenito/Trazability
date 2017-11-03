@@ -114,7 +114,10 @@ function writeFileExcel(stock) {
             const outputMov = Enumerable.from(movitems)
                                 .where(w => { return w.movement.type == 'S'})
                                 .firstOrDefault();
+            let client = s.additional && s.additional.address && s.additional.address.client ? s.additional.address.client.name + ' ' + s.additional.address.client.surname  : ''
+            console.log('additional', s.additional)
             return { 
+                
                 nif: s.product.formatted || s.product.nif,
                 pos: inputMov && inputMov.movement && inputMov.movement.transaction && inputMov.movement.transaction.device ? inputMov.movement.transaction.device.pos : '',
                 date: inputMov && inputMov.movement ? inputMov.movement.createdAt : '',
@@ -122,7 +125,7 @@ function writeFileExcel(stock) {
                 origin: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
                 destinyType: s.warehouse ? s.warehouse.type : '',
                 destiny: s.warehouse ? s.warehouse.name : '',
-                client: s.additional && s.additional.address && s.additional.address.client ? s.additional.address.client.name + ' ' + s.additional.address.client.surname  : ''
+                client: client
             } 
         })
         worksheet.addRows(rows);
