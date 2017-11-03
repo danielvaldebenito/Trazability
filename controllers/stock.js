@@ -102,7 +102,8 @@ function writeFileExcel(stock) {
             { header: 'Origen', key: 'origin', width: 30 },
             { header: 'Tipo Destino', key: 'destinyType', width: 30 },
             { header: 'Destino (Actual)', key: 'destiny', width: 30},
-            { header: 'Cliente', key: 'client', width: 50 }
+            { header: 'NIT Cliente', key: 'clientNit', width: 50 },
+            { header: 'Nombre Cliente', key: 'clientName', width: 50 }
         ];
         
         let rows = stock.map((s) => { 
@@ -114,8 +115,8 @@ function writeFileExcel(stock) {
             const outputMov = Enumerable.from(movitems)
                                 .where(w => { return w.movement.type == 'S'})
                                 .firstOrDefault();
-            let client = s.additional && s.additional.address && s.additional.address.client ? s.additional.address.client.name + ' ' + s.additional.address.client.surname  : ''
-            console.log('additional', s.additional)
+            let client = s.additional && s.additional.address ? s.additional.address.client : null
+
             return { 
                 
                 nif: s.product.formatted || s.product.nif,
@@ -125,7 +126,8 @@ function writeFileExcel(stock) {
                 origin: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
                 destinyType: s.warehouse ? s.warehouse.type : '',
                 destiny: s.warehouse ? s.warehouse.name : '',
-                client: client
+                clientNit: client ? client.nit : '',
+                clientName: client ? client.name + ' ' + client.surname : ''
             } 
         })
         worksheet.addRows(rows);
