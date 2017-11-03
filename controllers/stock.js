@@ -183,13 +183,13 @@ function getAditionalData(warehouse) {
             const types = config.entitiesSettings.warehouse.types
             // types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACÉN', 'MERMAS', 'PROCESO_INTERNO']
             switch(type) {
-                case types[1]: // vehículo
+                case types[0]: // vehículo
                 Vehicle.findOne({ warehouse: warehouse}, (err, vehicle) => {
                     if(err) reject(err)
                     resolve({vehicle})
                 })
                 break;
-                case types[2]:
+                case types[1]:
                     Address
                         .find({warehouse: warehouse})
                         .populate('client')
@@ -198,13 +198,13 @@ function getAditionalData(warehouse) {
                             resolve({address})
                     })
                 break;
-                case types[3]: // store
+                case types[2]: // store
                     resolve(null);
                 break;
-                case types[4]: // mermas
+                case types[3]: // mermas
                     resolve(null)
                 break;
-                case types[5]: // proceso Interno
+                case types[4]: // proceso Interno
                     resolve(null); 
                 break;
                 default: resolve(null);
