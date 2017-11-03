@@ -192,7 +192,7 @@ function getAditionalData(warehouse) {
                 break;
                 case types[1]:
                     Address
-                        .find({warehouse: warehouse})
+                        .findOne({warehouse: warehouse})
                         .populate('client')
                         .exec((err, address) => {
                             if(err) reject(err)
