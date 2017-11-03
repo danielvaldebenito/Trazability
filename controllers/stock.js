@@ -10,6 +10,10 @@ const Excel = require('exceljs')
 const fs = require('fs')
 const path = require('path')
 const Enumerable = require('linq')
+const config = require('../config')
+const Vehicle = require('../models/vehicle')
+const Client = require('../models/client')
+const Address = require('../models/address')
 function getByNif(req, res) {
     const nif = req.params.nif
     Product.findOne({ nif: nif })
@@ -94,9 +98,11 @@ function writeFileExcel(stock) {
             { header: 'NIF', key: 'nif', width: 30 },
             { header: 'POS', key: 'pos', width: 30 },
             { header: 'Fecha', key: 'date', width: 30 },
+            { header: 'Tipo Origen', key: 'originType', width: 30 },
             { header: 'Origen', key: 'origin', width: 30 },
-            { header: 'Destino', key: 'destiny', width: 30},
-            //{ header: 'Test', key: 'test', width: 50 }
+            { header: 'Tipo Destino', key: 'destinyType', width: 30 },
+            { header: 'Destino (Actual)', key: 'destiny', width: 30},
+            { header: 'Test', key: 'test', width: 50 }
         ];
         
         let rows = stock.map((s) => { 
@@ -111,10 +117,12 @@ function writeFileExcel(stock) {
             return { 
                 nif: s.product.formatted || s.product.nif,
                 pos: inputMov && inputMov.movement && inputMov.movement.transaction && inputMov.movement.transaction.device ? inputMov.movement.transaction.device.pos : '',
-                date: inputMov && inputMov.movement  ? inputMov.movement.createdAt : '',
-                origin: inputMov && inputMov.movement && inputMov.movement.warehouse ? inputMov.movement.warehouse.name : '',
-                destiny: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
-                //test: JSON.stringify(inputMov)
+                date: inputMov && inputMov.movement ? inputMov.movement.createdAt : '',
+                originType: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.type : '',
+                origin: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
+                destinyType: s.warehouse ? s.warehouse.type : '',
+                destiny: s.warehouse ? s.warehouse.name : '',
+                test: JSON.stringify(s.additional)
             } 
         })
         // NIF  | POS QUE HIZO LA TRANSACCION | FECHA Y HORA | ORIGEN | DESTINO
@@ -146,16 +154,62 @@ function getDataToExport () {
                         getLastMovement(s.product._id)
                             .then(mov => {
                                 st.movs = mov
-                                sts.push(st)
-                                if(i == stock.length -1) {
-                                    resolve(sts)
-                                }
+                                getAditionalData(s.warehouse)
+                                .then(additional => {
+                                    st.additional = additional
+                                    sts.push(st)
+                                    if(i == stock.length -1) {
+                                        resolve(sts)
+                                    }
+                                })
                             }, reason => {
                                 console.log(reason)
                             })
                 }, this);
                 
             })
+    })
+}
+
+function getAditionalData(warehouse) {
+    return new Promise((resolve, reject) => {
+        if(!warehouse) {
+            resolve(null)
+        }
+        Warehouse.findById(warehouse._id, (err, wh) => {
+            if(err) reject(err)
+            if(!wh) reject('No existe bodega')
+            const type = wh.type
+            const types = config.entitiesSettings.warehouse.types
+            // types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACÉN', 'MERMAS', 'PROCESO_INTERNO']
+            switch(type) {
+                case types[1]: // vehículo
+                Vehicle.findOne({ warehouse: warehouse}, (err, vehicle) => {
+                    if(err) reject(err)
+                    resolve({vehicle})
+                })
+                break;
+                case types[2]:
+                    Address
+                        .find({warehouse: warehouse})
+                        .populate('client')
+                        .exec((err, address) => {
+                            if(err) reject(err)
+                            resolve({address})
+                    })
+                break;
+                case types[3]: // store
+                    resolve(null);
+                break;
+                case types[4]: // mermas
+                    resolve(null)
+                break;
+                case types[5]: // proceso Interno
+                    resolve(null); 
+                break;
+                default: resolve(null);
+            }
+        })
     })
 }
 function getLastMovement (product) {
