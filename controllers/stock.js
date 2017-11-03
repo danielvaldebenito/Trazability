@@ -102,7 +102,7 @@ function writeFileExcel(stock) {
             { header: 'Origen', key: 'origin', width: 30 },
             { header: 'Tipo Destino', key: 'destinyType', width: 30 },
             { header: 'Destino (Actual)', key: 'destiny', width: 30},
-            { header: 'Test', key: 'test', width: 50 }
+            { header: 'Cliente', key: 'client', width: 50 }
         ];
         
         let rows = stock.map((s) => { 
@@ -122,11 +122,9 @@ function writeFileExcel(stock) {
                 origin: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
                 destinyType: s.warehouse ? s.warehouse.type : '',
                 destiny: s.warehouse ? s.warehouse.name : '',
-                test: JSON.stringify(s.additional)
+                client: s.additional && s.additional.address && s.additional.address.client ? s.additional.address.client.name + ' ' + s.additional.address.client.surname  : ''
             } 
         })
-        // NIF  | POS QUE HIZO LA TRANSACCION | FECHA Y HORA | ORIGEN | DESTINO
-
         worksheet.addRows(rows);
 
         worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
