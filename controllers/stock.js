@@ -9,7 +9,7 @@ const MovementItem = require('../models/movementItem')
 const Excel = require('exceljs')
 const fs = require('fs')
 const path = require('path')
-
+const Enumerable = require('linq')
 function getByNif(req, res) {
     const nif = req.params.nif
     Product.findOne({ nif: nif })
@@ -93,18 +93,28 @@ function writeFileExcel(stock) {
         worksheet.columns = [
             { header: 'NIF', key: 'nif', width: 30 },
             { header: 'POS', key: 'pos', width: 30 },
-            { header: 'Fecha', key: 'date', width: 10 },
+            { header: 'Fecha', key: 'date', width: 30 },
             { header: 'Origen', key: 'origin', width: 30 },
-            { header: 'Destino', key: 'destiny', width: 30}
+            { header: 'Destino', key: 'destiny', width: 30},
+            //{ header: 'Test', key: 'test', width: 50 }
         ];
         
         let rows = stock.map((s) => { 
+            let movitems = []
+            movitems = s.movs;
+            const inputMov = Enumerable.from(movitems)
+                                .where(w => { return w.movement.type == 'E'})
+                                .firstOrDefault();
+            const outputMov = Enumerable.from(movitems)
+                                .where(w => { return w.movement.type == 'S'})
+                                .firstOrDefault();
             return { 
                 nif: s.product.formatted || s.product.nif,
-                pos: s.mov && s.mov.movement && s.mov.movement.transaction && s.mov.movement.transaction.device ? s.mov.movement.transaction.device.pos : '',
-                date: s.mov && s.mov.movement && s.mov.movement.transaction ? s.mov.movement.transaction.createdAt : '',
-                origin: s.mov && s.mov.movement && s.mov.movement.transaction ? s.mov.movement.warehouse.name : '',
-                destiny: s.mov && s.mov.movement && s.mov.movement.transaction ? s.mov.movement.warehouse.name : ''
+                pos: inputMov && inputMov.movement && inputMov.movement.transaction && inputMov.movement.transaction.device ? inputMov.movement.transaction.device.pos : '',
+                date: inputMov && inputMov.movement  ? inputMov.movement.createdAt : '',
+                origin: inputMov && inputMov.movement && inputMov.movement.warehouse ? inputMov.movement.warehouse.name : '',
+                destiny: outputMov && outputMov.movement && outputMov.movement.warehouse ? outputMov.movement.warehouse.name : '',
+                //test: JSON.stringify(inputMov)
             } 
         })
         // NIF  | POS QUE HIZO LA TRANSACCION | FECHA Y HORA | ORIGEN | DESTINO
@@ -135,7 +145,7 @@ function getDataToExport () {
                     if(s.product)
                         getLastMovement(s.product._id)
                             .then(mov => {
-                                st.mov = mov
+                                st.movs = mov
                                 sts.push(st)
                                 if(i == stock.length -1) {
                                     resolve(sts)
@@ -151,21 +161,23 @@ function getDataToExport () {
 function getLastMovement (product) {
     return new Promise ( ( resolve, reject ) => {
         MovementItem
-            .find({ product: product }, { }, { sort: { createdAt: -1 } })
-            .limit(2)
+            .find({ product: product })
             .populate({ 
                 path: 'movement', 
-                populate: { 
+                populate: [{ 
                     path: 'transaction',
                     populate: { 
                         path: 'device'
                     }
-                }
+                },{
+                    path: 'warehouse',
+                }]
             })
-            .exec((err, movement) => {
+            .sort([['createdAt', -1]])
+            .limit(2)
+            .exec((err, movements) => {
                 if(err) reject(err)
-                movement = movement.filter((m) => { return m.movement.type == 'E' })
-                resolve(movement)
+                resolve(movements)
             })
     })
 }
