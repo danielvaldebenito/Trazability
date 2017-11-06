@@ -93,17 +93,17 @@ function writeFileExcel(stock) {
             }
           ]
         let worksheet = workbook.addWorksheet('Productos')
-        worksheet.autoFilter = 'A1:E1';
+        worksheet.autoFilter = 'A1:I1';
         worksheet.columns = [
-            { header: 'NIF', key: 'nif', width: 30 },
-            { header: 'POS', key: 'pos', width: 30 },
-            { header: 'Fecha', key: 'date', width: 30 },
-            { header: 'Tipo Origen', key: 'originType', width: 30 },
-            { header: 'Origen', key: 'origin', width: 30 },
-            { header: 'Tipo Destino', key: 'destinyType', width: 30 },
-            { header: 'Destino (Actual)', key: 'destiny', width: 30},
-            { header: 'NIT Cliente', key: 'clientNit', width: 50 },
-            { header: 'Nombre Cliente', key: 'clientName', width: 50 }
+            { header: 'NIF', key: 'nif', width: 20 },
+            { header: 'POS', key: 'pos', width: 10 },
+            { header: 'Fecha', key: 'date', width: 10 },
+            { header: 'Tipo Origen', key: 'originType', width: 20 },
+            { header: 'Origen', key: 'origin', width: 40 },
+            { header: 'Tipo Destino', key: 'destinyType', width: 20 },
+            { header: 'Destino (Actual)', key: 'destiny', width: 40},
+            { header: 'NIT Cliente', key: 'clientNit', width: 40 },
+            { header: 'Nombre Cliente', key: 'clientName', width: 40 }
         ];
         
         let rows = stock.map((s) => { 
@@ -133,7 +133,7 @@ function writeFileExcel(stock) {
         worksheet.addRows(rows);
 
         worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
-            row.font = { name: 'Arial', family: 4, size: 12 }
+            row.font = { name: 'Arial', family: 4, size: 10 }
         })
         const random = Math.random().toString(36).slice(2);
         let filename = `EXPORT_${random}.xlsx`;
