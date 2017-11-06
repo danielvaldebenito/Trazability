@@ -14,37 +14,68 @@ function getAll(req, res) {
     const sidx = req.query.sidx || '_id'
     const sord = req.query.sord || 1
     const distributor = req.params.distributor
-    Distributor.findById(distributor, (err, dist) => {
-        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+    if(distributor) {
+        Distributor.findById(distributor, (err, dist) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
+    
+            let cities = []
+            if(dist.deliveryLocations) {
+                cities = dist.deliveryLocations.map((c) => { return c.city })
+            }
+            PriceList.find({ city: { $in: cities }})
+                .sort([[sidx, sord]])
+                .populate('items.productType')
+                .paginate(page, limit, (err, records, total) => {
+                    if (err)
+                        return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err })
+                    if (!records)
+                        return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
+    
+                    return res
+                        .status(200)
+                        .send({
+                            done: true,
+                            message: 'OK',
+                            data: records,
+                            total: total,
+                            code: 0
+                        })
+    
+    
+                })
+        })
+    } else {
+        const city = req.query.city
+        const region = req.query.region
+        PriceList.find(city && city != 'null' ? { city: city } : {})
+        .where(region && region != 'null' ? { region: region } : {})
+        .sort([[sidx, sord]])
+        .populate('items.productType')
+        .paginate(page, limit, (err, records, total) => {
+            if (err)
+                return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err })
+            if (!records)
+                return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
 
-        let cities = []
-        if(dist.deliveryLocations) {
-            cities = dist.deliveryLocations.map((c) => { return c.city })
-        }
-        PriceList.find({ city: { $in: cities }})
-            .sort([[sidx, sord]])
-            .populate('items.productType')
-            .paginate(page, limit, (err, records, total) => {
-                if (err)
-                    return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error', error: err })
-                if (!records)
-                    return res.status(400).send({ done: false, code: 1, message: 'Error al obtener los datos' })
-
-                return res
-                    .status(200)
-                    .send({
-                        done: true,
-                        message: 'OK',
-                        data: records,
-                        total: total,
-                        code: 0
-                    })
+            return res
+                .status(200)
+                .send({
+                    done: true,
+                    message: 'OK',
+                    data: records,
+                    total: total,
+                    code: 0
+                })
 
 
-            })
-    })
+        })
+    }
+    
 
 }
+
+
+
 function getOne(req, res) {
     var id = req.params.id
     PriceList
