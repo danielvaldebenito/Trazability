@@ -14,12 +14,16 @@ function login() {
             client.login(args, function(err, result) {
                 if(err) reject(err);
                 if(result) {
-                    const sessionId = result.result.sessionId
-                    config.integration.sessionId = sessionId
-                    const sHeader = { SessionHeader: { sessionId: sessionId }};
-                    client.addSoapHeader(sHeader, '', 'tns', '')
-                    console.log('sessionid', result.result.sessionId)
-                    resolve(result.result.sessionId)
+                    if(result.result) {
+                        const sessionId = result.result.sessionId
+                        config.integration.sessionId = sessionId
+                        const sHeader = { SessionHeader: { sessionId: sessionId }};
+                        client.addSoapHeader(sHeader, '', 'tns', '')
+                        resolve(result.result.sessionId)
+                    } else {
+                        reject('No hay resultados')
+                    }
+                    
                 } else {
                     reject('No hubo resultados')
                 }

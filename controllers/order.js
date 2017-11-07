@@ -291,7 +291,13 @@ function saveOne (req, res) {
                             orderIntegration.createOrder(populated, logued)
                                 .then(result => {
                                     console.log(result)
+                                },
+                                onrejected => {
+                                    console.log('ERROR Integración: ', onrejected)
                                 })
+                        },
+                        onrej => {
+                            console.log('Error Integración: ', onrej)
                         });
                         
                         
@@ -378,10 +384,12 @@ function setOrderEnRuta(req, res) {
                 .then(sessionId => {
                     Order.find({ _id: { $in: orders }}, (err, o) => {
                         if(o && o.erpUpdated) {
-                            orderIntegration.changeState(o, sessionId)
+                            orderIntegration.changeState(o, sessionId, config.entitiesSettings.order.statesErp[1]) // notificado al conductor
                                 .then(result => console.log(result))
                         }
                     })
+                }, onrejected => {
+                    console.log('ERROR Integración: ', onrejected)
                 })
             
             return res.status(200)
@@ -395,7 +403,7 @@ function setOrderEnRuta(req, res) {
 }
 function cancelOrder(req, res) {
     const id = req.params.id
-    
+    const reason = req.query.reason || ''
     Order.findById(id, 
         (err, found) => {
             if(err) return res.status(500).send({ done: false, code: -1, message: 'Error al buscar orden', err})
@@ -414,19 +422,32 @@ function cancelOrder(req, res) {
                 date: moment(),
                 event: config.entitiesSettings.order.eventsHistory[4] // Cancelación
             }
-            const update = { status: config.entitiesSettings.order.status[4], pendingConfirmCancel: true, $push: { history: history } }
+            const update = { 
+                status: config.entitiesSettings.order.status[4], 
+                pendingConfirmCancel: true, 
+                reasonCancel: reason,
+                $push: { history: history } 
+            }
             Order.update({ _id: id}, update, (err, raw) => {
                 if(device) {
                     pushNotification.cancelOrder(device, id, found.orderNumber, 'YES')
                 }
                 pushSocket.send('orders', found.distributor, 'change-state-order', id)
+
+                loginIntegration.login()
+                .then(sessionId => {
+                    orderIntegration.changeState(found, sessionId, config.entitiesSettings.order.statesErp[2], reason) // pedido cancelado
+                        .then(result => console.log(result))
+                        
+                    })
+                })
                 return res.status(200)
                     .send({
                         done: true,
                         message: 'OK',
                         code: 0
                     })
-            })
+        
             
     })
 }

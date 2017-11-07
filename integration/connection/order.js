@@ -59,6 +59,7 @@ function createOrder(order, sessionId) {
             const send = {
                 invoiceList: list
             }
+            console.log('send: ', JSON.stringify(send))
             client.creaPedido_mtd({ strIdPedido: JSON.stringify(send)}, (err, respuesta) => {
                 console.log({err, respuesta})
 
@@ -101,18 +102,21 @@ function createOrder(order, sessionId) {
 
 }
 
-function changeState(order, sessionId) {
+function changeState(order, sessionId, state, reason) {
     return new Promise ((resolve, reject) => {
+        if(!order.erpUpdated) {
+            reject('No se ha informado pedido')
+        }
         soap.createClient(changeStatus, (err, client) => {
             if(err) reject(err)
             const sHeader = { SessionHeader: { sessionId: sessionId }};
             client.addSoapHeader(sHeader, '', 'tns', '')
             // {"invoiceList":[{"idSalesforce":"0060x000001reYN","noPedido":"151486","Estado":"Notificado al Conductor"}]}
-            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: 'Notificado al Conductor' };
+            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: state, Razon: reason || ''};
             let array = []
             array.push(args)
-            let send = { invoiceList: args }
-            client.cambioEtapaPedido_mtd(JSON.stringify(send), (err, ok) => {
+            let send = { invoiceList: array }
+            client.cambioEtapaPedido_mtd({ strIdPedido: JSON.stringify(send) }, (err, ok) => {
                 if(err) reject(err)
                 resolve(ok)
             })
