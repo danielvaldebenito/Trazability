@@ -83,6 +83,33 @@ function saveOrderFromErpIntegration (req, res) {
     })
 }
 
+function changeOrderStateFromErpIntegration (req, res) {
+    const body = req.body
+    const state = body.state
+    const salesforceId = body.salesforceId
+    const reason = body.reason || null
+    Order.findOneAndUpdate({ erpId: salesforceId }, { status: state, reasonCancel: reason },(err, order) => {
+        if(err) { 
+            console.log('error', err); 
+            return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar pedido', error: err })
+        }
+        
+        if(state == config.entitiesSettings.order.status[4]){ // cancelado
+            pushNotification.cancelOrder(order.device, order._id)
+        }
+        
+        pushSocket.send('/orders', order.distributor, 'change-state-order', order._id)
+
+        return res
+            .status(200)
+            .send({ 
+                done: true, 
+                message: 'Registro actualizado exitosamente'
+            })
+    })
+}
+
 module.exports = {
-    saveOrderFromErpIntegration
+    saveOrderFromErpIntegration,
+    changeOrderStateFromErpIntegration
 }  

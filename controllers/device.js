@@ -199,6 +199,11 @@ function loginDevice(req, res) { // VENTA
                                                                                 .populate({ path: 'items.productType', select: ['_id', 'code', 'name'] })
                                                                                 .exec((err, priceLists) => {
                                                                                     if (err) return res.status(500).send({ done: false, code: -1, message: 'Ha ocurrido un error al obtener las listas de precio', err })
+                                                                                    
+                                                                                    if(!priceLists || !priceLists.length || priceLists.length == 0) {
+                                                                                        return res.status(200).send({ done: false, code: 1, message: 'Su distribuidor no tiene listas de precios asociadas. Consulte con su administrador' })
+                                                                                    }
+
                                                                                     ProductType
                                                                                         .find()
                                                                                         .exec((err, pts) => {

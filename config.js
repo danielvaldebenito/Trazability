@@ -52,6 +52,12 @@ module.exports = {
                 'Gas Natural',
                 'Tanque o instalación no Aptos para suministro'
             ],
+            statesErp: [
+                'Pendiente de programación',
+                'Notificado al Conductor',
+                'Pedido Cancelado',
+                'Cerrada ganada'
+            ],
             eventsHistory: ['CREACIÓN', 'ASIGNACIÓN', 'EN RUTA', 'ENTREGA', 'CANCELACIÓN', 'CONFIRMACIÓN CANCELACIÓN','NO ENTREGA', 'INFORMADO', 'REASIGNACIÓN'],
             maxProductTypesForOrder: 4,
             delayCommitted: {

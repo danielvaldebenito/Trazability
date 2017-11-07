@@ -21,5 +21,7 @@ api.post('/order/', [
     md_order.getProductType,
     
 ], OrderController.saveOrderFromErpIntegration)
-
+api.put('/order/', [
+    md_auth.ensureAuth
+], OrderController.changeOrderStateFromErpIntegration)
 module.exports = api;

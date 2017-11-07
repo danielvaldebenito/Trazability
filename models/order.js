@@ -8,6 +8,7 @@ const config = require('../config')
 const status = config.entitiesSettings.order.status;
 const types = config.entitiesSettings.order.types;
 const events = config.entitiesSettings.order.eventsHistory;
+const reasonsCancel = config.entitiesSettings.order.reasons;
 const Schema = mongoose.Schema
 const urlConnection = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
 const connection = mongoose.createConnection(urlConnection)
@@ -41,10 +42,11 @@ const OrderSchema = Schema({
     licensePlate: String,
     userName: String,
     pendingConfirmCancel: Boolean,
-    pendingConfirmReassign: Boolean,
-    pendingDeviceReassign: { type: Schema.Types.ObjectId, ref: 'Device'},
-    pendingVehicleReassign: { type: Schema.Types.ObjectId, ref: 'Vehicle'},
-    pendingOWReassign: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
+    reasonCancel: { type: String, enum: reasonsCancel },
+    // pendingConfirmReassign: Boolean,
+    // pendingDeviceReassign: { type: Schema.Types.ObjectId, ref: 'Device'},
+    // pendingVehicleReassign: { type: Schema.Types.ObjectId, ref: 'Vehicle'},
+    // pendingOWReassign: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
     history: [{
         user: { type: Schema.Types.ObjectId, ref: 'User'},
         userName: String,

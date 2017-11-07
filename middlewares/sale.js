@@ -34,8 +34,9 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
                 productType: m.productType, // tipo de producto
                 quantity: m.quantity, // cantidad (ENVASADO: 1 - GRANEL: N)
                 price: m.price,
-                discount: 0,
-                surcharge: 0
+                discount: m.discount,
+                surcharge: m.surcharge,
+                negotiable: m.negotiable
             }
             saleDetail.push(sItem)
         } else {
