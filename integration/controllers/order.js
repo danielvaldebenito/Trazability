@@ -88,24 +88,46 @@ function changeOrderStateFromErpIntegration (req, res) {
     const state = body.state
     const salesforceId = body.salesforceId
     const reason = body.reason || null
-    Order.findOneAndUpdate({ erpId: salesforceId }, { status: state, reasonCancel: reason },(err, order) => {
+    
+    Order.findOne({ erpId: salesforceId },(err, order) => {
         if(err) { 
             console.log('error', err); 
-            return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar pedido', error: err })
+            return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar pedido', error: err })
         }
-        
-        if(state == config.entitiesSettings.order.status[4]){ // cancelado
-            pushNotification.cancelOrder(order.device, order._id)
+        if(!order)
+            return res.status(404).send({done: false, message: 'Pedido no existe '})
+        const hist = {
+            device: order.device,
+            date: moment(),
+            userName: 'SALESFORCE',
+            event: body._event 
+            // eventsHistory: ['CREACIÓN', 'ASIGNACIÓN', 'EN RUTA', 'ENTREGA', 'CANCELACIÓN', 'CONFIRMACIÓN CANCELACIÓN','NO ENTREGA', 'INFORMADO', 'REASIGNACIÓN'],
         }
+        const update = { 
+            status: state, 
+            reasonCancel: reason, 
+            $push: { history: hist } 
+        }
+        Order.findByIdAndUpdate(order._id, update, (err, updated) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar pedido', error: err })
+            }
+            if(state == config.entitiesSettings.order.status[4]){ // cancelado
+                pushNotification.cancelOrder(order.device, order._id)
+            }
+            
+            pushSocket.send('/orders', order.distributor, 'change-state-order', order._id)
+    
+            return res
+                .status(200)
+                .send({ 
+                    done: true, 
+                    message: 'Registro actualizado exitosamente'
+                })
+        })
         
-        pushSocket.send('/orders', order.distributor, 'change-state-order', order._id)
-
-        return res
-            .status(200)
-            .send({ 
-                done: true, 
-                message: 'Registro actualizado exitosamente'
-            })
+        
     })
 }
 
