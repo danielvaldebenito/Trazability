@@ -11,6 +11,7 @@ var createSaleTransaction = function(req, res, next) {
     transaction.type = 'VENTA'
     transaction.device = body.device
     transaction.user = req.user.sub
+    transaction.document = body.document
     transaction.save((err, tr) => {
         if(err) {
             res.status(500).send({ message: 'Error en middleware', error: err })
@@ -26,6 +27,7 @@ var createAnyTransaction = function(req, res, next) {
     var transaction = new Transaction()
     transaction.type = body.transactionType
     transaction.device = body.device
+    transaction.document = body.document
     transaction.user = req.user.sub
     transaction.save((err, tr) => {
         if(err) {

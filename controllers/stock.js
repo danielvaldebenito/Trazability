@@ -59,7 +59,10 @@ function getStockWarehouse(req, res) {
 }
 
 function exportToExcel (req, res) {
-    getDataToExport()
+    const dependence = req.query.dependence
+    const warehouseType = req.query.warehouseType
+    const warehouse = req.query.warehouse
+    getDataToExport(dependence, warehouseType, warehouse)
         .then(stock => {
             writeFileExcel(stock)
                 .then(filename => {
@@ -79,6 +82,8 @@ function exportToExcel (req, res) {
                         }
                     })
                 })
+        }, onrejected => {
+            res.status(onrejected.status).send({ done: false, message: 'Ha ocurrido un error', err: onrejected.err})
         })
 }
 function writeFileExcel(stock) {
@@ -92,7 +97,7 @@ function writeFileExcel(stock) {
               firstSheet: 0, activeTab: 1, visibility: 'visible'
             }
           ]
-        let worksheet = workbook.addWorksheet('Productos')
+        let worksheet = workbook.addWorksheet('Stock')
         worksheet.autoFilter = 'A1:I1';
         worksheet.columns = [
             { header: 'NIF', key: 'nif', width: 20 },
@@ -103,7 +108,8 @@ function writeFileExcel(stock) {
             { header: 'Tipo Destino', key: 'destinyType', width: 20 },
             { header: 'Destino (Actual)', key: 'destiny', width: 40},
             { header: 'NIT Cliente', key: 'clientNit', width: 40 },
-            { header: 'Nombre Cliente', key: 'clientName', width: 40 }
+            { header: 'Nombre Cliente', key: 'clientName', width: 40 },
+            { header: 'Documento', key: 'document', width: 20 }
         ];
         
         let rows = stock.map((s) => { 
@@ -127,7 +133,8 @@ function writeFileExcel(stock) {
                 destinyType: s.warehouse ? s.warehouse.type : '',
                 destiny: s.warehouse ? s.warehouse.name : '',
                 clientNit: client ? client.nit : '',
-                clientName: client ? client.name + ' ' + client.surname : ''
+                clientName: client ? client.name + ' ' + client.surname : '',
+                document: inputMov && inputMov.movement && inputMov.movement.transaction && inputMov.movement.transaction.document ? inputMov.movement.transaction.document.folio : ''
             } 
         })
         worksheet.addRows(rows);
@@ -143,13 +150,31 @@ function writeFileExcel(stock) {
             });
     })
 }
-function getDataToExport () {
+function getDataToExport (dependence, warehouseType, warehouse) {
     return new Promise((resolve, reject) => {
         Stock.find()
-            .populate('warehouse')
+            .populate({ 
+                path: 'warehouse', 
+                populate: { 
+                    path: 'dependence'
+                }
+            })
             .populate('product')
             .exec((err, stock) => {
-                if(err) reject(err)
+                if(err) reject({status: 500, err: err})
+
+                if(dependence) {
+                    stock = stock.filter((s) => { return s.warehouse && s.warehouse.dependence && s.warehouse.dependence._id == dependence })
+                    if(warehouseType) {
+                        stock = stock.filter((s) => { return s.warehouse && s.warehouse.type == warehouseType })
+                        if(warehouse) {
+                            stock = stock.filter((s) => { return s.warehouse && s.warehouse._id == warehouse })
+                        }
+                    }
+                }
+                if(!stock || !stock.length || stock.length == 0) {
+                    resolve([])
+                }
                 let sts = []
                 stock.forEach(function(s, i) {
                     let st = s.toObject()
@@ -166,14 +191,13 @@ function getDataToExport () {
                                     }
                                 })
                             }, reason => {
-                                console.log(reason)
+                                reject({ status: 500, err: reason })
                             })
                 }, this);
                 
             })
     })
 }
-
 function getAditionalData(warehouse) {
     return new Promise((resolve, reject) => {
         if(!warehouse) {
@@ -223,9 +247,11 @@ function getLastMovement (product) {
                 path: 'movement', 
                 populate: [{ 
                     path: 'transaction',
-                    populate: { 
+                    populate: [{ 
                         path: 'device'
-                    }
+                    },{
+                        path: 'document'
+                    }]
                 },{
                     path: 'warehouse',
                 }]

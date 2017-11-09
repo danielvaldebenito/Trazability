@@ -22,6 +22,6 @@ api.post('/movement/',
          md_movement.createOutputMovement,
          md_movementItem.createNormalMovementItems
     ], MovementController.OKMovement)
-
+api.get('/movement-export',md_auth.ensureAuth, MovementController.exportTransaction)
 
 module.exports = api;

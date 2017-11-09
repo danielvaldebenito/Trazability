@@ -72,7 +72,7 @@ function createOrder(order, sessionId) {
                         console.log(jsonResult)
                         if(jsonResult.estadoTransaccion == 'Fallido') {
                             reject('Fallido')
-                        } else if (jsonResult.estadoTransaccion == 'Existoso') {
+                        } else if (jsonResult.estadoTransaccion == 'Exitoso') {
                             const idClienteSF = jsonResult.idClienteSF
                             const idPedidoSF = jsonResult.idPedidoSF
                             const noPedidoSF = jsonResult.noPedidoSF

@@ -96,6 +96,7 @@ function getDependences (req, res) {
     Dependence
         .find(distributor ? { distributor: distributor }: {})
         .where(!dependence || dependence == 'null' ? {} : { _id:  dependence })
+        .where({ virtual: { $ne: true }})
         .exec((err, data) => {
             if(err) return res.status(500).send({ code : -1, done: false, message: 'Ha ocurrido un error', error: err })
             if(!data) return res.status(404).send({ code : 1, done: false, message: 'Error. La consulta no obtuvo datos'})

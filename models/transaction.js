@@ -9,7 +9,8 @@ const TransactionSchema = Schema({
     type: { type: String, require: true, enum: types },
     movements: [{ type: Schema.Types.ObjectId, ref: 'Movement'}],
     device: { type: Schema.Types.ObjectId, ref: 'Device'},
-    user: { type: Schema.Types.ObjectId, ref: 'User'}
+    user: { type: Schema.Types.ObjectId, ref: 'User'},
+    document: { type: Schema.Types.ObjectId, ref: 'Document'}
 })
 TransactionSchema.plugin(timestamp)
 module.exports = mongoose.model('Transaction', TransactionSchema)
