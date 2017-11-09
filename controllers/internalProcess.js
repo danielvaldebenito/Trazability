@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const InternalProcess = require('../models/internalProcess')
 const Warehouse = require('../models/warehouse')
 const Dependence = require('../models/dependence')
+const User = require('../models/user')
+const Stock = require('../models/stock')
 function getAll (req, res) {
     var page = parseInt(req.query.page) || 1
     var limit = parseInt(req.query.limit) || 200
@@ -174,25 +176,38 @@ function updateOne(req, res) {
     })
     
 }
-const User = require('../models/user')
-function deleteOne(req, res) {
-    var id = req.params.id
-    InternalProcess.findByIdAndRemove(id, (err, deleted) => {
-        if (err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro' })
-        if (!deleted) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
 
-        User.update({ internalProcess: id }, { $pull: { internalProcess: id } }, { multi: true }, (err, raw) => {
-            if(err) return res.status(500).send({ done: false, message: 'Error al actualizar usuarios', err})
+function deleteOne(req, res) {
+    const id = req.params.id
+    InternalProcess.findById(id, (err, ip) => {
+        if (err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro', err })
+        if (!ip) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
+
+        Stock.find({ warehouse: ip.warehouse }, {  }, (err, stock) => {
+            if (err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro', err })
+            if(stock.length > 0) return res.status(500).send({ done: false, message: 'El proceso interno que desea eliminar tiene stock en su interior'})
             
-            return res
-            .status(200)
-            .send({
-                done: true,
-                message: 'Registro eliminado',
-                deleted,
-                raw
+            User.update({ internalProcess: id }, { $pull: { internalProcess: id } }, { multi: true }, (err, raw) => {
+                if(err) return res.status(500).send({ done: false, message: 'Error al actualizar usuarios', err})
+                
+                InternalProcess.findByIdAndRemove(id, (err, deleted) => {
+                    if(err) return res.status(500).send({ done: false, message: 'Error al eliminar proceso interno', err})
+
+                    return res
+                        .status(200)
+                        .send({
+                            done: true,
+                            message: 'Registro eliminado',
+                            deleted,
+                            raw
+                        })
+                })
+                
+                
             })
+
         })
+        
         
     })
 }

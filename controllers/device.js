@@ -437,17 +437,12 @@ function getConfig(req, res) {
 
 function getDevices(req, res) {
     const filter = req.query.filter
-    const distributor = req.query.distributor
+    //const distributor = req.query.distributor
     const limit = req.query.limit || 200
     const page = req.query.page || 1
 
-    Device.find()
-        .where(filter ? { 
-            $or: [
-                { esn: { $regex: filter, $options: 'i'} },
-                { pos: { $regex: filter, $options: 'i'} }
-            ]
-        } : {})
+    Device
+        .find()
         .sort([['pos', 1]])
         .populate([
             { 
@@ -463,9 +458,31 @@ function getDevices(req, res) {
                 }
             }
         ])
+
         .paginate(page, limit, (err, records, total) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
-
+            console.log('records', records)
+            const length = records.length
+            if(filter) {
+                
+                records = records.filter((record) => {
+                    let firstFilter = record.esn.toLowerCase().indexOf(filter.toLowerCase()) > -1 || record.pos.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                    if(!record.user && !record.user2)
+                        return firstFilter;
+                    else {
+                        if(record.user && record.user.distributor) {
+                            return firstFilter || record.user.distributor.name.toLowerCase().indexOf(filter.toLowerCase()) > -1 
+                        } else if(record.user2 && record.user2.distributor) {
+                            return firstFilter || record.user2.distributor.name.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                        } else {
+                            return firstFilter
+                        }
+                    }
+                });
+                
+            }
+            const newLength = records.length
+            total = total - (length - newLength)
             return res
                 .status(200)
                 .send({ 
