@@ -466,7 +466,7 @@ function getDevices(req, res) {
             if(filter) {
                 
                 records = records.filter((record) => {
-                    let firstFilter = record.esn.toLowerCase().indexOf(filter.toLowerCase()) > -1 || record.pos.toLowerCase().indexOf(filter.toLowerCase()) > -1
+                    let firstFilter = (record.esn && record.esn.toLowerCase().indexOf(filter.toLowerCase()) > -1) || (record.pos && record.pos.toLowerCase().indexOf(filter.toLowerCase()) > -1)
                     if(!record.user && !record.user2)
                         return firstFilter;
                     else {
