@@ -249,28 +249,37 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                     resolve({ stock: []})
                 }
                 let sts = []
+                let count = 0
                 stock.forEach((s, i) => {
+                    count++;
                     let st = s.toObject()
-                    let type = st.product.productType ? st.product.productType.name  : 'DESCONOCIDO'
-                    let ubication = st.warehouse ? st.warehouse._id : 'DESCONOCIDO'
-                    let exists = Enumerable.from(sts)
-                                    .where((w) => { return w.type == type && w.ubication.toString() == ubication.toString() })
-                                    .firstOrDefault();
-                    console.log('exists', {exists, type, ubication})
-                    if(exists) {
-                        exists.quantity = exists.quantity + 1;
+                    if(s.product) {
+                        let type = st.product.productType ? st.product.productType.name  : 'DESCONOCIDO'
+                        let ubication = st.warehouse ? st.warehouse._id : 'DESCONOCIDO'
+                        let exists = Enumerable.from(sts)
+                                        .where((w) => { return w.type == type && w.ubication.toString() == ubication.toString() })
+                                        .firstOrDefault();
+                        console.log('exists', {exists, type, ubication})
+                        if(exists) {
+                            exists.quantity = exists.quantity + 1;
+                        } else {
+                            sts.push({ 
+                                type: type, 
+                                quantity: 1, 
+                                ubication: ubication,
+                                ubicationName: st.warehouse ? st.warehouse.name : 'DESCONOCIDO',
+                                ubicationType: st.warehouse ? st.warehouse.type : 'DESCONOCIDO'
+                            })
+                        }
+                        if(count == stock.length) {
+                            resolve({ stock: sts })
+                        }
                     } else {
-                        sts.push({ 
-                            type: type, 
-                            quantity: 1, 
-                            ubication: ubication,
-                            ubicationName: st.warehouse ? st.warehouse.name : 'DESCONOCIDO',
-                            ubicationType: st.warehouse ? st.warehouse.type : 'DESCONOCIDO'
-                        })
+                        if(count == stock.length) {
+                            resolve({ stock: sts })
+                        }
                     }
-                    if(i == stock.length - 1) {
-                        resolve({ stock: sts})
-                    }
+                    
                     
                 }, this);
                 
