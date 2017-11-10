@@ -250,6 +250,7 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                 }
                 let sts = []
                 let count = 0
+                console.log('stock length resume', stock.length)
                 stock.forEach((s, i) => {
                     count++;
                     let st = s.toObject()
@@ -313,6 +314,7 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                     resolve({ stock: [] })
                 }
                 let sts = []
+                console.log('stock length detail', stock.length)
                 stock.forEach(function(s, i) {
                     let st = s.toObject()
                     if(s.product) {
