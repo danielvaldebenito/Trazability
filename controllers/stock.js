@@ -257,7 +257,7 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                     let exists = Enumerable.from(sts)
                                     .where((w) => { return w.type == type && w.ubication == ubication })
                                     .firstOrDefault();
-                    console.log('exists', exists)
+                    console.log('exists', {exists, type, ubication})
                     if(exists) {
                         exists.quantity = exists.quantity + 1;
                     } else {
