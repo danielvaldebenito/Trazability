@@ -16,6 +16,7 @@ const moment = require('moment')
 const config = require('../config')
 const pushNotification = require('../services/push')
 const pushSocket = require('../services/pushSocket')
+
 function pruebas(req, res) {
     res
         .status(200)
@@ -23,7 +24,6 @@ function pruebas(req, res) {
             message: 'Probando una acción del controlador de usuarios del api rest'
         })
 }
-
 function registerDevice(req, res) {
     const params = req.body;
     const firebaseToken = params.firebaseToken;
@@ -259,7 +259,6 @@ function loginDevice(req, res) { // VENTA
             }
         })
 }
-
 function logout(req, res) {
     const username = req.params.username
     const bo = req.query.bo
@@ -284,7 +283,6 @@ function logout(req, res) {
 
     })
 }
-
 function loginTrazability(req, res) {
     const params = req.body
     const username = params.username
@@ -414,8 +412,6 @@ function loginTrazability(req, res) {
         })
 
 }
-
-
 function getConfig(req, res) {
     var type = req.params.app;
     DeviceConfig.find({ app: type }, (err, records) => {
@@ -434,7 +430,6 @@ function getConfig(req, res) {
             })
     })
 }
-
 function getDevices(req, res) {
     const filter = req.query.filter
     //const distributor = req.query.distributor
@@ -493,7 +488,6 @@ function getDevices(req, res) {
         })
 
 }
-
 function setPos(req, res) {
     const deviceId = req.body.device
     const pos = req.body.pos
@@ -516,7 +510,24 @@ function setPos(req, res) {
         })
     })
 }
-
+function deleteOne(req, res) {
+    const id = req.params.id
+    Device.findById(id, (err, device) => {
+        if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
+        if(device.user || device.user2) {
+            return res.status(200).send({ done: false, message: 'El dispositivo tiene un usuario asociado'})
+        }
+        
+        Device.findByIdAndRemove(id, (err, deleted) => {
+            if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
+            return res.status(200)
+                    .send({
+                        done: true,
+                        message: 'Dispositivo eliminado'
+                    })
+        })
+    })
+}
 module.exports = {
     pruebas,
     registerDevice,
@@ -525,5 +536,6 @@ module.exports = {
     logout,
     getConfig,
     getDevices,
-    setPos
+    setPos,
+    deleteOne
 }

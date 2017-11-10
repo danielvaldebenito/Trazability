@@ -13,4 +13,5 @@ api.post('/device/login', md_vehicle.getVehicleFromLicensePlate, DeviceControlle
 api.post('/device/login-traza', DeviceController.loginTrazability)
 api.put('/device/logout/:username', DeviceController.logout)
 api.put('/device-set-pos', DeviceController.setPos)
+api.delete('/device/:id', [md_auth.ensureAuth, md_auth.isAdmin], DeviceController.deleteOne)
 module.exports = api;
