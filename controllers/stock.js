@@ -249,9 +249,8 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                     resolve({ stock: []})
                 }
                 let sts = []
-                stock.forEach(function(s, i) {
+                stock.forEach((s, i) => {
                     let st = s.toObject()
-                    console.log('analizando', st)
                     let type = st.product.productType ? st.product.productType.name  : 'DESCONOCIDO'
                     let ubication = st.warehouse ? st.warehouse._id : 'DESCONOCIDO'
                     let exists = Enumerable.from(sts)
@@ -269,9 +268,12 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                             ubicationType: st.warehouse ? st.warehouse.type : 'DESCONOCIDO'
                         })
                     }
-                    if(i == stock.length - 1) {
-                        resolve({ stock: sts})
-                    }
+                    setTimeout(function() {
+                        if(i == stock.length - 1) {
+                            resolve({ stock: sts})
+                        }
+                    }, 10);
+                    
                 }, this);
                 
             })
