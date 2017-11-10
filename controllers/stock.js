@@ -319,6 +319,7 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                 stock.forEach(function(s, i) {
                     count ++;
                     let st = s.toObject()
+                    sts.push(st)
                     if(st.product) {
                         getLastMovement(s.product._id)
                         .then(mov => {
@@ -326,7 +327,6 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                             getAditionalData(s.warehouse)
                             .then(additional => {
                                 st.additional = additional
-                                sts.push(st)
                                 if(count == stock.length) {
                                     resolve({ stock: sts })
                                 }
