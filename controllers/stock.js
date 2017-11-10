@@ -199,8 +199,8 @@ function writeResumeFileExcel(data) {
         worksheet.columns = [
             { header: 'Tipo Ubicación', key: 'type', width: 20 },
             { header: 'Ubicación', key: 'ubication', width: 20 },
-            { header: 'Producto', key: 'productType', width: 10 },
-            { header: 'Cantidad', key: 'quantity', width: 20 }
+            { header: 'Producto', key: 'productType', width: 20 },
+            { header: 'Cantidad', key: 'quantity', width: 10 }
         ];
         
         let rows = data.stock.map((s) => { 
@@ -257,8 +257,9 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                     let exists = Enumerable.from(sts)
                                     .where((w) => { return w.type == type && w.ubication == ubication })
                                     .firstOrDefault();
+                    console.log('exists', exists)
                     if(exists) {
-                        exists.quantity++;
+                        exists.quantity = exists.quantity + 1;
                     } else {
                         sts.push({ 
                             type: type, 
