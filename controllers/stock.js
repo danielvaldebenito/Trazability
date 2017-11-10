@@ -253,11 +253,10 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                     let st = s.toObject()
                     let type = st.product.productType ? st.product.productType.name  : 'DESCONOCIDO'
                     let ubication = st.warehouse ? st.warehouse._id : 'DESCONOCIDO'
-                    let exists = Enumerable.from(sts)
-                                    .where((w) => { return w.type == type && w.ubication == ubication })
-                                    .firstOrDefault();
+                    let exists = sts.filter((item) => { return w.type == type && w.ubication == ubication });
+                                    
                     console.log('exists', {exists, type, ubication})
-                    if(exists) {
+                    if(exists.length) {
                         exists.quantity = exists.quantity + 1;
                     } else {
                         sts.push({ 
@@ -268,17 +267,17 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                             ubicationType: st.warehouse ? st.warehouse.type : 'DESCONOCIDO'
                         })
                     }
-                    setTimeout(function() {
-                        if(i == stock.length - 1) {
-                            resolve({ stock: sts})
-                        }
-                    }, 10);
+                    if(i == stock.length - 1) {
+                        resolve({ stock: sts})
+                    }
                     
                 }, this);
                 
             })
     })
 }
+
+
 function getDataToExport (dependence, warehouseType, warehouse) {
     return new Promise((resolve, reject) => {
         Stock.find()
