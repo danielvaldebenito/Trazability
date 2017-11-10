@@ -461,7 +461,6 @@ function getDevices(req, res) {
 
         .paginate(page, limit, (err, records, total) => {
             if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err })
-            console.log('records', records)
             const length = records.length
             if(filter) {
                 

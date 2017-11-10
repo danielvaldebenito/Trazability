@@ -57,13 +57,43 @@ function getStockWarehouse(req, res) {
         } )
     
 }
-
+function exportResumeToExcel(req, res) {
+    const dependence = req.query.dependence
+    const warehouseType = req.query.warehouseType
+    const warehouse = req.query.warehouse
+    const dependenceName = req.query.dependenceName
+    const warehouseName = req.query.warehouseName
+    getResumeDataToExport(dependence, warehouseType, warehouse)
+        .then(stock => {
+            writeResumeFileExcel(stock)
+                .then(filename => {
+                    const filePath = './exports/' + filename
+                    fs.exists(filePath, (exists) => {
+                        if(exists) {
+                            res.sendFile(path.resolve(filePath))
+                            setTimeout(function() {
+                                fs.unlink(filePath, (err) => {
+                                    if(err)
+                                        console.log(err)
+                                    console.log('deleted', filePath)
+                                })
+                            }, 60000);
+                        } else {
+                            res.status(400).send({message: 'Archivo no disponible'})
+                        }
+                    })
+                })
+        })
+}
 function exportToExcel (req, res) {
     const dependence = req.query.dependence
     const warehouseType = req.query.warehouseType
     const warehouse = req.query.warehouse
+    const dependenceName = req.query.dependenceName
+    const warehouseName = req.query.warehouseName
     getDataToExport(dependence, warehouseType, warehouse)
         .then(stock => {
+            console.log('stock', stock)
             writeFileExcel(stock)
                 .then(filename => {
                     const filePath = './exports/' + filename
@@ -86,7 +116,7 @@ function exportToExcel (req, res) {
             res.status(onrejected.status).send({ done: false, message: 'Ha ocurrido un error', err: onrejected.err})
         })
 }
-function writeFileExcel(stock) {
+function writeFileExcel(data) {
     return new Promise((resolve, reject) => {
         let workbook = new Excel.Workbook()
         workbook.creator = 'Unigas'
@@ -97,7 +127,8 @@ function writeFileExcel(stock) {
               firstSheet: 0, activeTab: 1, visibility: 'visible'
             }
           ]
-        let worksheet = workbook.addWorksheet('Stock')
+        let worksheetName = 'Stock'
+        let worksheet = workbook.addWorksheet(worksheetName)
         worksheet.autoFilter = 'A1:I1';
         worksheet.columns = [
             { header: 'NIF', key: 'nif', width: 20 },
@@ -112,7 +143,7 @@ function writeFileExcel(stock) {
             { header: 'Documento', key: 'document', width: 20 }
         ];
         
-        let rows = stock.map((s) => { 
+        let rows = data.stock.map((s) => { 
             let movitems = []
             movitems = s.movs;
             const inputMov = Enumerable.from(movitems)
@@ -150,7 +181,49 @@ function writeFileExcel(stock) {
             });
     })
 }
-function getDataToExport (dependence, warehouseType, warehouse) {
+function writeResumeFileExcel(data) {
+    return new Promise((resolve, reject) => {
+        let workbook = new Excel.Workbook()
+        workbook.creator = 'Unigas'
+        workbook.created = new Date()
+        workbook.views = [
+            {
+              x: 0, y: 0, width: 10000, height: 20000, 
+              firstSheet: 0, activeTab: 1, visibility: 'visible'
+            }
+          ]
+        let worksheetName = 'Stock'
+        console.log(worksheetName)
+        let worksheet = workbook.addWorksheet(worksheetName)
+        worksheet.autoFilter = 'A1:D1';
+        worksheet.columns = [
+            { header: 'Tipo Ubicación', key: 'type', width: 20 },
+            { header: 'Ubicación', key: 'ubication', width: 20 },
+            { header: 'Producto', key: 'productType', width: 10 },
+            { header: 'Cantidad', key: 'quantity', width: 20 }
+        ];
+        
+        let rows = data.stock.map((s) => { 
+            return { 
+                type: s.ubicationType,
+                ubication: s.ubicationName,
+                productType: s.type,
+                quantity: s.quantity
+            } 
+        })
+        worksheet.addRows(rows);
+        worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
+            row.font = { name: 'Arial', family: 4, size: 10 }
+        })
+        const random = Math.random().toString(36).slice(2);
+        let filename = `EXPORT_${random}.xlsx`;
+        workbook.xlsx.writeFile(`exports/` + filename)
+            .then(() => {
+                resolve(filename)
+            });
+    })
+}
+function getResumeDataToExport (dependence, warehouseType, warehouse) {
     return new Promise((resolve, reject) => {
         Stock.find()
             .populate({ 
@@ -173,26 +246,80 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                     }
                 }
                 if(!stock || !stock.length || stock.length == 0) {
-                    resolve([])
+                    resolve({ stock: []})
                 }
                 let sts = []
                 stock.forEach(function(s, i) {
                     let st = s.toObject()
-                    if(s.product)
+                    console.log('analizando', st)
+                    let type = st.product.productType ? st.product.productType.name  : 'DESCONOCIDO'
+                    let ubication = st.warehouse ? st.warehouse._id : 'DESCONOCIDO'
+                    let exists = Enumerable.from(sts)
+                                    .where((w) => { return w.type == type && w.ubication == ubication })
+                                    .firstOrDefault();
+                    if(exists) {
+                        exists.quantity++;
+                    } else {
+                        sts.push({ 
+                            type: type, 
+                            quantity: 1, 
+                            ubication: ubication,
+                            ubicationName: st.warehouse ? st.warehouse.name : 'DESCONOCIDO',
+                            ubicationType: st.warehouse ? st.warehouse.type : 'DESCONOCIDO'
+                        })
+                    }
+                    if(i == stock.length - 1) {
+                        resolve({ stock: sts})
+                    }
+                }, this);
+                
+            })
+    })
+}
+function getDataToExport (dependence, warehouseType, warehouse) {
+    return new Promise((resolve, reject) => {
+        Stock.find()
+            .populate({ 
+                path: 'warehouse', 
+                populate: { 
+                    path: 'dependence'
+                }
+            })
+            .populate('product')
+            .exec((err, stock) => {
+                if(err) reject({status: 500, err: err})
+                if(dependence) {
+                    stock = stock.filter((s) => { return s.warehouse && s.warehouse.dependence && s.warehouse.dependence._id == dependence })
+                    if(warehouseType) {
+                        stock = stock.filter((s) => { return s.warehouse && s.warehouse.type == warehouseType })
+                        if(warehouse) {
+                            stock = stock.filter((s) => { return s.warehouse && s.warehouse._id == warehouse })
+                        }
+                    }
+                }
+                if(!stock || !stock.length || stock.length == 0) {
+                    resolve({ stock: [] })
+                }
+                let sts = []
+                stock.forEach(function(s, i) {
+                    let st = s.toObject()
+                    if(s.product) {
                         getLastMovement(s.product._id)
-                            .then(mov => {
-                                st.movs = mov
-                                getAditionalData(s.warehouse)
-                                .then(additional => {
-                                    st.additional = additional
-                                    sts.push(st)
-                                    if(i == stock.length -1) {
-                                        resolve(sts)
-                                    }
-                                })
-                            }, reason => {
-                                reject({ status: 500, err: reason })
+                        .then(mov => {
+                            st.movs = mov
+                            getAditionalData(s.warehouse)
+                            .then(additional => {
+                                st.additional = additional
+                                sts.push(st)
+                                if(i == stock.length - 1) {
+                                    resolve({ stock: sts })
+                                }
                             })
+                        }, reason => {
+                            reject({ status: 500, err: reason })
+                        })
+                    }
+                        
                 }, this);
                 
             })
@@ -265,4 +392,4 @@ function getLastMovement (product) {
     })
 }
 
-module.exports = { getByNif, getStockWarehouse, exportToExcel }
+module.exports = { getByNif, getStockWarehouse, exportToExcel, exportResumeToExcel }
