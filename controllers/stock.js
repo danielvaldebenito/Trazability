@@ -317,16 +317,16 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                 let count = 0
                 console.log('stock length detail', stock.length)
                 stock.forEach(function(s, i) {
-                    count ++;
+                    
                     let st = s.toObject()
                     
                     if(st.product) {
                         getLastMovement(s.product._id)
                         .then(mov => {
                             st.movs = mov
-                            
                             getAditionalData(s.warehouse)
                             .then(additional => {
+                                count ++;
                                 st.additional = additional
                                 sts.push(st)
                                 if(count == stock.length) {
@@ -342,12 +342,7 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                         }, reason => {
                             reject({ status: 500, err: reason })
                         })
-                    } else {
-                        sts.push(st)
-                        if(count == stock.length) {
-                            resolve({ stock: sts })
-                        }
-                    }
+                    } 
                         
                 }, this);
                 
