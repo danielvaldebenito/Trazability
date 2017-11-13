@@ -93,7 +93,6 @@ function exportToExcel (req, res) {
     const warehouseName = req.query.warehouseName
     getDataToExport(dependence, warehouseType, warehouse)
         .then(stock => {
-            console.log('stock', stock)
             writeFileExcel(stock)
                 .then(filename => {
                     const filePath = './exports/' + filename
@@ -193,7 +192,6 @@ function writeResumeFileExcel(data) {
             }
           ]
         let worksheetName = 'Stock'
-        console.log(worksheetName)
         let worksheet = workbook.addWorksheet(worksheetName)
         worksheet.autoFilter = 'A1:D1';
         worksheet.columns = [
@@ -250,7 +248,7 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                 }
                 let sts = []
                 let count = 0
-                console.log('stock length resume', stock.length)
+
                 stock.forEach((s, i) => {
                     count++;
                     let st = s.toObject()
@@ -260,7 +258,6 @@ function getResumeDataToExport (dependence, warehouseType, warehouse) {
                         let exists = Enumerable.from(sts)
                                         .where((w) => { return w.type == type && w.ubication.toString() == ubication.toString() })
                                         .firstOrDefault();
-                        console.log('exists', {exists, type, ubication})
                         if(exists) {
                             exists.quantity = exists.quantity + 1;
                         } else {
@@ -315,7 +312,6 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                 }
                 let sts = []
                 let count = 0
-                console.log('stock length detail', stock.length)
                 stock.forEach(function(s, i) {
                     
                     let st = s.toObject()

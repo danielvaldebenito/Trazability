@@ -11,7 +11,8 @@ const Excel = require('exceljs')
 const fs = require('fs')
 const path = require('path')
 const Enumerable = require('linq')
-function getData(limit, page, type, from, to) {
+function getData(limit, page, type, from, to, filter) {
+    console.log('filter', filter)
     return new Promise((resolve, reject) => {
         Transaction
         .find({ 
@@ -51,6 +52,16 @@ function getData(limit, page, type, from, to) {
         ])
         .paginate(page, limit, (err, records, total) => {
             if(err) reject(err)
+
+            if(filter) {
+                let length = records.length
+                records = records.filter((f) => { 
+                    return (f.device && f.device.pos && f.device.pos.toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1) 
+                    || (f.user && (f.user.name + ' ' + f.user.surname).toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1 )
+                })
+                total = total - (length - records.length)
+            }
+            
             resolve({records, total })
         })
     })
@@ -115,8 +126,8 @@ function getAll (req, res) {
     const type = req.query.type
     const from = !req.query.from || req.query.from == 'null' ? moment().add(-10, 'days') : req.query.from
     const to = !req.query.to || req.query.to == 'null' ? from + ' 23:59:59' : req.query.to + ' 23:59:59'
-    
-    getData(limit, page, type, from, to)
+    const filter = req.query.filter
+    getData(limit, page, type, from, to, filter)
         .then(
             resolved => {
                 return res.status(200)
@@ -133,7 +144,6 @@ function getAll (req, res) {
 }
 function OKMovement (req, res) {
 
-    console.log('movimiento', req.body)
     const tt = req.body.transactionType
     const types = config.entitiesSettings.transaction.types
     const promise = tt == types[4] // CARGA
@@ -211,10 +221,9 @@ function exportTransaction(req, res) {
     promise
         .then(
             resolved => {
-                console.log({resolved})
                 writeFileExcel(type, resolved)
                     .then(filename => {
-                        console.log('creado el archivo', filename)
+                        
                         const filePath = './exports/' + filename
                         fs.exists(filePath, (exists) => {
                             if(exists) {
@@ -282,7 +291,6 @@ function writeFileExcel(type, data) {
                 
             }, this)
         }, this);
-        console.log('items', items)
         let rows = items.map((i) => { 
             return { 
                 type: type,
