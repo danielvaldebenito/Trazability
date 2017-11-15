@@ -71,7 +71,7 @@ function getDataTruckload (from, to) {
         Truckload.find({ createdAt: { $gte: from, $lte: to } })
         .populate({
             path: 'transaction',
-            populate: {
+            populate: [{
                 path: 'movements',
                 populate: [{ 
                     path: 'items',
@@ -83,10 +83,10 @@ function getDataTruckload (from, to) {
                     }
                 },{
                     path: 'warehouse'
-                }, {
-                    path: 'document'
                 }]
-            }
+            }, {
+                path: 'document'
+            }]
         })
         .exec ( ( err, data ) => {
             if(err) reject(err)
@@ -99,7 +99,7 @@ function getDataTruckunload (from, to) {
         Truckunload.find({ createdAt: { $gte: from, $lte: to } })
         .populate({
             path: 'transaction',
-            populate: {
+            populate: [{
                 path: 'movements',
                 populate: [{ 
                     path: 'items',
@@ -111,10 +111,10 @@ function getDataTruckunload (from, to) {
                     }
                 },{
                     path: 'warehouse'
-                },{
-                    path: 'document'
                 }]
-            }
+            },{
+                path: 'document'
+            }]
 
         })
         .exec ( ( err, data ) => {
