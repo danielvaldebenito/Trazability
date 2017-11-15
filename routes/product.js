@@ -8,7 +8,7 @@ const md_upload = multipart({uploadDir: './uploads/products'});
 
 api.get('/products', md_auth.ensureAuth, ProductController.getAllProducts)
 api.get('/products/format', md_auth.ensureAuth, ProductController.getAllProductsFormat)
-api.get('/products/json', ProductController.getJsonProducts)
+api.get('/products/json/:page', ProductController.getJsonProducts)
 api.get('/product/:nif', md_auth.ensureAuth, ProductController.getOneByNif)
 api.get('/product-exists/:nif', md_auth.ensureAuth, ProductController.existsByNif)
 api.post('/product-false-nif', md_auth.ensureAuth, ProductController.createFalseNifs)

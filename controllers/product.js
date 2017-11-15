@@ -15,6 +15,7 @@ const fs = require('fs')
 const path = require('path')
 const productService = require('../services/product')
 const Excel = require('exceljs')
+const pagination = require('mongoose-pagination')
 const worksheetName = 'Hoja1'
 function getOneByNif (req, res) {
     const nif = req.params.nif
@@ -136,26 +137,30 @@ function getAllProducts (req, res) {
 
 }
 function getAllProductsFormat (req, res) {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 100000
     Product
-    .find({ enabled: true })
-    .select(['-_id','formatted', 'productType'])
-    .populate({ 
-        path: 'productType',
-        select: ['code']
-    })
-    .exec((err, products) => {
-        const data = products.map((product, index) => {
-            let pt = product.productType
-            return product.formatted + '|' + (pt ? pt.code : '') 
+        .find({ enabled: true })
+        .select(['-_id','formatted', 'productType'])
+        .populate({ 
+            path: 'productType',
+            select: ['code']
         })
+        .paginate(page, limit, (err, products, total) => {
+            if(err) return res.status(500).send({done: false, message: 'Error al obtener data', err })
+            const data = products.map((product, index) => {
+                let pt = product.productType
+                return product.formatted + '|' + (pt ? pt.code : '') 
+            })
 
-        fs.writeFileSync('./uploads/products/products.json', JSON.stringify(data))
-        return res.status(200).send({ done: true, message: 'OK, archivo escrito'})
-    })
+            fs.writeFileSync('./uploads/products/products' + page + '.json', JSON.stringify(data))
+            return res.status(200).send({ done: true, message: 'OK, archivo escrito'})
+        })
 
 }
 function getJsonProducts (req, res){
-    const filePath = './uploads/products/products.json'
+    const page = parseInt(req.params.page)
+    const filePath = './uploads/products/products' + page + '.json'
     fs.exists(filePath, (exists) => {
         if(exists) {
             res.setHeader('Content-disposition', 'attachment; filename= products.json');
