@@ -13,5 +13,5 @@ api.get('/transaction/station/:transaction', md_auth.ensureAuth, TransactionCont
 api.get('/transaction/transfer/:transaction', md_auth.ensureAuth, TransactionController.getTransferByTransaction)
 api.get('/transaction/truckload/:transaction', md_auth.ensureAuth, TransactionController.getTruckloadByTransaction)
 api.get('/transaction/truckunload/:transaction', md_auth.ensureAuth, TransactionController.getTruckunloadByTransaction)
-
+api.get('/transaction/maintenance/:transaction', md_auth.ensureAuth, TransactionController.getMaintenanceByTransaction)
 module.exports = api

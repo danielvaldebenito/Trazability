@@ -73,7 +73,12 @@ function getSaleByTransaction (req, res) {
 }
 function getMaintenanceByTransaction (req, res) {
     const transaction = req.params.transaction
-    Maintenance.findOne({ transaction: transaction })
+    Maintenance
+    .findOne({ transaction: transaction })
+    .populate([
+        { path: 'originWarehouse'},
+        { path: 'destinyWarehouse'}
+    ])
     .exec((err, maintenance) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
         if(!maintenance) return res.status(404).send({ done: false, message: 'No se ha encontrado mantención asociada'})
@@ -163,6 +168,7 @@ function getTruckunloadByTransaction (req, res) {
     })
 
 }
+
 function getTransferByTransaction (req, res) {
     const transaction = req.params.transaction
 
