@@ -287,7 +287,7 @@ function writeFileExcel(type, data) {
                             vehicle: movement.warehouse.name,
                             tco: transaction.document ? transaction.document.folio : '',
                             nif: it.product ? it.product.formatted || it.product.nif : '',
-                            productType: it.product ? it.product.productType ? it.product.productType.name : '' : '',
+                            productType: it.product && it.product.productType ? it.product.productType.capacity : '',
                             date: transaction.createdAt
                         }
                         items.push(item);
