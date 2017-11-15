@@ -13,6 +13,9 @@ const InternalProcess = require('../models/internalProcess')
 const config = require('../config')
 const fs = require('fs')
 const path = require('path')
+const productService = require('../services/product')
+const Excel = require('exceljs')
+const worksheetName = 'Hoja1'
 function getOneByNif (req, res) {
     const nif = req.params.nif
     const limit = req.query.limit || 10
@@ -90,7 +93,6 @@ function existsByNif (req, res) {
         return res.status(200).send({ exists:  product != null })
     })
 }
-const productService = require('../services/product')
 function createFalseNifs (req, res) {
     ProductType.find((err, pts) => {
         if(err) return res.status(500).send({done: false, message: 'Ha ocurrido un error al buscar tipos de producto', err})
@@ -152,7 +154,6 @@ function getAllProductsFormat (req, res) {
     })
 
 }
-
 function getJsonProducts (req, res){
     const filePath = './uploads/products/products.json'
     fs.exists(filePath, (exists) => {
@@ -165,7 +166,6 @@ function getJsonProducts (req, res){
         }
     })
 }
-
 function getWarehouseByType(id) {
     const types = config.entitiesSettings.warehouse.types
     //types: ['VEHÍCULO', 'DIRECCION_CLIENTE', 'ALMACÉN', 'MERMAS', 'PROCESO_INTERNO']
@@ -258,12 +258,113 @@ function getWarehouseByType(id) {
     
    return p;
 }
+function importProducts (req, res) {
+    if(req.files) {
+        const file_path = req.files.file.path
+        const file_split = file_path.split('\\')
+        const file_name = file_split[2]
+        const ext_split = file_name.split('\.')
+        const file_ext = ext_split[1]
+        const extensionsAllowed = ['xls', 'xlsx']
+        if(extensionsAllowed.indexOf(file_ext) == -1) {
+            return res.status(404)
+                .send({
+                    message: 'La extensión del archivo no es válida'
+                })
+        }
+        readExcelProducts(file_name)
+            .then((rowCount) => {
+                setTimeout(() => {
+                    // TODO: Delete filefs.unlink(filePath, (err) => {
+                    fs.unlink(__dirname + '/../uploads/products/' + file_name, (err) => {
+                        if(err)
+                            console.log(err)
+                        console.log('deleted', file_name)
+                    })
+                }, 60000);
+                return res.status(200).send({ done: true, message: 'Archivo subido exitosamente con ' + rowCount + ' registros.'})
+            }, rejected => {
+                return res.status(404).send({ done: false, message: rejected })
+            })
+        
+    } else {
+        return res.status(404)
+                    .send({ done: false, message: 'No vienen archivos para importar'})
+    }
+}
 
+function readExcelProducts (file_name) {
+    return new Promise((resolve, reject) => {
+        const workbook = new Excel.Workbook();
+        workbook.xlsx.readFile(__dirname + '/../uploads/products/' + file_name)
+            .then(() => {
+                const worksheet = workbook.getWorksheet(worksheetName);
+                if(!worksheet) return reject('No se encontró una hoja con el nombre ' + worksheetName)
+
+                worksheet.spliceRows(1, 1);
+                let rowCount = worksheet.rowCount;
+                worksheet.eachRow({ includeEmpty: false}, (row, rowNumber) => {
+                    
+                    let capacity = row.getCell(1).value;
+                    let nif = row.getCell(2).value.toString();
+                    let fila = { capacity, nif }
+                    saveProductFromExcelFile(fila)
+                        .then(prod => {
+                            if(rowNumber == rowCount - 1) {
+                                resolve(rowCount)
+                            } 
+                        }, onrejected => {
+                            reject('on reject ' + onrejected)
+                        })
+                    
+                });
+            }, onrejected => {
+                reject('on rejected' + onrejected)
+            })
+            .catch((error) => {
+                reject('on error' + error)
+            });
+    })
+    
+}
+function saveProductFromExcelFile (row) {
+    return new Promise((resolve, reject) => {
+        getProductTypeFromCapacity(row.capacity)
+        .then((pt) => {
+            const product = {
+                nif: row.nif,
+                formatted: row.nif,
+                productType: pt._id,
+                createdByPda: false,
+                createdBy: 'admin',
+                enabled: true
+            }
+            Product.findOneAndUpdate({ nif: row.nif }, 
+                    product, 
+                    { upsert: true, new: true, projection: { _id: true } }, 
+                    (err, prod) => {
+                        if(err) reject(err)
+                        console.log(prod)
+                        resolve(prod)
+                    })
+        })
+    })
+}
+function getProductTypeFromCapacity (capacity) {
+    return new Promise((resolve, reject) => {
+        ProductType.findOne({ capacity: capacity }, (err, pt) => {
+            if(err) reject(err)
+            if(!pt) reject(pt)
+            resolve(pt)
+        })
+    })
+}
 module.exports = { 
     getOneByNif, 
     existsByNif, 
     createFalseNifs, 
     getAllProducts, 
     getAllProductsFormat,
-    getJsonProducts
+    getJsonProducts,
+    importProducts
 }

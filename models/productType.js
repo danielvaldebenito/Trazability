@@ -1,15 +1,16 @@
 'use strict'
 /* Modelo de producto */
-var mongoose = require('mongoose')
-var timestamp = require('mongoose-timestamp')
+const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
 const config = require('../config')
 const types = config.entitiesSettings.productType.types
-var Schema = mongoose.Schema
-var ProductTypeSchema = Schema({
+const Schema = mongoose.Schema
+const ProductTypeSchema = Schema({
     name: String,
     description: String,
     code: String,
-    type: { type: String, enum: types }
+    type: { type: String, enum: types },
+    capacity: Number
 })
 ProductTypeSchema.plugin(timestamp)
 

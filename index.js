@@ -1,12 +1,12 @@
 'use strict'
-var mongoose = require('mongoose');
-var soap = require('soap-server')
-var config = require('./config');
-var app = require('./app');
-var bodyParser = require('body-parser')
-var port = process.env.PORT || 3548;
-var mongoConnectionUrl = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
-//var mongoConnectionUrl = 'mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad'
+const mongoose = require('mongoose');
+const soap = require('soap-server')
+const config = require('./config');
+const app = require('./app');
+const bodyParser = require('body-parser')
+const port = process.env.PORT || 3548;
+const mongoConnectionUrl = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
+//const mongoConnectionUrl = 'mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad'
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoConnectionUrl, { useMongoClient: true }, (err, res) => {
     if(err) {
@@ -14,7 +14,7 @@ mongoose.connect(mongoConnectionUrl, { useMongoClient: true }, (err, res) => {
         throw err;
     } else {
         console.log('La conexión a la Base de datos corriendo correctamente', config.database);
-        var server = app.listen(port, () => {
+        const server = app.listen(port, () => {
             console.log(`Servidor corriendo correctamente en el puerto ${port}`);
             
         })

@@ -1,15 +1,14 @@
 'use strict'
-var fs = require('fs')
-var path = require('path')
-var bcrypt = require('bcrypt-nodejs')
-var User = require('../models/user')
-var Vehicle = require('../models/vehicle')
-var InternalProcessType = require('../models/internalProcessType')
-var jwt = require('../services/jwt')
-var moment = require('moment')
-var config = require('../config')
-var fs = require('fs')
-var mail = require('../services/mail')
+const fs = require('fs')
+const path = require('path')
+const bcrypt = require('bcrypt-nodejs')
+const User = require('../models/user')
+const Vehicle = require('../models/vehicle')
+const InternalProcessType = require('../models/internalProcessType')
+const jwt = require('../services/jwt')
+const moment = require('moment')
+const config = require('../config')
+const mail = require('../services/mail')
 function pruebas(req, res) {
 
     res
@@ -374,7 +373,6 @@ function disableUser (req, res) {
                     })
     })
 }
-
 function enableUser (req, res) {
     const userId = req.params.id
     User.findByIdAndUpdate(userId, { disabled: false }, (err, updated) => {
