@@ -267,12 +267,12 @@ function writeFileExcel(type, data) {
         let worksheet = workbook.addWorksheet('Productos')
         worksheet.autoFilter = 'A1:F1';
         worksheet.columns = [
-            { header: 'Tipo', key: 'type', width: 20 },
-            { header: 'Fecha', key: 'date', width: 20 },
-            { header: 'Vehículo', key: 'vehicle', width: 10 },
-            { header: 'TCO', key: 'tco', width: 10 },
+            { header: 'Tipo', key: 'type', width: 15 },
+            { header: 'Fecha', key: 'date', width: 15 },
+            { header: 'Vehículo', key: 'vehicle', width: 15 },
+            { header: 'TCO', key: 'tco', width: 15 },
             { header: 'NIF', key: 'nif', width: 20 },
-            { header: 'Capacidad', key: 'productType', width: 10 }
+            { header: 'Capacidad', key: 'productType', width: 15 }
         ];
         let transactions = data.map(t => { return t.transaction });
         let items = []
