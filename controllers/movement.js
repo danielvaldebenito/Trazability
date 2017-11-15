@@ -69,7 +69,7 @@ function getData(limit, page, type, from, to, filter) {
 function getDataTruckload (from, to) {
     return new Promise((resolve, reject) => {
         Truckload.find({ createdAt: { $gte: from, $lte: to } })
-        .populate([{
+        .populate({
             path: 'transaction',
             populate: {
                 path: 'movements',
@@ -83,11 +83,11 @@ function getDataTruckload (from, to) {
                     }
                 },{
                     path: 'warehouse'
+                }, {
+                    path: 'document'
                 }]
             }
-        }, {
-            path: 'document'
-        }])
+        })
         .exec ( ( err, data ) => {
             if(err) reject(err)
             resolve(data)
@@ -97,7 +97,7 @@ function getDataTruckload (from, to) {
 function getDataTruckunload (from, to) {
     return new Promise((resolve, reject) => {
         Truckunload.find({ createdAt: { $gte: from, $lte: to } })
-        .populate([{
+        .populate({
             path: 'transaction',
             populate: {
                 path: 'movements',
@@ -111,12 +111,12 @@ function getDataTruckunload (from, to) {
                     }
                 },{
                     path: 'warehouse'
+                },{
+                    path: 'document'
                 }]
             }
 
-        }, {
-            path: 'document'
-        }])
+        })
         .exec ( ( err, data ) => {
             if(err) reject(err)
             resolve(data)
