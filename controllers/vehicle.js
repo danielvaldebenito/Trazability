@@ -123,17 +123,23 @@ function updateOne(req, res) {
 }
 function deleteOne(req, res){
     var id = req.params.id
-    Vehicle.findByIdAndUpdate(id, { disabled: true, licensePlate: null }, (err, deleted) => {
-        if(err) return res.status(500).send({ done: false, message: 'Error al eliminar el registro' })
-        if(!deleted) return res.status(404).send({ done: false, message: 'No se pudo eliminar el registro' })
+    User.findOne({ vehicle: id }, (err, found) => {
+        if(err) return res.status(500).send({ done: false, message: 'Error al buscar usuario', err })
+        if(found) return res.status(200).send({ done: false, message: 'Existe un usuario para este vehículo' })
         
-        return res
+        Vehicle.findByIdAndRemove(id, (err, vehicle) => {
+            if(err) return res.status(500).send({ done: false, message: 'Error al eliminar vehículo', err})
+
+            return res
             .status(200)
             .send({ 
                 done: true, 
-                message: 'Registro eliminado', 
-                deleted 
+                message: 'Registro eliminado',  
             })
+        })
+
+
+        
         
     })
 }

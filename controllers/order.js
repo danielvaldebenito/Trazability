@@ -544,30 +544,9 @@ function getMonitorData(distributor, type, from, to) {
     let date2 = new Date(year, month - 1, day, 23, 59, 59)
 
     return new Promise((resolve, reject) => {
-        Order.aggregate(
-            [
-                { "$match": { createdAt: {  "$gte": date1, "$lte": date2} } },
-                { "$sort": { "orderNumber": 1 } },
-                { "$group": { 
-                    "_id": "vehicle",
-                    "orderNumber": { "$first": "$orderNumber" },
-                }},
-                { "$lookup": {
-                     "from": "vehicles",
-                     "localField": "vehicle",
-                     "foreignField": "_id",
-                     "as": "vehicle"
-                }},
-                { "$unwind": { "path" : "$from" } },
-                { "$unwind": { "path" : "$orderNumber" } }
-            ],
-            function(err,results) {
-                if (err) reject(err);
-                resolve(results);
-            }
-        )
-
+       
         
+
     })
 }
 function getMonitor(req, res) {
@@ -576,12 +555,28 @@ function getMonitor(req, res) {
     const from = !req.query.from || req.query.from == 'null' ? null : req.query.from
     const to = !req.query.to || req.query.to == 'null' ? null : req.query.to
     console.log({ from, to })
-    getMonitorData(distributor, type, from, to)
-        .then(data => {
-            return res.status(200).send({ done: true, data })
-        }, error => {
-            return res.status(500).send({ message: 'Error: ' + error })
+    Order.aggregate([
+        {
+            $match: {
+                //distributor: new ObjectId(dist),
+                createdAt: { $ne: null }
+            }
+        },
+        {
+            $group: { _id: '$status', count: { $sum: 1 } }
+        }
+    ])
+        .exec((e, d) => {
+            if (e) return res.status(500).send({ done: false, message: 'Error al obtener resumen', error: e, code: -1 })
+            if (!d) return res.status(404).send({ done: false, message: 'Error al obtener resumen', code: 1 })
+            return res.status(200).send({ done: true, message: 'OK', data: d })
         })
+    // getMonitorData(distributor, type, from, to)
+    //     .then(data => {
+    //         return res.status(200).send({ done: true, data })
+    //     }, error => {
+    //         return res.status(500).send({ message: 'Error: ' + error })
+    //     })
 }
 
 
