@@ -9,7 +9,7 @@ const MaintenanceSchema = Schema({
     reason: { type: String, enum: reasons },
     document: { type: Schema.Types.ObjectId, ref: 'Document' }, 
     transaction: { type: Schema.Types.ObjectId, ref: 'Transaction' }, 
-    origenWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, 
+    originWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }, 
     destinyWarehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse' }
 })
 MaintenanceSchema.plugin(timestamp)

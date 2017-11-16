@@ -77,7 +77,8 @@ function getMaintenanceByTransaction (req, res) {
     .findOne({ transaction: transaction })
     .populate([
         { path: 'originWarehouse'},
-        { path: 'destinyWarehouse'}
+        { path: 'destinyWarehouse'},
+        { path: 'document'}
     ])
     .exec((err, maintenance) => {
         if(err) return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err})
