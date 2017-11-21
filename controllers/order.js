@@ -731,7 +731,7 @@ function writeFileExcelMonitor(data, type) {
         let rows = []
         //const colorAsStatus = ['FF0000FF','FF0000FF','','','']
         data.map((s) => { 
-            let head = type == 'vehicle' ? s._id.licensePlate : s._id
+            let head = type == 'vehicle' ? s._id ? s._id.licensePlate : 'Desconocido' : s._id || 'Desconocido'
             let orders = s.orders;
             let lastRow = worksheet.lastRow;
             let newRowNumber = lastRow.number + 1
