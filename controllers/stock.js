@@ -319,11 +319,10 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                     if(st.product) {
                         getLastMovement(s.product._id)
                         .then(mov => {
-                            console.log('item-last-movement', i)
                             st.movs = mov
                             getAditionalData(s.warehouse)
                             .then(additional => {
-                                console.log('item-adicional-data', i)
+
                                 count ++;
                                 st.additional = additional
                                 sts.push(st)
