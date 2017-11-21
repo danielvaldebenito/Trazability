@@ -3936,3 +3936,18 @@ La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabili
   user: 'unigas',
   password: '09v9085a' }
 Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: Iniciando aplicación
+La conexión a la Base de datos corriendo correctamente { name: 'unigastrazabilidad',
+  port: 27017,
+  server: 'localhost',
+  user: 'unigas',
+  password: '09v9085a' }
+Servidor corriendo correctamente en el puerto 3548
+[32minfo[39m: POST /api/orders-monitor 404 628.426 ms - 158 body: {}
+
+{ from: null, to: null }
+[32minfo[39m: GET /api/orders-monitor - - ms - - body: {}
+
+{ from: null, to: null }
+[32minfo[39m: GET /api/orders-monitor - - ms - - body: {}
+

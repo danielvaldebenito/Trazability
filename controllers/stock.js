@@ -312,16 +312,20 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                 }
                 let sts = []
                 let count = 0
+                let length = stock.length
+                console.log('stock.length', length);
                 stock.forEach(function(s, i) {
                     
                     let st = s.toObject()
-                    
+                    console.log('item-stock', i)
                     if(st.product) {
                         getLastMovement(s.product._id)
                         .then(mov => {
+                            console.log('item-last-movement', i)
                             st.movs = mov
                             getAditionalData(s.warehouse)
                             .then(additional => {
+                                console.log('item-adicional-data', i)
                                 count ++;
                                 st.additional = additional
                                 sts.push(st)

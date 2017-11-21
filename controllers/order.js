@@ -8,6 +8,7 @@ const pushSocket = require('../services/pushSocket')
 const pushNotification = require('../services/push')
 moment.locale('es')
 const Order = require('../models/order')
+const Client = require('../models/client')
 const OrderItem = require('../models/orderItem')
 const Warehouse = require('../models/warehouse')
 const Distributor = require('../models/distributor')
@@ -529,54 +530,81 @@ function assignDeviceToOrder(req, res) {
 
 
 // MONITOR
-function getMonitorData(distributor, type, from, to) {
-    let date = from
-    let splited = date ? date.split('-') : [2017, 1, 1]
-    let year = parseInt(splited[0])
-    let month = parseInt(splited[1])
-    let day = parseInt(splited[2])
-    let date1 = new Date(year, month - 1, day, 0, 0, 0)
-    date = to
-    splited = date ? date.split('-') : [3000, 1, 1]
-    year = parseInt(splited[0])
-    month = parseInt(splited[1])
-    day = parseInt(splited[2])
-    let date2 = new Date(year, month - 1, day, 23, 59, 59)
-
+function getMonitorData(distributor, type, from, to, filter) {
     return new Promise((resolve, reject) => {
-       
-        
+        let ObjectId = mongoose.Types.ObjectId
+        Order.aggregate([
+            { 
+                $sort: { 
+                    '_id': -1 
+                }
+            },
+            { 
+                $match: { 
+                    createdAt: { 
+                        $gte: from, 
+                        $lte: to 
+                    },
+                    distributor: distributor ? new ObjectId(distributor) : { $ne: null }
+                } 
+            },
+            { 
+                $group: { 
+                    _id: "$" + type + "", 
+                    orders: { 
+                        $push: { 
+                            orderNumber: '$orderNumber', 
+                            status: '$status',
+                            date: '$createdAt',
+                            type: '$type',
+                            id: '$_id'
+                        } 
+                    } 
+                }
+            },
+            { 
+                $sort: { 
+                    '_id': 1 
+                }
+            }
+          ])
+            .exec((e, d) => {
+                if (e) reject(e.toString())
+                if (!d) reject('No se pudo obtener la información')
+                if(type == 'vehicle') {
+                    Vehicle.populate(d, {path: '_id'}, function(err, pop) {
+                        if(filter) {
+                            d = d.filter((f) => { return f._id && f._id.licensePlate.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 })
+                        }
+                        resolve(d)
+                    });
+                } else {
+                    if(filter) {
+                        d = d.filter((f) => { return f._id && f._id.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1 })
+                    }
+                    resolve(d)
+                }  
+            })
 
     })
 }
 function getMonitor(req, res) {
-    const type = req.query.type
+    const type = req.query.type || 'vehicle'
     const distributor = req.query.distributor
-    const from = !req.query.from || req.query.from == 'null' ? null : req.query.from
-    const to = !req.query.to || req.query.to == 'null' ? null : req.query.to
+    const from = req.query.from
+    const to = req.query.to
     console.log({ from, to })
-    Order.aggregate([
-        {
-            $match: {
-                //distributor: new ObjectId(dist),
-                createdAt: { $ne: null }
-            }
-        },
-        {
-            $group: { _id: '$status', count: { $sum: 1 } }
-        }
-    ])
-        .exec((e, d) => {
-            if (e) return res.status(500).send({ done: false, message: 'Error al obtener resumen', error: e, code: -1 })
-            if (!d) return res.status(404).send({ done: false, message: 'Error al obtener resumen', code: 1 })
-            return res.status(200).send({ done: true, message: 'OK', data: d })
+    const fromSplit = from ? from.split('-') : [2017,1,1];
+    const toSplit = to ? to.split('-') : null
+    const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
+    const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
+    const filter = req.query.filter
+    getMonitorData(distributor, type, date1, date2, filter)
+        .then(data => {
+            return res.status(200).send({ done: true, data })
+        }, error => {
+            return res.status(500).send({ message: 'Error: ' + error })
         })
-    // getMonitorData(distributor, type, from, to)
-    //     .then(data => {
-    //         return res.status(200).send({ done: true, data })
-    //     }, error => {
-    //         return res.status(500).send({ message: 'Error: ' + error })
-    //     })
 }
 
 
