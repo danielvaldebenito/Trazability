@@ -9,6 +9,8 @@ const api = express.Router()
 
 api.get('/orders/:distributor', md_auth.ensureAuth, OrderController.getAll)
 api.get('/orders-monitor/', md_auth.ensureAuth, OrderController.getMonitor)
+api.get('/orders-monitor-export/', md_auth.ensureAuth, OrderController.exportMonitor)
+api.get('/orders-monitor-page/', md_auth.ensureAuth, OrderController.getDataMonitorOtherPages)
 api.get('/order/:id', md_auth.ensureAuth, OrderController.getOne)
 api.get('/order-resume/:distributor', md_auth.ensureAuth, OrderController.getDayResume)
 api.get('/order/vehicle/:vehicle', md_auth.ensureAuth, OrderController.getAllVehicle)

@@ -1,6 +1,5 @@
 'use strict'
 
-const path = require('path')
 const mongoose = require('mongoose')
 const pagination = require('mongoose-pagination')
 const moment = require('moment')
@@ -19,6 +18,9 @@ const ProductType = require('../models/productType')
 const config = require('../config')
 const orderIntegration = require('../integration/connection/order')
 const loginIntegration = require('../integration/connection/login')
+const Excel = require('exceljs')
+const fs = require('fs')
+const path = require('path')
 
 function getAll(req, res) {
     const page = parseInt(req.query.page) || 1
@@ -530,7 +532,7 @@ function assignDeviceToOrder(req, res) {
 
 
 // MONITOR
-function getMonitorData(distributor, type, from, to, filter) {
+function getMonitorData(distributor, type, from, to, filter, page, limit) {
     return new Promise((resolve, reject) => {
         let ObjectId = mongoose.Types.ObjectId
         Order.aggregate([
@@ -555,11 +557,21 @@ function getMonitorData(distributor, type, from, to, filter) {
                         $push: { 
                             orderNumber: '$orderNumber', 
                             status: '$status',
-                            date: '$createdAt',
+                            createdAt: '$createdAt',
                             type: '$type',
-                            id: '$_id'
+                            _id: '$_id'
                         } 
-                    } 
+                    },
+                    total: { $sum: 1 } 
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    orders: {
+                        $slice: ['$orders', 0, limit]
+                    },
+                    total: 1
                 }
             },
             { 
@@ -588,26 +600,194 @@ function getMonitorData(distributor, type, from, to, filter) {
 
     })
 }
+
+function getDataMonitorOtherPages(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const type = req.query.type
+    const id = req.query.id
+    const from = req.query.from
+    const to = req.query.to
+    const fromSplit = from ? from.split('-') : [2017,1,1];
+    const toSplit = to ? to.split('-') : null
+    const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
+    const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
+    if(type == 'vehicle') {
+        Order.find()
+            .sort([['_id', -1]])
+            .where({ 
+                vehicle: id, 
+                createdAt: { 
+                    $gte: date1, 
+                    $lte: date2 
+                }
+            })   
+            .populate({ path: 'vehicle', select: ['_id', 'licensePlate']})
+            .select(['orderNumber', 'status', 'createdAt', 'type', '_id', 'vehicle'])
+            .paginate(page, limit, (err, orders, total) => {
+                if(err) return res.status(500).send({ done: false, err })
+                return res.status(200).send({ done: true, orders, total })
+        })
+    } else {
+        Order.find()
+            .sort([['_id', -1]])
+            .where({ userName: id, 
+                createdAt: { 
+                    $gte: from, 
+                    $lte: to 
+                } 
+            })
+            .select(['orderNumber', 'status', 'createdAt', 'type', '_id'])
+            .paginate(page, limit, (err, orders, total) => {
+                if(err) return res.status(500).send({ done: false, err })
+                return res.status(200).send({ orders, total })
+            })
+    }
+}
+
 function getMonitor(req, res) {
     const type = req.query.type || 'vehicle'
     const distributor = req.query.distributor
     const from = req.query.from
     const to = req.query.to
-    console.log({ from, to })
     const fromSplit = from ? from.split('-') : [2017,1,1];
     const toSplit = to ? to.split('-') : null
     const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
     const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
     const filter = req.query.filter
-    getMonitorData(distributor, type, date1, date2, filter)
+    const limit = parseInt(req.query.limit) || 5
+    const page = parseInt(req.query.page) || 1
+    getMonitorData(distributor, type, date1, date2, filter, page, limit)
         .then(data => {
             return res.status(200).send({ done: true, data })
         }, error => {
             return res.status(500).send({ message: 'Error: ' + error })
         })
 }
+function exportMonitor(req, res) {
+    const type = req.query.type || 'vehicle'
+    const distributor = req.query.distributor
+    const from = req.query.from
+    const to = req.query.to
+    const fromSplit = from ? from.split('-') : [2017,1,1];
+    const toSplit = to ? to.split('-') : null
+    const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
+    const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
+    const filter = req.query.filter
+    const limit = parseInt(req.query.limit) || 50000
+    const page = parseInt(req.query.page) || 1
+    getMonitorData(distributor, type, date1, date2, filter, page, limit)
+        .then(data => {
+            console.log('data', data)
+            writeFileExcelMonitor(data, type)
+                .then(filename => {
+                    const filePath = './exports/' + filename
+                    fs.exists(filePath, (exists) => {
+                        if(exists) {
+                            res.sendFile(path.resolve(filePath))
+                            setTimeout(function() {
+                                fs.unlink(filePath, (err) => {
+                                    if(err)
+                                        console.log(err)
+                                    console.log('deleted', filePath)
+                                })
+                            }, 60000);
+                        } else {
+                            res.status(400).send({message: 'Archivo no disponible'})
+                        }
+                    })
+                }, rej => {
+                    res.status(500).send({ error: rej.toString()})
+                })
+
+        }, error => {
+            res.status(500).send({ error: error.toString()})
+        })
+}
 
 
+function writeFileExcelMonitor(data, type) {
+    return new Promise((resolve, reject) => {
+        let workbook = new Excel.Workbook()
+        workbook.creator = 'Unigas'
+        workbook.created = new Date()
+        workbook.views = [
+            {
+              x: 0, y: 0, width: 10000, height: 20000, 
+              firstSheet: 0, activeTab: 1, visibility: 'visible'
+            }
+          ]
+        let worksheetName = 'Pedidos'
+        let worksheet = workbook.addWorksheet(worksheetName)
+        let key = type == 'vehicle' ? 'VEHÍCULO' : 'USUARIO'
+        worksheet.autoFilter = 'A1:D1';
+        worksheet.columns = [
+            { header: key, key: 'key', width: 20 },
+            { header: 'Número', key: 'orderNumber', width: 10 },
+            { header: 'Estado', key: 'status', width: 20 },
+            { header: 'Fecha', key: 'createdAt', width: 20 }
+        ];
+        
+        let rows = []
+        //const colorAsStatus = ['FF0000FF','FF0000FF','','','']
+        data.map((s) => { 
+            let head = type == 'vehicle' ? s._id.licensePlate : s._id
+            let orders = s.orders;
+            let lastRow = worksheet.lastRow;
+            let newRowNumber = lastRow.number + 1
+            let border = {style:'medium', color: {argb:'00000000'}}
+            worksheet.mergeCells('A' + newRowNumber + ':A' + (newRowNumber + orders.length - 1));
+            worksheet.getCell('A' + newRowNumber).value = head;
+            worksheet.getCell('A' + newRowNumber).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+            orders.map((o, i) => {
+                worksheet.getCell('B' + (newRowNumber + i)).value = o.orderNumber;
+                worksheet.getCell('C' + (newRowNumber + i)).value = o.status;
+                worksheet.getCell('D' + (newRowNumber + i)).value = moment(o.createdAt).format("DD-MM-YYYY HH:mm:ss");
+                
+                worksheet.getCell('B' + (newRowNumber + i)).border = {
+                    top: i == 0 ? border : null,
+                    bottom: i == orders.length - 1 ? border : null,
+                    left: border,
+                    right: border
+                }
+                worksheet.getCell('B' + (newRowNumber + i)).alignment = { horizontal: 'center' }
+                worksheet.getCell('C' + (newRowNumber + i)).border = {
+                    top: i == 0 ? border : null,
+                    bottom: i == orders.length - 1 ? border : null,
+                    left: border,
+                    right: border
+                }
+                worksheet.getCell('D' + (newRowNumber + i)).border = {
+                    top: i == 0 ? border : null,
+                    bottom: i == orders.length - 1 ? border : null,
+                    left: border,
+                    right: border
+                }
+                
+            })
+            worksheet.getCell('A' + newRowNumber).border = { 
+                top: border,
+                left: border,
+                bottom: border,
+                right: border
+            }
+            
+            worksheet.getRow(newRowNumber + orders.length - 1).commit();
+        })
+        //worksheet.addRows(rows);
+
+        worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
+            row.font = { name: 'Arial', family: 4, size: 11 }
+        })
+        
+        const random = Math.random().toString(36).slice(2);
+        let filename = `EXPORT_${random}.xlsx`;
+        workbook.xlsx.writeFile(`exports/` + filename)
+            .then(() => {
+                resolve(filename)
+            });
+    })
+}
 module.exports = {
     getAll,
     getOne,
@@ -622,5 +802,7 @@ module.exports = {
     setOrderEnRuta,
     cancelOrder,
     confirmCancel,
-    getMonitor
+    getMonitor,
+    getDataMonitorOtherPages,
+    exportMonitor
 }  
