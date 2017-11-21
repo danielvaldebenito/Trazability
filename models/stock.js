@@ -1,10 +1,10 @@
 'use strict'
 /* Modelo de última ubicación informada de cada producto */
-var mongoose = require('mongoose')
-var timestamp = require('mongoose-timestamp')
-var Schema = mongoose.Schema
+const mongoose = require('mongoose')
+const timestamp = require('mongoose-timestamp')
+const Schema = mongoose.Schema
 
-var StockSchema = Schema({
+const StockSchema = Schema({
     product: { type: Schema.ObjectId, ref: 'Product' },
     warehouse: { type: Schema.ObjectId, ref: 'Warehouse' }
 })

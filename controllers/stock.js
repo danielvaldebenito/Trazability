@@ -315,9 +315,7 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                 let length = stock.length
                 console.log('stock.length', length);
                 stock.forEach(function(s, i) {
-                    count ++;
                     let st = s.toObject()
-                    console.log('item-stock', i)
                     if(st.product) {
                         getLastMovement(s.product._id)
                         .then(mov => {
@@ -326,23 +324,30 @@ function getDataToExport (dependence, warehouseType, warehouse) {
                             getAditionalData(s.warehouse)
                             .then(additional => {
                                 console.log('item-adicional-data', i)
-                                
+                                count ++;
                                 st.additional = additional
                                 sts.push(st)
                                 if(count == stock.length) {
                                     resolve({ stock: sts })
                                 }
                             }, rejected => {
+                                count ++;
+                                console.log(rejected)
                                 // sts.push(st)
                                 // if(count == stock.length) {
                                 //     resolve({ stock: sts })
                                 // }
-                                reject({ status: 500, err: rejected })
+                                //reject({ status: 500, err: rejected })
                             })
                         }, reason => {
-                            reject({ status: 500, err: reason })
+                            count++
+                            console.log(reason)
+                            //reject({ status: 500, err: reason })
                         })
-                    } 
+                    } else {
+                        console.log('No hay producto ' + i)
+                        count++;
+                    }
                         
                 }, this);
                 
