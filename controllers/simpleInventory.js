@@ -81,7 +81,7 @@ function saveOne (req, res) {
         let take = { productType: d.productType, quantity: d.quantity, date: moment(d.date, "DD-MM-YYYY HH:mm:ss")}
         takes.push(take)
         if(!item) {
-            let doc = { warehouse: d.warehouse, dependence: d.dependence, takes: takes };
+            let doc = { warehouse: d.warehouse, dependence: d.dependence, takes: takes, date: moment(), user: req.user.sub };
             items.push(doc);
         }
     })

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 const timestamp = require('mongoose-timestamp')
 const Schema = mongoose.Schema
-const SimpleInventorySchema = Schema({
+let SimpleInventorySchema = Schema({
     warehouse: { type: Schema.Types.ObjectId, ref: 'Warehouse'},
     dependence: { type: Schema.Types.ObjectId, ref: 'Dependence' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -13,7 +13,8 @@ const SimpleInventorySchema = Schema({
             quantity: Number,
             date: Date
         }
-    ]
+    ],
+    date: Date
 })
 SimpleInventorySchema.plugin(timestamp)
 module.exports = mongoose.model('SimpleInventory', SimpleInventorySchema)
