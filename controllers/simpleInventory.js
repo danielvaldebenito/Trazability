@@ -86,8 +86,8 @@ function saveOne (req, res) {
         }
     })
     SimpleInventory.insertMany(items, (err, docs) => {
-        if(err) return res.status(500).send({ done: false, message: 'ERROR', err})
-        return res.status(200).send({ done: true, message: docs.length + ' registros ingresados' })
+        if(err) return res.status(500).send({ done: false, code: -1, message: 'ERROR', err})
+        return res.status(200).send({ done: true, code: 0, message: docs.length + ' registros ingresados' })
     })
     
 }
