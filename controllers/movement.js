@@ -228,7 +228,7 @@ function exportTransaction(req, res) {
             resolved => {
                 writeFileExcel(type, resolved)
                     .then(filename => {
-                        
+                        console.log('filename', filename)
                         const filePath = './exports/' + filename
                         fs.exists(filePath, (exists) => {
                             if(exists) {
