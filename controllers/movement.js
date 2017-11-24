@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 const Enumerable = require('linq')
 function getData(limit, page, type, from, to, filter) {
-    console.log('filter', filter)
+
     return new Promise((resolve, reject) => {
         Transaction
         .find({ 
@@ -276,13 +276,13 @@ function writeFileExcel(type, data) {
         ];
         let transactions = data.map(t => { return t.transaction });
         let items = []
-        transactions.forEach((transaction) => {
+        transactions.map((transaction) => {
             let movements = transaction.movements;
-            movements.forEach((movement) => {
+            movements.map((movement) => {
                 let movementType = type == 'CARGA' ? 'E' : 'S'
                 if(movement.type == movementType) {
                     let i = movement.items
-                    i.forEach((it) => {
+                    i.map((it) => {
                         let item = {
                             vehicle: movement.warehouse.name,
                             tco: transaction.document ? transaction.document.folio : '',
@@ -294,8 +294,8 @@ function writeFileExcel(type, data) {
                     })
                 }
                 
-            }, this)
-        }, this);
+            })
+        });
         let rows = items.map((i) => { 
             return { 
                 type: type,

@@ -6,6 +6,7 @@ const md_wh = require('../middlewares/warehouse')
 const api = express.Router()
 
 api.get('/simple-inventory/', md_auth.ensureAuth, SimpleInventoryController.getAll)
+api.get('/simple-inventory-export/', md_auth.ensureAuth, SimpleInventoryController.exportAll)
 api.get('/simple-inventory/:id', md_auth.ensureAuth, SimpleInventoryController.getOne)
 api.post('/simple-inventory/', [md_auth.ensureAuth], SimpleInventoryController.saveOne)
 

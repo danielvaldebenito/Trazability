@@ -21,7 +21,7 @@ const loginIntegration = require('../integration/connection/login')
 const Excel = require('exceljs')
 const fs = require('fs')
 const path = require('path')
-
+const datesService = require('../services/dates')
 function getAll(req, res) {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 200
@@ -533,6 +533,7 @@ function assignDeviceToOrder(req, res) {
 
 // MONITOR
 function getMonitorData(distributor, type, from, to, filter, page, limit) {
+    console.log('rango', { from, to })
     return new Promise((resolve, reject) => {
         let ObjectId = mongoose.Types.ObjectId
         Order.aggregate([
@@ -650,16 +651,13 @@ function getMonitor(req, res) {
     const distributor = req.query.distributor
     const from = req.query.from
     const to = req.query.to
-    const fromSplit = from ? from.split('-') : [2017,1,1];
-    const toSplit = to ? to.split('-') : null
-    const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
-    const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
+    const dates = datesService.convertDateRange([from, to], 'YYYY-MM-DD')
     const filter = req.query.filter
-    const limit = parseInt(req.query.limit) || 5
+    const limit = parseInt(req.query.limit) || 10
     const page = parseInt(req.query.page) || 1
-    getMonitorData(distributor, type, date1, date2, filter, page, limit)
+    getMonitorData(distributor, type, dates[0], dates[1], filter, page, limit)
         .then(data => {
-            return res.status(200).send({ done: true, data })
+            return res.status(200).send({ done: true, data, dates })
         }, error => {
             return res.status(500).send({ message: 'Error: ' + error })
         })
@@ -669,14 +667,11 @@ function exportMonitor(req, res) {
     const distributor = req.query.distributor
     const from = req.query.from
     const to = req.query.to
-    const fromSplit = from ? from.split('-') : [2017,1,1];
-    const toSplit = to ? to.split('-') : null
-    const date1 = new Date(parseInt(fromSplit[0]), parseInt(fromSplit[1]) - 1, parseInt(fromSplit[2]), 0, 0, 0)
-    const date2 = !toSplit ? new Date() : new Date(parseInt(toSplit[0]), parseInt (toSplit[1]) - 1, parseInt( toSplit[2]), 23, 59, 59)
+    const dates = datesService.convertDateRange([from, to], 'YYYY-MM-DD')
     const filter = req.query.filter
     const limit = parseInt(req.query.limit) || 50000
     const page = parseInt(req.query.page) || 1
-    getMonitorData(distributor, type, date1, date2, filter, page, limit)
+    getMonitorData(distributor, type, dates[0], dates[1], filter, page, limit)
         .then(data => {
             console.log('data', data)
             writeFileExcelMonitor(data, type)
