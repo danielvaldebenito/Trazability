@@ -257,71 +257,78 @@ function exportTransaction(req, res) {
 function writeFileExcel(type, data) {
     console.log('resolved', data.length);
     return new Promise((resolve, reject) => {
-        let workbook = new Excel.Workbook()
-        workbook.creator = 'Unigas'
-        workbook.created = new Date()
-        workbook.views = [
-            {
-              x: 0, y: 0, width: 10000, height: 20000, 
-              firstSheet: 0, activeTab: 1, visibility: 'visible'
-            }
-          ]
-        let worksheet = workbook.addWorksheet('Productos')
-        worksheet.autoFilter = 'A1:F1';
-        worksheet.columns = [
-            { header: 'Tipo', key: 'type', width: 15 },
-            { header: 'Fecha', key: 'date', width: 15 },
-            { header: 'Vehículo', key: 'vehicle', width: 15 },
-            { header: 'TCO', key: 'tco', width: 15 },
-            { header: 'NIF', key: 'nif', width: 20 },
-            { header: 'Capacidad', key: 'productType', width: 15 }
-        ];
-        let transactions = data.map(t => { return t.transaction });
-        let items = []
-        transactions.map((transaction, t) => {
-            console.log('transaction', t)
-            let movements = transaction.movements;
-            movements.map((movement, m) => {
-                console.log('movement', m)
-                let movementType = type == 'CARGA' ? 'E' : 'S'
-                if(movement.type == movementType) {
-                    let i = movement.items
-                    i.map((it, i) => {
-                        console.log('item', i)
-                        let item = {
-                            vehicle: movement.warehouse.name,
-                            tco: transaction.document ? transaction.document.folio : '',
-                            nif: it.product ? it.product.formatted || it.product.nif : '',
-                            productType: it.product && it.product.productType ? it.product.productType.capacity : '',
-                            date: transaction.createdAt
-                        }
-                        items.push(item);
-                    })
+        try 
+        {
+            let workbook = new Excel.Workbook()
+            workbook.creator = 'Unigas'
+            workbook.created = new Date()
+            workbook.views = [
+                {
+                  x: 0, y: 0, width: 10000, height: 20000, 
+                  firstSheet: 0, activeTab: 1, visibility: 'visible'
                 }
-                
-            })
-        });
-        let rows = items.map((i) => { 
-            return { 
-                type: type,
-                date: i.date,
-                vehicle: i.vehicle,
-                tco: i.tco,
-                nif: i.nif,
-                productType: i.productType
-            } 
-        })
-        worksheet.addRows(rows);
-
-        worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
-            row.font = { name: 'Arial', family: 4, size: 10 }
-        })
-        const random = Math.random().toString(36).slice(2);
-        let filename = `EXPORT_${random}.xlsx`;
-        workbook.xlsx.writeFile(`exports/` + filename)
-            .then(() => {
-                resolve(filename)
+              ]
+            let worksheet = workbook.addWorksheet('Productos')
+            worksheet.autoFilter = 'A1:F1';
+            worksheet.columns = [
+                { header: 'Tipo', key: 'type', width: 15 },
+                { header: 'Fecha', key: 'date', width: 15 },
+                { header: 'Vehículo', key: 'vehicle', width: 15 },
+                { header: 'TCO', key: 'tco', width: 15 },
+                { header: 'NIF', key: 'nif', width: 20 },
+                { header: 'Capacidad', key: 'productType', width: 15 }
+            ];
+            let transactions = data.map(t => { return t.transaction });
+            let items = []
+            transactions.map((transaction, t) => {
+                console.log('transaction', t)
+                let movements = transaction.movements;
+                movements.map((movement, m) => {
+                    console.log('movement', m)
+                    let movementType = type == 'CARGA' ? 'E' : 'S'
+                    if(movement.type == movementType) {
+                        let i = movement.items
+                        i.map((it, i) => {
+                            console.log('item', i)
+                            let item = {
+                                vehicle: movement.warehouse.name,
+                                tco: transaction.document ? transaction.document.folio : '',
+                                nif: it.product ? it.product.formatted || it.product.nif : '',
+                                productType: it.product && it.product.productType ? it.product.productType.capacity : '',
+                                date: transaction.createdAt
+                            }
+                            items.push(item);
+                        })
+                    }
+                    
+                })
             });
+            let rows = items.map((i) => { 
+                return { 
+                    type: type,
+                    date: i.date,
+                    vehicle: i.vehicle,
+                    tco: i.tco,
+                    nif: i.nif,
+                    productType: i.productType
+                } 
+            })
+            worksheet.addRows(rows);
+    
+            worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
+                row.font = { name: 'Arial', family: 4, size: 10 }
+            })
+            const random = Math.random().toString(36).slice(2);
+            let filename = `EXPORT_${random}.xlsx`;
+            workbook.xlsx.writeFile(`exports/` + filename)
+                .then(() => {
+                    resolve(filename)
+                });
+        }
+        catch (e) {
+            console.log('error', e)
+        }
+        
     })
 }
 module.exports = { OKMovement, getAll, exportTransaction }
