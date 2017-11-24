@@ -244,8 +244,9 @@ function exportTransaction(req, res) {
                                 res.status(400).send({message: 'Archivo no disponible'})
                             }
                         })
-                    })
-                    .catch(reason => console.log(reason))
+                    }, error => console.log('error', error)
+                    )
+                    .catch(reason => console.log('reason', reason))
             },
             rejected => {
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error', err: rejected })
@@ -254,6 +255,7 @@ function exportTransaction(req, res) {
     
 }
 function writeFileExcel(type, data) {
+    console.log('resolved', data.length);
     return new Promise((resolve, reject) => {
         let workbook = new Excel.Workbook()
         workbook.creator = 'Unigas'
@@ -276,13 +278,16 @@ function writeFileExcel(type, data) {
         ];
         let transactions = data.map(t => { return t.transaction });
         let items = []
-        transactions.map((transaction) => {
+        transactions.map((transaction, t) => {
+            console.log('transaction', t)
             let movements = transaction.movements;
-            movements.map((movement) => {
+            movements.map((movement, m) => {
+                console.log('movement', m)
                 let movementType = type == 'CARGA' ? 'E' : 'S'
                 if(movement.type == movementType) {
                     let i = movement.items
-                    i.map((it) => {
+                    i.map((it, i) => {
+                        console.log('item', i)
                         let item = {
                             vehicle: movement.warehouse.name,
                             tco: transaction.document ? transaction.document.folio : '',
