@@ -322,9 +322,13 @@ function writeFileExcel(type, data) {
             })
             const random = Math.random().toString(36).slice(2);
             let filename = `EXPORT_${random}.xlsx`;
+            console.log('try saving', filename)
             workbook.xlsx.writeFile(`exports/` + filename)
                 .then(() => {
+                    console.log('saved!', filename)
                     resolve(filename)
+                }, rej => {
+                    console.log('no se guardó el archivo', {filename, rej})
                 });
         }
         catch (e) {
