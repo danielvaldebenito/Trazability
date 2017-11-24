@@ -264,7 +264,7 @@ function writeFileExcel(type, data) {
             workbook.created = new Date()
             workbook.views = [
                 {
-                  x: 0, y: 0, width: 10000, height: 20000, 
+                  x: 0, y: 0, width: 10000, height: 200000, 
                   firstSheet: 0, activeTab: 1, visibility: 'visible'
                 }
               ]
@@ -303,6 +303,7 @@ function writeFileExcel(type, data) {
                     
                 })
             });
+            console.log('items:', items.length)
             let rows = items.map((i) => { 
                 return { 
                     type: type,
@@ -313,6 +314,7 @@ function writeFileExcel(type, data) {
                     productType: i.productType
                 } 
             })
+            console.log('rows', rows.length)
             worksheet.addRows(rows);
     
             worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
