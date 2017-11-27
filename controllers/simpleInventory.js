@@ -217,7 +217,7 @@ function writeFileExcel(data) {
             worksheet.getCell('D' + newRowNumber).value = s.user.name + ' ' + s.user.surname;
             worksheet.getCell('D' + newRowNumber).alignment = alignment;
 
-            worksheet.getCell('E' + newRowNumber).value = moment(s.date).format("dd-MM-yyyy HH:mm:ss");
+            worksheet.getCell('E' + newRowNumber).value = moment(s.date).format("DD-MM-YYYY HH:mm:ss");
             worksheet.getCell('E' + newRowNumber).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
 
             takes.map((take, i) => {

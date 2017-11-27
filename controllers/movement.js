@@ -281,15 +281,12 @@ function writeFileExcel(type, data) {
             let transactions = data.map(t => { return t.transaction });
             let items = []
             transactions.map((transaction, t) => {
-                console.log('transaction', t)
                 let movements = transaction.movements;
                 movements.map((movement, m) => {
-                    console.log('movement', m)
                     let movementType = type == 'CARGA' ? 'E' : 'S'
                     if(movement.type == movementType) {
                         let i = movement.items
                         i.map((it, i) => {
-                            console.log('item', i)
                             let item = {
                                 vehicle: movement.warehouse.name,
                                 tco: transaction.document ? transaction.document.folio : '',
@@ -303,7 +300,7 @@ function writeFileExcel(type, data) {
                     
                 })
             });
-            console.log('items:', items.length)
+
             let rows = items.map((i) => { 
                 return { 
                     type: type,
@@ -314,7 +311,7 @@ function writeFileExcel(type, data) {
                     productType: i.productType
                 } 
             })
-            console.log('rows', rows.length)
+
             worksheet.addRows(rows);
     
             worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
@@ -328,11 +325,11 @@ function writeFileExcel(type, data) {
                     console.log('saved!', filename)
                     resolve(filename)
                 }, rej => {
-                    console.log('no se guardó el archivo', {filename, rej})
+                    reject('No se pudo guardar el archivo')
                 });
         }
         catch (e) {
-            console.log('error', e)
+            reject('error' + e)
         }
         
     })

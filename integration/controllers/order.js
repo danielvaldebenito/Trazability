@@ -23,7 +23,7 @@ function saveOrderFromErpIntegration (req, res) {
     var params = req.body
     order.erpId = params.salesforceId
     order.erpOrderNumber = params.orderNumber
-    order.commitmentDate = moment(params.commitmentDate, "DD-MM-YYYY HH:mm:ss").isValid() ? moment(params.commitmentDate, "DD-MM-YYYY HH:mm:ss") : null;
+    order.commitmentDate = moment(params.commitmentDate, "YYYY-MM-DD HH:mm:ss").isValid() ? moment(params.commitmentDate, "YYYY-MM-DD HH:mm:ss") : null;
     order.type = params.type == 'Granel' ? 'GRANEL' : 'ENVASADO'
     order.phone = params.phone
     order.observation = params.observation
@@ -114,7 +114,7 @@ function changeOrderStateFromErpIntegration (req, res) {
                 return res.status(500).send({ done: false, message: 'Ha ocurrido un error al actualizar pedido', error: err })
             }
             if(state == config.entitiesSettings.order.status[4]){ // cancelado
-                pushNotification.cancelOrder(order.device, order._id)
+                pushNotification.cancelOrder(order.device, order._id, order.orderNumber, 'YES')
             }
             
             pushSocket.send('/orders', order.distributor, 'change-state-order', order._id)
