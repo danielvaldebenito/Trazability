@@ -11,6 +11,7 @@ const Excel = require('exceljs')
 const fs = require('fs')
 const path = require('path')
 const Enumerable = require('linq')
+const datesService = require('../services/dates')
 function getData(limit, page, type, from, to, filter) {
 
     return new Promise((resolve, reject) => {
@@ -219,9 +220,11 @@ function exportTransaction(req, res) {
     const limit = parseInt(req.query.limit) || 200000
     const page = parseInt(req.query.page) || 1
     const type = req.query.type
-    const from = !req.query.from || req.query.from == 'null' ? moment().add(-10, 'days') : req.query.from
-    const to = !req.query.to || req.query.to == 'null' ? from + ' 23:59:59' : req.query.to + ' 23:59:59'
-    let promise = type == 'CARGA' ? getDataTruckload(from , to) : getDataTruckunload(from, to)
+    const from = req.query.from
+    const to = req.query.to
+    const dates = datesService.convertDateRange([from, to], 'YYYY-MM-DD')
+
+    let promise = type == 'CARGA' ? getDataTruckload(dates[0] , dates[1]) : getDataTruckunload(dates[0], dates[1])
     
     promise
         .then(

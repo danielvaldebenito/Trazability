@@ -70,6 +70,7 @@ function saveOneByDevice(req, res, next) {
             }
             const update = {
                 status: status,
+                reasonCancel: status == config.entitiesSettings.order.status[4] ? null : params.delivery.reason,
                 vehicle: params.vehicle,
                 userName: req.user.name + ' ' + req.user.surname,
                 device: params.device,

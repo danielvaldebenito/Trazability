@@ -3951,3 +3951,10 @@ Servidor corriendo correctamente en el puerto 3548
 { from: null, to: null }
 [32minfo[39m: GET /api/orders-monitor - - ms - - body: {}
 
+[32minfo[39m: Iniciando aplicación
+error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad
+[32minfo[39m: Iniciando aplicación
+error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad
+[32minfo[39m: Iniciando aplicación
+[32minfo[39m: Iniciando aplicación
+error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad
