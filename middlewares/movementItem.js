@@ -27,23 +27,19 @@ const createMovementItems = function(req, res, next) {
                         var id
                         if(!pro)
                         {
-                            productService.formatNif(nif)
-                                .then(formatted => {
-                                    let product = new Product ({
-                                        nif: nif,
-                                        productType: i.productType,
-                                        createdByPda: true,
-                                        createdBy: req.user.username,
-                                        formatted: formatted
-                                    })
-                                    product.save ((errr, productStored) => {
-                                        if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
-                                        id = productStored._id
-                                        saveMovementItemToDb(i, id, inputMovement)
-                                        saveMovementItemToDb(i, id, outputMovement)
-                                    })
-                                })
-                                .catch(error => { console.log('NO SE PUDO GUARDAR PRODUCTO ' + nif) })
+                            let product = new Product ({
+                                nif: nif,
+                                productType: i.productType,
+                                createdByPda: true,
+                                createdBy: req.user.username,
+                                formatted: formatted
+                            })
+                            product.save ((errr, productStored) => {
+                                if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
+                                id = productStored._id
+                                saveMovementItemToDb(i, id, inputMovement)
+                                saveMovementItemToDb(i, id, outputMovement)
+                            })
                             
                         } else {
                             id = pro._id
@@ -177,32 +173,28 @@ const createMovementItemsByRetreat = function(req, res, next) {
                 if(nif) {
                     productService.formatNif(nif)
                         .then(formatted => {
-                            Product.findOne({ nif: nif })
+                            Product.findOne({ formatted: formatted })
                             .exec((err, pro) => {
                                 if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                                 var id
                                 if(!pro)
                                 {
-                                    productService.formatNif(nif)
-                                    .then(formatted => {
-                                        let product = new Product ({
-                                            nif: nif,
-                                            productType: i.productType,
-                                            createdByPda: true,
-                                            createdBy: req.user.username,
-                                            formatted: formatted
-                                        })
-                                        product.save ((errr, productStored) => {
-                                            if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', errr})
-                                            id = productStored._id
-                                            if(retreatInputMovement)
-                                                saveMovementItemToDb(i, id, retreatInputMovement)
-                                            if(retreatOutputMovement)
-                                                saveMovementItemToDb(i, id, retreatOutputMovement)
-                                        })
-
-                                    })
                                     
+                                    let product = new Product ({
+                                        nif: nif,
+                                        productType: i.productType,
+                                        createdByPda: true,
+                                        createdBy: req.user.username,
+                                        formatted: formatted
+                                    })
+                                    product.save ((errr, productStored) => {
+                                        if(errr) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', errr})
+                                        id = productStored._id
+                                        if(retreatInputMovement)
+                                            saveMovementItemToDb(i, id, retreatInputMovement)
+                                        if(retreatOutputMovement)
+                                            saveMovementItemToDb(i, id, retreatOutputMovement)
+                                    })
                                 } else {
                                     id = pro._id
                                     if(retreatInputMovement)
