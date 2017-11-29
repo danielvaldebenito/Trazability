@@ -67,8 +67,8 @@ function saveOrderFromErpIntegration (req, res) {
         }
         if(!stored) return res.status(404).send({ done: false, message: 'No ha sido posible guardar el registro' })
         
-        if(params.vehicle){
-            pushNotification.newOrderAssigned(params.vehicle, JSON.stringify(stored))
+        if(params.device){
+            pushNotification.newOrderAssigned(params.device, stored._id)
         }
         
         pushSocket.send('/orders', params.distributor, 'new-order', stored._id)
