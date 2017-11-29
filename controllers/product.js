@@ -280,7 +280,6 @@ function importProducts (req, res) {
         readExcelProducts(file_name)
             .then((rowCount) => {
                 setTimeout(() => {
-                    // TODO: Delete filefs.unlink(filePath, (err) => {
                     fs.unlink(__dirname + '/../uploads/products/' + file_name, (err) => {
                         if(err)
                             console.log(err)
@@ -344,12 +343,11 @@ function saveProductFromExcelFile (row) {
                 createdBy: 'admin',
                 enabled: true
             }
-            Product.findOneAndUpdate({ nif: row.nif }, 
+            Product.findOneAndUpdate({ $or: [ { nif: row.nif },{ formatted: row.nif }] }, 
                     product, 
                     { upsert: true, new: true, projection: { _id: true } }, 
                     (err, prod) => {
                         if(err) reject(err)
-                        console.log(prod)
                         resolve(prod)
                     })
         })
