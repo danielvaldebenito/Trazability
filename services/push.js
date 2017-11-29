@@ -101,7 +101,7 @@ function cancelOrder(device, id, orderNumber, confirm) {
             var payload = {
                 data: {
                     key: 'CANCEL_ORDER',
-                    id: id,
+                    id: id.toString(),
                     orderNumber: orderNumber.toString(),
                     confirm: confirm
                 }
