@@ -81,6 +81,15 @@ function saveOneByDevice(req, res, next) {
             if (found.device != params.device) {
                 pushNotification.cancelOrder(found.device, found._id.toString(), found.orderNumber, "NO")
             }
+
+            if(status == config.entitiesSettings.order.status[4]) {
+                loginIntegration.login()
+                .then(sessionId => {
+                    orderIntegration.changeState(found, sessionId, config.entitiesSettings.order.statesErp[2], params.delivery.reason) // pedido cancelado
+                        .then(result => console.log(result))
+
+                })
+            }
             Order.update({ _id: params.delivery.orderId }, update, (err, updated) => {
                 if (err) return res.status(200).send({ done: false, message: 'Error al actualizar pedido', err, code: -1 })
 
