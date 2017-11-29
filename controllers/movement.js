@@ -67,7 +67,7 @@ function getData(limit, page, type, from, to, filter) {
         })
     })
 }
-function getDataTruckload (from, to) {
+function getDataTruckload (from, to, filter) {
     return new Promise((resolve, reject) => {
         Truckload.find({ createdAt: { $gte: from, $lte: to } })
         .populate({
@@ -87,15 +87,26 @@ function getDataTruckload (from, to) {
                 }]
             }, {
                 path: 'document'
+            }, {
+                path: 'user'
+            }, {
+                path: 'device'
             }]
         })
         .exec ( ( err, data ) => {
             if(err) reject(err)
+            if(filter) {
+                data = data.filter((f) => { 
+                    return (f.transaction.device && f.transaction.device.pos && f.transaction.device.pos.toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1) 
+                    || (f.transaction.user && (f.transaction.user.name + ' ' + f.transaction.user.surname).toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1 )
+                })
+                
+            }
             resolve(data)
         })
     })
 }
-function getDataTruckunload (from, to) {
+function getDataTruckunload (from, to, filter) {
     return new Promise((resolve, reject) => {
         Truckunload.find({ createdAt: { $gte: from, $lte: to } })
         .populate({
@@ -115,11 +126,22 @@ function getDataTruckunload (from, to) {
                 }]
             },{
                 path: 'document'
+            }, {
+                path: 'user'
+            }, {
+                path: 'device'
             }]
 
         })
         .exec ( ( err, data ) => {
             if(err) reject(err)
+            if(filter) {
+                data = data.filter((f) => { 
+                    return (f.transaction.device && f.transaction.device.pos && f.transaction.device.pos.toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1) 
+                    || (f.transaction.user && (f.transaction.user.name + ' ' + f.transaction.user.surname).toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1 )
+                })
+                
+            }
             resolve(data)
         })
     })
@@ -222,9 +244,10 @@ function exportTransaction(req, res) {
     const type = req.query.type
     const from = req.query.from
     const to = req.query.to
+    const filter = req.query.filter
     const dates = datesService.convertDateRange([from, to], 'YYYY-MM-DD')
 
-    let promise = type == 'CARGA' ? getDataTruckload(dates[0] , dates[1]) : getDataTruckunload(dates[0], dates[1])
+    let promise = type == 'CARGA' ? getDataTruckload(dates[0] , dates[1], filter) : getDataTruckunload(dates[0], dates[1], filter)
     
     promise
         .then(
@@ -272,14 +295,16 @@ function writeFileExcel(type, data) {
                 }
               ]
             let worksheet = workbook.addWorksheet('Productos')
-            worksheet.autoFilter = 'A1:F1';
+            worksheet.autoFilter = 'A1:H1';
             worksheet.columns = [
                 { header: 'Tipo', key: 'type', width: 15 },
                 { header: 'Fecha', key: 'date', width: 15 },
                 { header: 'Vehículo', key: 'vehicle', width: 15 },
                 { header: 'TCO', key: 'tco', width: 15 },
                 { header: 'NIF', key: 'nif', width: 20 },
-                { header: 'Capacidad', key: 'productType', width: 15 }
+                { header: 'Capacidad', key: 'productType', width: 15 },
+                { header: 'POS', key: 'pos', width: 15 },
+                { header: 'Usuario', key: 'user', width: 15 }
             ];
             let transactions = data.map(t => { return t.transaction });
             let items = []
@@ -290,12 +315,15 @@ function writeFileExcel(type, data) {
                     if(movement.type == movementType) {
                         let i = movement.items
                         i.map((it, i) => {
+                            
                             let item = {
                                 vehicle: movement.warehouse.name,
                                 tco: transaction.document ? transaction.document.folio : '',
                                 nif: it.product ? it.product.formatted || it.product.nif : '',
                                 productType: it.product && it.product.productType ? it.product.productType.capacity : '',
-                                date: transaction.createdAt
+                                date: transaction.createdAt,
+                                pos: transaction.device ? transaction.device.pos : '',
+                                user: transaction.user ? transaction.user.name + ' ' + transaction.user.surname : ''
                             }
                             items.push(item);
                         })
@@ -311,7 +339,9 @@ function writeFileExcel(type, data) {
                     vehicle: i.vehicle,
                     tco: i.tco,
                     nif: i.nif,
-                    productType: i.productType
+                    productType: i.productType,
+                    user: i.user,
+                    pos: i.pos
                 } 
             })
 

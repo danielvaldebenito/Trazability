@@ -288,6 +288,7 @@ function loginTrazability(req, res) {
     const username = params.username
     const password = params.password
     const esn = params.esn
+    const version = params.version
     const initialDataKey = params.initialDataKey
     const initialDataKeyConfig = config.entitiesSettings.initialDataKey
     const isSameDataKey = initialDataKey == initialDataKeyConfig
@@ -335,7 +336,8 @@ function loginTrazability(req, res) {
                                             var dev = new Device({
                                                 esn: esn,
                                                 status: 1,
-                                                user2: user._id
+                                                user2: user._id,
+                                                version2: version
                                             })
                                             dev.save((error, devStored) => {
                                                 if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al guardar PDA', error: error })
@@ -364,7 +366,7 @@ function loginTrazability(req, res) {
 
 
                                         } else {
-                                            Device.update({ _id: device._id }, { user2: user._id }, (err, raw) => {
+                                            Device.update({ _id: device._id }, { user2: user._id, version2: version }, (err, raw) => {
                                                 if (error) return res.status(500).send({ done: false, code: -1, data: null, message: 'Error al actualizar PDA', error: error })
                                                 User.update({ _id: user._id }, { device: device._id }, (err, raw) => {
 
