@@ -77,7 +77,7 @@ function saveOrderFromErpIntegration (req, res) {
             .status(200)
             .send({ 
                 done: true, 
-                message: 'Registro guardado exitosamente', 
+                message: stored.orderNumber + '/Registro guardado exitosamente', 
                 stored: stored
             })
     })
@@ -86,10 +86,10 @@ function saveOrderFromErpIntegration (req, res) {
 function changeOrderStateFromErpIntegration (req, res) {
     const body = req.body
     const state = body.state
-    const salesforceId = body.salesforceId
+    const orderNumber = body.salesforceId
     const reason = body.reason || null
     
-    Order.findOne({ erpId: salesforceId },(err, order) => {
+    Order.findOne({ orderNumber: orderNumber },(err, order) => {
         if(err) { 
             console.log('error', err); 
             return res.status(500).send({ done: false, message: 'Ha ocurrido un error al buscar pedido', error: err })
