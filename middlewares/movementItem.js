@@ -18,8 +18,10 @@ const createMovementItems = function(req, res, next) {
         var total = items.length
         items.forEach((i) => {
             var nif = i.nif
-            
-            Product.findOne({ nif: nif })
+            productService.formatNif(nif)
+                .then(formatted => {
+
+                    Product.findOne({ formatted: formatted })
                     .exec((err, pro) => {
                         if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                         var id
@@ -50,7 +52,10 @@ const createMovementItems = function(req, res, next) {
                         }
                         
                     })
-            
+                })
+                .catch((error) => {
+                    throw error
+                })
         })
         next()
     }   
@@ -89,7 +94,7 @@ const createNormalMovementItems = function(req, res, next) {
                     formatted: formatted
                 }
 
-                Product.findOneAndUpdate({ nif: nif }, product, { upsert: true, new: true, projection: { _id: true }  }, (err, doc) => {
+                Product.findOneAndUpdate({ formatted: formatted }, product, { upsert: true, new: true, projection: { _id: true }  }, (err, doc) => {
                     if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                     
                     const id = doc._id
@@ -170,8 +175,9 @@ const createMovementItemsByRetreat = function(req, res, next) {
             retreats.forEach(function(i) {
                 var nif = i.nif
                 if(nif) {
-                    
-                    Product.findOne({ nif: nif })
+                    productService.formatNif(nif)
+                        .then(formatted => {
+                            Product.findOne({ nif: nif })
                             .exec((err, pro) => {
                                 if(err) return res.status(500).send({ done: false, message: 'Error al buscar producto para verificar si existe en la base de datos', err})
                                 var id
@@ -206,8 +212,8 @@ const createMovementItemsByRetreat = function(req, res, next) {
                                 }
                             
                         })
-                        
-                    
+                        })
+                        .catch(error => {throw error})
                 }
             }, this);
             next()
