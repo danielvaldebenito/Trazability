@@ -316,15 +316,14 @@ function readExcelProducts (file_name) {
                     
                     saveProductFromExcelFile(fila)
                         .then(prod => {
-                            if(rowNumber == rowCount - 1) {
-                                resolve(rowCount)
-                            }
+                            
                             console.log('producto guardado', rowNumber)
                         }, onrejected => {
                             reject('on reject ' + onrejected)
                         })
                     
                 });
+                resolve(rowCount)
             }, onrejected => {
                 reject('on rejected' + onrejected)
             })
