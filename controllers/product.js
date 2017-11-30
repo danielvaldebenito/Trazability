@@ -307,18 +307,19 @@ function readExcelProducts (file_name) {
 
                 worksheet.spliceRows(1, 1);
                 let rowCount = worksheet.rowCount;
+                console.log('rowCount', rowCount)
                 worksheet.eachRow({ includeEmpty: false}, (row, rowNumber) => {
                     
                     let capacity = row.getCell(1).value;
                     let nif = row.getCell(2).value.toString();
                     let fila = { capacity, nif }
-                    console.log('reading fila', fila)
+                    
                     saveProductFromExcelFile(fila)
                         .then(prod => {
                             if(rowNumber == rowCount - 1) {
-                                console.log('producto guardado', rowNumber)
                                 resolve(rowCount)
-                            } 
+                            }
+                            console.log('producto guardado', rowNumber)
                         }, onrejected => {
                             reject('on reject ' + onrejected)
                         })
