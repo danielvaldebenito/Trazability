@@ -351,7 +351,7 @@ function saveProductFromExcelFile (row) {
                         if(err) reject(err)
                         resolve(prod)
                     })
-        })
+        }, rejected => reject(rejected))
     })
 }
 function getProductTypeFromCapacity (capacity) {
