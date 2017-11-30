@@ -308,10 +308,11 @@ function readExcelProducts (file_name) {
                 worksheet.spliceRows(1, 1);
                 let rowCount = worksheet.rowCount;
                 worksheet.eachRow({ includeEmpty: false}, (row, rowNumber) => {
-                    console.log('reading', rowNumber)
+                    
                     let capacity = row.getCell(1).value;
                     let nif = row.getCell(2).value.toString();
                     let fila = { capacity, nif }
+                    console.log('reading fila', fila)
                     saveProductFromExcelFile(fila)
                         .then(prod => {
                             if(rowNumber == rowCount - 1) {
