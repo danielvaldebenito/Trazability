@@ -386,12 +386,14 @@ function setOrderEnRuta(req, res) {
 
             loginIntegration.login()
                 .then(sessionId => {
-                    Order.find({ _id: { $in: orders } }, (err, o) => {
+                    Order.find({ _id: { $in: orders } }, (err, ors) => {
+                        ors.forEach((o) => {
+                            if (o && o.erpUpdated) {
+                                orderIntegration.changeState(o, sessionId, config.entitiesSettings.order.statesErp[1]) // notificado al conductor
+                                    .then(result => console.log(result))
+                            }
+                        })
                         
-                        if (o && o.erpUpdated) {
-                            orderIntegration.changeState(o, sessionId, config.entitiesSettings.order.statesErp[1]) // notificado al conductor
-                                .then(result => console.log(result))
-                        }
                     })
                 }, onrejected => {
                     console.log('ERROR Integración: ', onrejected)
