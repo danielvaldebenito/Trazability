@@ -308,6 +308,7 @@ function readExcelProducts (file_name) {
                 worksheet.spliceRows(1, 1);
                 let rowCount = worksheet.rowCount;
                 console.log('rowCount', rowCount)
+                let count = 0;
                 worksheet.eachRow({ includeEmpty: false}, (row, rowNumber) => {
                     
                     let capacity = row.getCell(1).value;
@@ -316,8 +317,8 @@ function readExcelProducts (file_name) {
                     
                     saveProductFromExcelFile(fila)
                         .then(prod => {
-                            
-                            console.log('producto guardado', rowNumber)
+                            count++;
+                            console.log('agregado producto', prod, count)
                         }, onrejected => {
                             reject('on reject ' + onrejected)
                         })
@@ -350,7 +351,7 @@ function saveProductFromExcelFile (row) {
                     { upsert: true, new: true, projection: { _id: true } }, 
                     (err, prod) => {
                         if(err) reject(err)
-                        resolve(prod)
+                        resolve(row.nif)
                     })
         }, rejected => reject(rejected))
     })
