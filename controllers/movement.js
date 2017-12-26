@@ -51,6 +51,7 @@ function getData(limit, page, type, from, to, filter) {
                 path: 'document'
             }
         ])
+        .sort([['createdAt', -1]])
         .paginate(page, limit, (err, records, total) => {
             if(err) reject(err)
 
@@ -93,6 +94,7 @@ function getDataTruckload (from, to, filter) {
                 path: 'device'
             }]
         })
+        .sort([['createdAt', -1]])
         .exec ( ( err, data ) => {
             if(err) reject(err)
             if(filter) {
@@ -133,6 +135,7 @@ function getDataTruckunload (from, to, filter) {
             }]
 
         })
+        .sort([['createdAt', -1]])
         .exec ( ( err, data ) => {
             if(err) reject(err)
             if(filter) {
@@ -147,6 +150,55 @@ function getDataTruckunload (from, to, filter) {
     })
     
 }
+
+function getDataMaintenance (from, to, filter) {
+    return new Promise((resolve, reject) => {
+        Maintenance.find({ createdAt: { $gte: from, $lte: to } })
+        .populate([{
+            path: 'transaction',
+            populate: [{
+                path: 'movements',
+                populate: [{ 
+                    path: 'items',
+                    populate: {
+                        path: 'product',
+                        populate: {
+                            path: 'productType'
+                        }
+                    }
+                },{
+                    path: 'warehouse'
+                }]
+            },{
+                path: 'document'
+            }, {
+                path: 'user'
+            }, {
+                path: 'device'
+            }]
+
+        },{
+            path: 'originWarehouse'
+        },{
+            path: 'destinyWarehouse'
+        }])
+        .sort([['createdAt', -1]])
+        .exec ( ( err, data ) => {
+            if(err) reject(err)
+            if(filter) {
+                data = data.filter((f) => { 
+                    return (f.transaction.device && f.transaction.device.pos && f.transaction.device.pos.toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1) 
+                    || (f.transaction.user && (f.transaction.user.name + ' ' + f.transaction.user.surname).toString().toLowerCase().indexOf(filter.toString().toLowerCase()) > -1 )
+                })
+                
+            }
+            resolve(data)
+        })
+    })
+    
+}
+
+
 function getAll (req, res) {
     const distributor = req.query.distributor
     const limit = parseInt(req.query.limit) || 200
@@ -247,12 +299,17 @@ function exportTransaction(req, res) {
     const filter = req.query.filter
     const dates = datesService.convertDateRange([from, to], 'YYYY-MM-DD')
 
-    let promise = type == 'CARGA' ? getDataTruckload(dates[0] , dates[1], filter) : getDataTruckunload(dates[0], dates[1], filter)
+    let promise = type == 'CARGA' ? getDataTruckload(dates[0] , dates[1], filter) 
+                    : type == 'DESCARGA' ? getDataTruckunload(dates[0], dates[1], filter)
+                        : type == 'MANTENCIÓN' ? getDataMaintenance(dates[0], dates[1], filter)
+                            : null;
+    if(!promise) return;
     
     promise
         .then(
             resolved => {
-                writeFileExcel(type, resolved)
+                let promise2 = type == 'CARGA' || type == 'DESCARGA' ? writeFileExcel(type, resolved) : writeFileExcelMaintenance(resolved)
+                promise2
                     .then(filename => {
                         console.log('filename', filename)
                         const filePath = './exports/' + filename
@@ -270,7 +327,7 @@ function exportTransaction(req, res) {
                                 res.status(400).send({message: 'Archivo no disponible'})
                             }
                         })
-                    }, error => console.log('error', error)
+                    }, error => res.status(500).send({message: 'Ha ocurrido un error', error: error})
                     )
                     .catch(reason => console.log('reason', reason))
             },
@@ -294,7 +351,7 @@ function writeFileExcel(type, data) {
                   firstSheet: 0, activeTab: 1, visibility: 'visible'
                 }
               ]
-            let worksheet = workbook.addWorksheet('Productos')
+            let worksheet = workbook.addWorksheet(type)
             worksheet.autoFilter = 'A1:H1';
             worksheet.columns = [
                 { header: 'Tipo', key: 'type', width: 15 },
@@ -335,6 +392,100 @@ function writeFileExcel(type, data) {
             let rows = items.map((i) => { 
                 return { 
                     type: type,
+                    date: i.date,
+                    vehicle: i.vehicle,
+                    tco: i.tco,
+                    nif: i.nif,
+                    productType: i.productType,
+                    user: i.user,
+                    pos: i.pos
+                } 
+            })
+
+            worksheet.addRows(rows);
+    
+            worksheet.eachRow({includeEmpty: false}, (row, rowNumber) => {
+                row.font = { name: 'Arial', family: 4, size: 10 }
+            })
+            const random = Math.random().toString(36).slice(2);
+            let filename = `EXPORT_${random}.xlsx`;
+            console.log('try saving', filename)
+            workbook.xlsx.writeFile(`exports/` + filename)
+                .then(() => {
+                    console.log('saved!', filename)
+                    resolve(filename)
+                }, rej => {
+                    reject('No se pudo guardar el archivo')
+                });
+        }
+        catch (e) {
+            reject('error' + e)
+        }
+        
+    })
+}
+
+function writeFileExcelMaintenance(data) {
+    return new Promise((resolve, reject) => {
+        try 
+        {
+            let workbook = new Excel.Workbook()
+            workbook.creator = 'Unigas'
+            workbook.created = new Date()
+            workbook.views = [
+                {
+                  x: 0, y: 0, width: 10000, height: 200000, 
+                  firstSheet: 0, activeTab: 1, visibility: 'visible'
+                }
+              ]
+            let worksheet = workbook.addWorksheet('MANTENCIÓN')
+            worksheet.autoFilter = 'A1:H1';
+            worksheet.columns = [
+                { header: 'Fecha', key: 'date', width: 15 },
+                { header: 'Origen', key: 'origin', width: 20 },
+                { header: 'Destino', key: 'destination', width: 20 },
+                { header: 'Motivo', key: 'reason', width: 25 },
+                { header: 'TCO', key: 'tco', width: 15 },
+                { header: 'NIF', key: 'nif', width: 20 },
+                { header: 'Capacidad', key: 'productType', width: 15 },
+                { header: 'POS', key: 'pos', width: 15 },
+                { header: 'Usuario', key: 'user', width: 15 }
+            ];
+            let maintenances = data.map(m => { return m })
+            //let transactions = data.map(t => { return t.transaction });
+            let items = []
+            maintenances.map((maintenance, m) => {
+                let movements = maintenance.transaction.movements;
+                console.log('maintenance', maintenance)
+                movements.map((movement, m) => {
+                    let movementType = 'S'
+                    if(movement.type == movementType) {
+                        let i = movement.items
+                        i.map((it, i) => {
+                            
+                            let item = {
+                                origin: maintenance.originWarehouse.name,
+                                destination: maintenance.destinyWarehouse.name,
+                                reason: maintenance.reason,
+                                tco: maintenance.transaction.document ? maintenance.transaction.document.folio : '',
+                                nif: it.product ? it.product.formatted || it.product.nif : '',
+                                productType: it.product && it.product.productType ? it.product.productType.capacity : '',
+                                date: maintenance.transaction.createdAt,
+                                pos: maintenance.transaction.device ? maintenance.transaction.device.pos : '',
+                                user: maintenance.transaction.user ? maintenance.transaction.user.name + ' ' + maintenance.transaction.user.surname : ''
+                            }
+                            items.push(item);
+                        })
+                    }
+                    
+                })
+            });
+
+            let rows = items.map((i) => { 
+                return { 
+                    origin: i.origin,
+                    destination: i.destination,
+                    reason: i.reason,
                     date: i.date,
                     vehicle: i.vehicle,
                     tco: i.tco,

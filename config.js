@@ -25,7 +25,12 @@ module.exports = {
     integration: {
         sessionId: '',
         username: 'sistemas@unigas.com.co.developer',
-        password: 'Sagan2020$'
+        password: 'Sagan2020$',
+        imports: {
+            interval: 3600000,
+            start: 1,
+            end: 2
+        }
     },
     entitiesSettings: {
         initialDataKey: 1,

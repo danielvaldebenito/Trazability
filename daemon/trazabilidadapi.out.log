@@ -3958,3 +3958,5 @@ error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017
 [32minfo[39m: Iniciando aplicación
 [32minfo[39m: Iniciando aplicación
 error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad
+[32minfo[39m: Iniciando aplicación
+error al conectarse a la base de datos mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad

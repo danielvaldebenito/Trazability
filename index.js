@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const port = process.env.PORT || 3548;
 const mongoConnectionUrl = `mongodb://${config.database.user}:${config.database.password}@${config.database.server}:${config.database.port}/${config.database.name}`
 //const mongoConnectionUrl = 'mongodb://unigas:09v9085a@localhost:27017/unigastrazabilidad'
+const importService = require('./integration/controllers/imports')
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoConnectionUrl, { useMongoClient: true }, (err, res) => {
     if(err) {
@@ -19,5 +20,6 @@ mongoose.connect(mongoConnectionUrl, { useMongoClient: true }, (err, res) => {
             
         })
         require('./services/pushSocket')
+        importService.mainFunction();
     }
 })

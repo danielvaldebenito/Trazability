@@ -26,7 +26,7 @@ var getProductType = function (req, res, next) {
         var total = items.length
         items.forEach(function(element, index) {
             var productCode = element.productCode
-            ProductType.findOne({ code: productCode })
+            ProductType.findOne({ code2: productCode })
                         .exec((err, pt) => {
                             if(err) return res.status(500).send({ done: false, message: 'Ocurrió un error al buscar producto '})
                             if(!pt) return res.status(404).send({ done: false, message: 'El producto no existe ' + productCode })

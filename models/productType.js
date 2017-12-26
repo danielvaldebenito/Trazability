@@ -9,6 +9,7 @@ const ProductTypeSchema = Schema({
     name: String,
     description: String,
     code: String,
+    code2: String,
     type: { type: String, enum: types },
     capacity: Number
 })
