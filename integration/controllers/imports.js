@@ -25,9 +25,11 @@ getProductTypes()
 const mainFunction = () => {
     setInterval(() => {
         let hour = moment().hour();
-        if(hour > startHour && hour < endHour) {
+        if(hour >= startHour && hour <= endHour) {
             readClientCsvFile();
             readContratistaCsvFile();
+        } else {
+            logger.info('Aún no es hora para las importaciones', hour)
         }
     }, timeinterval)
 }
