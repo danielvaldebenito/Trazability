@@ -9,6 +9,7 @@ const loginService = require('../connection/login')
 const Order = require('../../models/order')
 const Client = require('../../models/client')
 const config = require('../../config')
+const Enumerable = require('linq')
 function createOrder(order, sessionId) {
     const p = new Promise(function(resolve, reject) {
     
