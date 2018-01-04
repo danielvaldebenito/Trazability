@@ -1,3 +1,4 @@
+
 'use strict'
 
 const soap = require('soap')
@@ -7,6 +8,7 @@ const changeStatus = __dirname + '/../wsdl/cambioEstadoPedido.wsdl'
 const loginService = require('../connection/login')
 const Order = require('../../models/order')
 const Client = require('../../models/client')
+const config = require('../../config')
 function createOrder(order, sessionId) {
     const p = new Promise(function(resolve, reject) {
     
@@ -107,12 +109,20 @@ function changeState(order, sessionId, state, reason) {
         if(!order.erpUpdated) {
             reject('No se ha informado pedido')
         }
+       
         soap.createClient(changeStatus, (err, client) => {
             if(err) reject(err)
             const sHeader = { SessionHeader: { sessionId: sessionId }};
             client.addSoapHeader(sHeader, '', 'tns', '')
             // {"invoiceList":[{"idSalesforce":"0060x000001reYN","noPedido":"151486","Estado":"Notificado al Conductor"}]}
-            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: state, Razon: reason || ''};
+            let existsReason
+            if(reason) {
+                const reasons = config.entitiesSettings.order.reasons;
+                existsReason = Enumerable.from(reasons)
+                                        .where(w => { return w.toLowerCase() == reason.toLowerCase() })
+                                        .firstOrDefault();
+            }
+            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: state, Razon: existsReason || ''};
             let array = []
             array.push(args)
             let send = { invoiceList: array }
