@@ -157,6 +157,7 @@ function changeState(order, sessionId, state, reason, itemsSale) {
             let array = []
             array.push(args)
             let send = { invoiceList: array }
+            console.log('send', send)
             client.cambioEtapaPedido_mtd({ strIdPedido: JSON.stringify(send) }, (err, ok) => {
                 if(err) reject(err)
                 resolve(ok)
