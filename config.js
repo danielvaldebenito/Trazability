@@ -29,7 +29,7 @@ module.exports = {
         imports: {
             interval: 3600000,
             start: 1,
-            end: 2
+            end: 3
         }
     },
     entitiesSettings: {

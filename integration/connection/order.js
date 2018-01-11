@@ -10,6 +10,7 @@ const Order = require('../../models/order')
 const Client = require('../../models/client')
 const config = require('../../config')
 const Enumerable = require('linq')
+const ProductType = require('../../models/productType')
 function createOrder(order, sessionId) {
     const p = new Promise(function(resolve, reject) {
     
@@ -34,22 +35,22 @@ function createOrder(order, sessionId) {
                 tipoPedido: order.type == 'ENVASADO' ? 'Cilindro Individual' : 'Granel',
                 POS: order.device ? order.device.pos : '', // esn * para pruebas usar pos006
                 placaVehiculo: order.vehicle ? order.vehicle.licensePlate : '',
-                Producto1: order.items[0].productType.code,
+                Producto1: order.items[0].productType.code2,
                 CantidadProducto1: order.items[0].quantity,
                 ValorUnitarioP1: order.items[0].price,
                 ValorNegociableP1: order.items[0].negotiable,
                 TotalP1: 0,
-                Producto2: order.items[1] ? order.items[1].productType.code : '',
+                Producto2: order.items[1] ? order.items[1].productType.code2 : '',
                 CantidadProducto2: order.items[1] ? order.items[1].quantity : 0,
                 ValorUnitarioP2: order.items[1] ? order.items[1].price : 0,
                 ValorNegociableP2: order.items[1] ? order.items[1].negotiable : 0,
                 TotalP2: 0,
-                Producto3: order.items[2] ? order.items[2].productType.code : '',
+                Producto3: order.items[2] ? order.items[2].productType.code2 : '',
                 CantidadProducto3: order.items[2] ? order.items[2].quantity : 0,
                 ValorUnitarioP3: order.items[2] ? order.items[2].price : 0,
                 ValorNegociableP3: order.items[2] ? order.items[2].negotiable : 0,
                 TotalP3: 0,
-                Producto4: order.items[3] ? order.items[3].productType.code: '',
+                Producto4: order.items[3] ? order.items[3].productType.code2: '',
                 CantidadProducto4: order.items[3] ? order.items[3].quantity : 0,
                 ValorUnitarioP4: order.items[3] ? order.items[3].price : 0,
                 ValorNegociableP4: order.items[3] ? order.items[3].negotiable : 0,
@@ -105,7 +106,7 @@ function createOrder(order, sessionId) {
 
 }
 
-function changeState(order, sessionId, state, reason) {
+function changeState(order, sessionId, state, reason, itemsSale) {
     return new Promise ((resolve, reject) => {
         if(!order.erpUpdated) {
             reject('No se ha informado pedido')
@@ -123,7 +124,36 @@ function changeState(order, sessionId, state, reason) {
                                         .where(w => { return w.toLowerCase() == reason.toLowerCase() })
                                         .firstOrDefault();
             }
-            const args = { idSalesforce: order.erpId, noPedido: order.erpOrderNumber, Estado: state, Razon: existsReason || ''};
+            let jsonDetail = [
+                { product: null, quantity: 0 },
+                { product: null, quantity: 0 },
+                { product: null, quantity: 0 },
+                { product: null, quantity: 0 }
+            ]
+            if(itemsSale) {
+                itemsSale.forEach((item, i) => {
+                    getProductTypeById(item.productType)
+                        .then(pt => {
+                            jsonDetail[i].product = pt.code2
+                            jsonDetail[i].quantity = item.quantity
+                        })
+                });
+            }
+            const args = { 
+                idSalesforce: order.erpId, 
+                noPedido: order.erpOrderNumber, 
+                Estado: state, 
+                Razon: existsReason || '',
+                Producto1: jsonDetail[0].product,
+                CantidadEntregadaP1: jsonDetail[0].quantity,
+                Producto2: jsonDetail[1].product,
+                CantidadEntregadaP2: jsonDetail[1].quantity,
+                Producto3: jsonDetail[2].product,
+                CantidadEntregadaP3: jsonDetail[2].quantity,
+                Producto4: jsonDetail[3].product,
+                CantidadEntregadaP4: jsonDetail[3].quantity
+            };
+
             let array = []
             array.push(args)
             let send = { invoiceList: array }
@@ -168,4 +198,14 @@ function replaceTildes(str) {
             .replace('Ú', 'U')
 
 }
+function getProductTypeById(id) {
+    return new Promise((resolve, reject) => {
+        ProductType.findById(id, (err, pt) => {
+            if(err) reject(err)
+            resolve(pt)
+        });
+    }) 
+}
+
+
 module.exports = { createOrder, changeState }

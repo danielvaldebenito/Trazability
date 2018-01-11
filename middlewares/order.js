@@ -85,7 +85,7 @@ function saveOneByDevice(req, res, next) {
             let stateErp = status == config.entitiesSettings.order.status[4] ? config.entitiesSettings.order.statesErp[2] : config.entitiesSettings.order.statesErp[3]
             loginIntegration.login()
             .then(sessionId => {
-                orderIntegration.changeState(found, sessionId, stateErp, params.delivery.reason) // pedido cancelado
+                orderIntegration.changeState(found, sessionId, stateErp, params.delivery.reason, params.itemsSale) // pedido cancelado
                     .then(result => console.log(result))
 
             })
@@ -164,7 +164,7 @@ function saveOneByDevice(req, res, next) {
 
                             const loginPromise = loginIntegration.login();
                             loginPromise.then(logued => {
-                                orderIntegration.createOrder(populated, logued)
+                                orderIntegration.createOrder(populated, logued) // FIXME: agregar datos de venta
                                     .then(result => {
                                         console.log(result)
                                     })

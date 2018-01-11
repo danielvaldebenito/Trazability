@@ -15,7 +15,7 @@ const startHour = config.integration.imports.start;
 const endHour = config.integration.imports.end;
 const distributorFilename = 'contratistaUnigas.csv'
 const clientFilename = 'cuentaUnigas.csv'
-
+let lastDay = 0;
 getProductTypes()
     .then(pts => {
         productTypes = pts
@@ -25,9 +25,13 @@ getProductTypes()
 const mainFunction = () => {
     setInterval(() => {
         let hour = moment().hour();
+        let day = moment().date();
         if(hour >= startHour && hour <= endHour) {
-            readClientCsvFile();
-            readContratistaCsvFile();
+            if(day != lastDay) {
+                readClientCsvFile();
+                readContratistaCsvFile();
+                lastDay = day;
+            }
         } else {
             logger.info('Aún no es hora para las importaciones', hour)
         }
@@ -98,7 +102,8 @@ const readClientCsvFile = () => {
                 })
                 .on('finish', () => {
                     logger.info('Archivo de cliente cargado correctamente')
-                    fs.rename(__dirname + '/../../../IntegracionSaleForce/cuentaUnigas.csv', __dirname + '/../../../IntegracionSaleForce/backup/cuentaUnigas.csv', (err) => {
+                    let date = moment().format('YYYY-MM-DD HHmmss');
+                    fs.rename(__dirname + '/../../../IntegracionSaleForce/cuentaUnigas.csv', __dirname + '/../../../IntegracionSaleForce/backup/cuentaUnigas_' + date + '.csv', (err) => {
                         if(err) logger.info('Archivo de cliente movido al backup')
                     })
                 })
@@ -146,7 +151,8 @@ const readContratistaCsvFile = () => {
                 })
                 .on('finish', () => {
                     logger.info('Archivo de contratista cargado correctamente')
-                    fs.rename(__dirname + '/../../../IntegracionSaleForce/contratistaUnigas.csv', __dirname + '/../../../IntegracionSaleForce/backup/contratistaUnigas.csv', (err) => {
+                    let date = moment().format('YYYY-MM-DD HHmmss');
+                    fs.rename(__dirname + '/../../../IntegracionSaleForce/contratistaUnigas.csv', __dirname + '/../../../IntegracionSaleForce/backup/contratistaUnigas_' + date + '.csv', (err) => {
                         if(err) logger.info('Archivo de contratista movido al backup')
                     })
                 })
