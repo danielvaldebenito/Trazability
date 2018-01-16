@@ -141,14 +141,14 @@ function changeState(order, sessionId, state, reason, itemsSale) {
                             jsonDetail[i].quantity = item.quantity
                             if(itemsSale.length && itemsSale.length == index) {
                                 sendChangeStatus(order, state, existsReason, jsonDetail,client)
-                                    .then(r => resolve())
+                                    .then(r => resolve(r))
 
                             }
                         })
                 });
             } else {
                 sendChangeStatus(order, state, existsReason, jsonDetail, client)
-                    .then(r => resolve());
+                    .then(r => resolve(r));
             }
             
         })
