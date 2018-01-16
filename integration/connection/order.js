@@ -131,40 +131,59 @@ function changeState(order, sessionId, state, reason, itemsSale) {
                 { product: null, quantity: 0 }
             ]
             if(itemsSale) {
+                let index = 0
                 itemsSale.forEach((item, i) => {
+                    
                     getProductTypeById(item.productType)
                         .then(pt => {
+                            index++
                             jsonDetail[i].product = pt.code2
                             jsonDetail[i].quantity = item.quantity
+                            if(itemsSale.length && itemsSale.length == index) {
+                                sendChangeStatus(order, state, existsReason, jsonDetail)
+                                    .then(r => console.log(r))
+
+                            }
                         })
                 });
+            } else {
+                sendChangeStatus(order, state, existsReason, jsonDetail)
+                    .then(r => console.log(r));
             }
-            const args = { 
-                idSalesforce: order.erpId, 
-                noPedido: order.erpOrderNumber, 
-                Estado: state, 
-                Razon: existsReason || '',
-                Producto1: jsonDetail[0].product,
-                CantidadEntregadaP1: jsonDetail[0].quantity,
-                Producto2: jsonDetail[1].product,
-                CantidadEntregadaP2: jsonDetail[1].quantity,
-                Producto3: jsonDetail[2].product,
-                CantidadEntregadaP3: jsonDetail[2].quantity,
-                Producto4: jsonDetail[3].product,
-                CantidadEntregadaP4: jsonDetail[3].quantity
-            };
-
-            let array = []
-            array.push(args)
-            let send = { invoiceList: array }
-            console.log('send', send)
-            client.cambioEtapaPedido_mtd({ strIdPedido: JSON.stringify(send) }, (err, ok) => {
-                if(err) reject(err)
-                resolve(ok)
-            })
+            
         })
     })
 }
+
+function sendChangeStatus(order, state, existsReason, jsonDetail) {
+    return new Promise((resolve, reject) => {
+        const args = { 
+            idSalesforce: order.erpId, 
+            noPedido: order.erpOrderNumber, 
+            Estado: state, 
+            Razon: existsReason || '',
+            Producto1: jsonDetail[0].product,
+            CantidadEntregadaP1: jsonDetail[0].quantity,
+            Producto2: jsonDetail[1].product,
+            CantidadEntregadaP2: jsonDetail[1].quantity,
+            Producto3: jsonDetail[2].product,
+            CantidadEntregadaP3: jsonDetail[2].quantity,
+            Producto4: jsonDetail[3].product,
+            CantidadEntregadaP4: jsonDetail[3].quantity
+        };
+    
+        let array = []
+        array.push(args)
+        let send = { invoiceList: array }
+        console.log('send', send)
+        client.cambioEtapaPedido_mtd({ strIdPedido: JSON.stringify(send) }, (err, ok) => {
+            if(err) reject(err)
+            resolve(ok)
+        })
+    })
+}
+
+
 function updateOrderFromSalesForce (idOrder, idPedidoSF, noPedidoSF) {
     return new Promise ((resolve, reject) =>  {
         Order.findByIdAndUpdate(idOrder, 
