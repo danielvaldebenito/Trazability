@@ -140,14 +140,14 @@ function changeState(order, sessionId, state, reason, itemsSale) {
                             jsonDetail[i].product = pt.code2
                             jsonDetail[i].quantity = item.quantity
                             if(itemsSale.length && itemsSale.length == index) {
-                                sendChangeStatus(order, state, existsReason, jsonDetail)
+                                sendChangeStatus(order, state, existsReason, jsonDetail,client)
                                     .then(r => resolve())
 
                             }
                         })
                 });
             } else {
-                sendChangeStatus(order, state, existsReason, jsonDetail)
+                sendChangeStatus(order, state, existsReason, jsonDetail, client)
                     .then(r => resolve());
             }
             
@@ -155,7 +155,7 @@ function changeState(order, sessionId, state, reason, itemsSale) {
     })
 }
 
-function sendChangeStatus(order, state, existsReason, jsonDetail) {
+function sendChangeStatus(order, state, existsReason, jsonDetail, client) {
     return new Promise((resolve, reject) => {
         const args = { 
             idSalesforce: order.erpId, 
