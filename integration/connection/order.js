@@ -138,7 +138,7 @@ function changeState(order, sessionId, state, reason, itemsSale) {
                         .then(pt => {
                             index++
                             jsonDetail[i].product = pt.code2
-                            jsonDetail[i].quantity = item.quantity
+                            jsonDetail[i].quantity = parseInt(item.quantity) 
                             if(itemsSale.length && itemsSale.length == index) {
                                 sendChangeStatus(order, state, existsReason, jsonDetail,client)
                                     .then(r => resolve(r))
