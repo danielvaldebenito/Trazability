@@ -32,7 +32,7 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
         {
             var sItem = {
                 productType: m.productType, // tipo de producto
-                quantity: m.quantity, // cantidad (ENVASADO: 1 - GRANEL: N)
+                quantity: parseFloat(m.quantity), // cantidad (ENVASADO: 1 - GRANEL: N)
                 price: m.price,
                 discount: m.discount,
                 surcharge: m.surcharge,
@@ -40,7 +40,7 @@ var convertMovementDetailToSaleDetail = function(req, res, next) {
             }
             saleDetail.push(sItem)
         } else {
-            saleItem.quantity = saleItem.quantity + 1;
+            saleItem.quantity = parseFloat(saleItem.quantity) + 1;
         }
     
         total --;
