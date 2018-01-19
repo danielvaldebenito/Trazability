@@ -13,4 +13,6 @@ api.get('/product/:nif', md_auth.ensureAuth, ProductController.getOneByNif)
 api.get('/product-exists/:nif', md_auth.ensureAuth, ProductController.existsByNif)
 api.post('/product-false-nif', md_auth.ensureAuth, ProductController.createFalseNifs)
 api.post('/products-load', [md_auth.ensureAuth, md_upload], ProductController.importProducts )
+api.post('/products-load-stream', [md_auth.ensureAuth, md_upload], ProductController.importProductsStream )
+api.post('/products-fix-stream', [md_auth.ensureAuth, md_upload], ProductController.fixProductsStream )
 module.exports = api;

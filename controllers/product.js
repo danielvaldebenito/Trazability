@@ -296,7 +296,6 @@ function importProducts (req, res) {
                     .send({ done: false, message: 'No vienen archivos para importar'})
     }
 }
-
 function readExcelProducts (file_name) {
     return new Promise((resolve, reject) => {
         const workbook = new Excel.Workbook();
@@ -331,6 +330,232 @@ function readExcelProducts (file_name) {
             .catch((error) => {
                 reject('on error' + error)
             });
+    })
+    
+}
+function importProductsStream (req, res) {
+    if(req.files) {
+        const file_path = req.files.file.path
+        const file_split = file_path.split('\\')
+        const file_name = file_split[2]
+        const ext_split = file_name.split('\.')
+        const file_ext = ext_split[1]
+        const extensionsAllowed = ['xls', 'xlsx']
+        if(extensionsAllowed.indexOf(file_ext) == -1) {
+            return res.status(404)
+                .send({
+                    message: 'La extensión del archivo no es válida'
+                })
+        }
+        readExcelProductsStream(file_name)
+            .then((rowCount) => {
+                setTimeout(() => {
+                    fs.unlink(__dirname + '/../uploads/products/' + file_name, (err) => {
+                        if(err)
+                            console.log(err)
+                        console.log('deleted', file_name)
+                    })
+                }, 60000);
+                return res.status(200).send({ done: true, message: 'Archivo subido exitosamente con ' + rowCount + ' registros.'})
+            }, rejected => {
+                return res.status(404).send({ done: false, message: rejected })
+            })
+        
+    } else {
+        return res.status(404)
+                    .send({ done: false, message: 'No vienen archivos para importar'})
+    }
+}
+function readExcelProductsStream (file_name) {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createReadStream (__dirname + '/../uploads/products/' + file_name);
+        var workbook = new Excel.stream.xlsx.WorkbookReader();
+        let count = 0;
+        var options = {
+            entries: "emit",
+            sharedStrings: "cache",
+            // styles: "emit",
+            // hyperlinks: "emit",
+            worksheets: "emit"
+        };
+        workbook.on('error', function (error) {
+            reject('An error occurred while writing reading excel' + error);
+        });
+        
+        workbook.on('entry', function (entry) {
+            console.log("entry", entry);
+        });
+        
+        // workbook.on('shared-string', function (index, text) {
+        //     console.log("index:", index, "text:", text);
+        // });
+        
+        workbook.on('worksheet', function (worksheet) {
+            console.log("worksheet", worksheet.name);
+            worksheet.on('row', function (row) {
+                // console.log(" row.values", row.values);
+                const capacity = row.values[1];
+                const nif = row.values[2];
+                console.log({ capacity, nif })
+                count++;
+                saveProductFromExcelFile({ capacity, nif })
+                    .then(p => {
+                        
+                        console.log('Producto guardado', p)
+                    })
+                // console.log(" row.model", row.model);
+            });
+        
+            worksheet.on('close', function () {
+                console.log("worksheet close");
+            });
+        
+            worksheet.on('finished', function () {
+                console.log('finished wroksheet')
+                
+            });
+        });
+        
+        workbook.on('finished', function () {
+            resolve(count)
+        });
+        
+        workbook.on('close', function () {
+            console.log("close");
+        });
+        
+          workbook.read(stream, options);
+
+        
+    })
+    
+}
+function fixProductsStream (req, res) {
+    if(req.files) {
+        const file_path = req.files.file.path
+        const file_split = file_path.split('\\')
+        const file_name = file_split[2]
+        const ext_split = file_name.split('\.')
+        const file_ext = ext_split[1]
+        const extensionsAllowed = ['xls', 'xlsx']
+        if(extensionsAllowed.indexOf(file_ext) == -1) {
+            return res.status(404)
+                .send({
+                    message: 'La extensión del archivo no es válida'
+                })
+        }
+        readExcelToFixProductsStream(file_name)
+            .then((rowCount) => {
+                setTimeout(() => {
+                    fs.unlink(__dirname + '/../uploads/products/' + file_name, (err) => {
+                        if(err)
+                            console.log(err)
+                        console.log('deleted', file_name)
+                    })
+                }, 60000);
+                return res.status(200).send({ done: true, message: 'Archivo subido exitosamente con ' + rowCount + ' registros.'})
+            }, rejected => {
+                return res.status(404).send({ done: false, message: rejected })
+            })
+        
+    } else {
+        return res.status(404)
+                    .send({ done: false, message: 'No vienen archivos para importar'})
+    }
+}
+function readExcelToFixProductsStream (file_name) {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createReadStream (__dirname + '/../uploads/products/' + file_name);
+        var workbook = new Excel.stream.xlsx.WorkbookReader();
+        let count = 0;
+        var options = {
+            entries: "emit",
+            sharedStrings: "cache",
+            // styles: "emit",
+            // hyperlinks: "emit",
+            worksheets: "emit"
+        };
+        workbook.on('error', function (error) {
+            reject('An error occurred while writing reading excel' + error);
+        });
+        
+        workbook.on('entry', function (entry) {
+            console.log("entry", entry);
+        });
+        
+        // workbook.on('shared-string', function (index, text) {
+        //     console.log("index:", index, "text:", text);
+        // });
+        
+        workbook.on('worksheet', function (worksheet) {
+            console.log("worksheet", worksheet.name);
+            worksheet.on('row', function (row) {
+                // console.log(" row.values", row.values);
+                const errado = row.values[1];
+                const correcto = row.values[2];
+                console.log({ errado, correcto })
+                count++;
+                fixProduct({errado, correcto})
+                    .then(p => {
+                        if(p == 0) console.log('No existe producto errado', errado)
+                        if(p == 1) console.log('PRODUCTO ACTUALIZADO', errado, correcto)
+                        if(p == 2) console.log('Producto errado desactivado', errado)
+                    })
+                // console.log(" row.model", row.model);
+            });
+        
+            worksheet.on('close', function () {
+                console.log("worksheet close");
+            });
+        
+            worksheet.on('finished', function () {
+                console.log('finished worksheet')
+                
+            });
+        });
+        
+        workbook.on('finished', function () {
+            resolve(count)
+        });
+        
+        workbook.on('close', function () {
+            console.log("close");
+        });
+        
+          workbook.read(stream, options);
+
+        
+    })
+    
+}
+function fixProduct(row) {
+    return new Promise((resolve, reject) => {
+        Product.findOne({ $or: [{ nif: row.errado }, { formatted: row.errado }] })
+            .exec((err, errado) => {
+                if(err) reject('Error' + err)
+                if(errado) {
+                    Product.findOne({ $or: [{ nif: row.correcto }, { formatted: row.correcto }] })
+                        .exec((err, correcto) => {
+                            if(err) reject('Error1 ' + err)
+                            if(!correcto) {
+                                Product.findByIdAndUpdate(errado._id, { nif: row.correcto, formatted: row.correcto })
+                                    .exec((err, updated) => {
+                                        if(err) reject('Error2', err)
+                                        resolve(1)
+                                    })
+                            } else {
+                                // Reemplazar en Stock
+                                Product.findByIdAndUpdate(errado._id, { enabled: false }, (err, updated) => {
+                                    if(err) reject('Error3', err)
+                                    resolve(2)
+                                })
+                            }
+                        })
+                } else {
+                    resolve(0)
+                }
+                
+            })
     })
     
 }
@@ -372,5 +597,7 @@ module.exports = {
     getAllProducts, 
     getAllProductsFormat,
     getJsonProducts,
-    importProducts
+    importProducts,
+    importProductsStream,
+    fixProductsStream
 }
