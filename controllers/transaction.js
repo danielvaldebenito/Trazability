@@ -208,7 +208,93 @@ function getStationByTransaction (req, res) {
     })
 
 }
-
+function fixDiplicatedTransactions(req, res) {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 500
+    Transaction.find()
+        .populate({
+            path: 'movements',
+            populate: {
+                path: 'items',
+                populate: {
+                    path: 'product'
+                }
+            }
+        })
+        .paginate(page, limit, (err, transactions, total) => {
+            if(err) return res.status(500).send({ done: false, err })
+            let count = limit;
+            transactions.forEach((transaction, t) => {
+                const movements = transaction.movements
+                let products = []
+                if(!movements || !movements.length || movements.length == 0)
+                    products = []
+                else  {
+                    movements.map(movement => {
+                        const items = movement.items
+                        items.map((i) => { if(i.product) products.push(i.product._id)  });
+                        
+                    })
+                }
+                Transaction.find({ _id: { $ne: transaction._id }, user: transaction.user, document: transaction.document, device: transaction.device, type: transaction.type })
+                    .populate({
+                        path: 'movements',
+                        populate: {
+                            path: 'items',
+                            populate: {
+                                path: 'product'
+                            }
+                        }
+                    })
+                    .exec((err, similarsTransactions) => {
+                        if(err) return res.status(500).send({ done: false, err })
+                        if(similarsTransactions && similarsTransactions.length && similarsTransactions.length > 0) {
+                            similarsTransactions.forEach(sTransaction => {
+                                const sMovements = sTransaction.movements
+                                let sProducts = []
+                                if(!sMovements || !sMovements.length || sMovements.length == 0)
+                                    sProducts = []
+                                else {
+                                    sMovements.map(sMovement => {
+                                        const sItems = sMovement.items
+                                        sItems.map((i) => { if(i.product) sProducts.push (i.product._id) });
+                                        
+                                    })
+                                }
+                                
+                                if(arraysEqual(products, sProducts)) {
+                                    console.log('Se debe eliminar transaccion ' + sTransaction._id + ' porque es igual a la transaccion ' + transaction._id)
+                                } 
+                                
+                            })
+                            count--;
+                            console.log('Analizando similares ' + (limit - count) + ' de ' + limit)
+                            if(count == 0)
+                                return res.status(200).send({ message: 'OK' })
+                        } else {
+                            count--;
+                            console.log('Analizando ' + (limit - count) + ' de ' + limit)
+                            if(count == 0)
+                                return res.status(200).send({ message: 'OK' })
+                        }
+                        
+                    })
+                    
+            })    
+        })
+}
+function arraysEqual(arr1, arr2) {
+    if (arr1.length == arr2.length
+        && arr1.every(function(u, i) {
+            return u === arr2[i];
+        })
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+    
+  }
 
 module.exports = { 
     getOne,
@@ -217,5 +303,6 @@ module.exports = {
     getStationByTransaction,
     getTransferByTransaction,
     getTruckloadByTransaction,
-    getTruckunloadByTransaction
+    getTruckunloadByTransaction,
+    fixDiplicatedTransactions
 }
